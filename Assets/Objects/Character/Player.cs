@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private GameObject player;
-    [SerializeField] private float playerSpeed;
+    [SerializeField] private float playerSpeed = 1;
     private bool isPickupRange = false;
     private bool sprintAvailable = true;
     [SerializeField] private float sprintMultiplier = 1;
