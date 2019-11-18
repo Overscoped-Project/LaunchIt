@@ -8,13 +8,13 @@ public class Player : MonoBehaviour
     [SerializeField] private float playerSpeed;
     private bool isPickupRange = false;
     private bool sprintAvailable = true;
-    [SerializeField] private float sprintMultiplier;
+    [SerializeField] private float sprintMultiplier = 1;
     private List<GameObject> pickupAbleObjects = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");    
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
 
@@ -56,13 +56,11 @@ public class Player : MonoBehaviour
         {
             sprintAvailable = false;
             playerSpeed *= sprintMultiplier;
-            Debug.Log(playerSpeed);
         }
         else if (!Input.GetKey(KeyCode.LeftShift) && !sprintAvailable)
         {
             playerSpeed /= sprintMultiplier;
             sprintAvailable = true;
-            Debug.Log(playerSpeed);
         }
      
     }
