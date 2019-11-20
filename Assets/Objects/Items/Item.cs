@@ -5,8 +5,10 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     protected enum itemTypes { Basic, Food, Ammunition, Weapon, QuestObject };
-    private int itemType;
-    private int amount;
+    [SerializeField] private int itemType;
+    [SerializeField] private int amount;
+    [SerializeField] private string description;
+    [SerializeField] private Sprite icon;
     void Start()
     {
 
@@ -18,19 +20,19 @@ public class Item : MonoBehaviour
     }
 
 
-    public int getAmount()
+    public int GetAmount()
     {
         return amount;
     }
-    public void setAmount(int amount)
+    public void SetAmount(int amount)
     {
         this.amount = amount;
     }
-    public int getItenType()
+    public int GetItenType()
     {
         return itemType;
     }
-    public void setItemType(int itemType)
+    public void SetItemType(int itemType)
     {
         this.itemType = itemType;
     }

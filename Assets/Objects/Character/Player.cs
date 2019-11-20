@@ -6,10 +6,9 @@ public class Player : MonoBehaviour
 {
     private GameObject player;
     [SerializeField] private float playerSpeed = 1;
-    private bool isPickupRange = false;
     private bool sprintAvailable = true;
     [SerializeField] private float sprintMultiplier = 1;
-    private List<GameObject> pickupAbleObjects = new List<GameObject>();
+   
 
     void Start()
     {
@@ -63,23 +62,5 @@ public class Player : MonoBehaviour
         }
 
     }
-     
-
-
-    private void OnTriggerEnter(Collider collider)
-    {
-        isPickupRange = true;
-        pickupAbleObjects.Add(collider.gameObject);
-    }
-
-    private void OnTriggerExit(Collider collider)
-    {   
-        pickupAbleObjects.Remove(collider.gameObject);
-        if (pickupAbleObjects.Count == 0)
-        {
-            isPickupRange = false;
-        }
-    }
-    
-    
+       
 }

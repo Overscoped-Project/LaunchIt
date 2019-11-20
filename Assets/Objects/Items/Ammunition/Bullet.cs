@@ -8,19 +8,19 @@ public class Bullet : Item
     [SerializeField] private int damage = 10;
     void Start()
     {
-        setItemType((int)itemTypes.Ammunition);       
+        SetItemType((int)itemTypes.Ammunition);       
     }
 
     void Update()
     {
     }
 
-    public float getSpeed()
+    public float GetSpeed()
     {
         return speed;
     }
 
-    public int getDamage()
+    public int GetDamage()
     {
         return damage;
     }
