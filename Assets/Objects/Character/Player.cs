@@ -62,9 +62,9 @@ public class Player : MonoBehaviour
             playerSpeed /= sprintMultiplier;
             sprintAvailable = true;
         }
-     
-    }
 
+    }
+     
 
 
     private void OnTriggerEnter(Collider collider)
