@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -11,13 +12,14 @@ public class Inventory : MonoBehaviour
     private List<Item> stored;
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject emptySlot;
+    
 
     void Start()
     {
         stored = new List<Item>();
         for (int i = 0; i < invSlots; i++)
         {
-            Instantiate(emptySlot, GameObject.FindGameObjectWithTag("Inventory").transform);          
+            Instantiate(emptySlot, GameObject.FindGameObjectWithTag("Inventory").transform);       
         }
 
     }

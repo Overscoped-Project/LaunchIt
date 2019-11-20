@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class SpawnBullets : MonoBehaviour
 {
-
     [SerializeField] private Bullet shot;
     [SerializeField] private float fireRate = 0.5f;
     [SerializeField] private float fireTime = 0.0000001f;
     // Start is called before the first frame update
     void Start()
     {
+
     }
 
     // Update is called once per frame

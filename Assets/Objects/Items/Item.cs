@@ -28,7 +28,7 @@ public class Item : MonoBehaviour
     {
         this.amount = amount;
     }
-    public int GetItenType()
+    public int GetItemType()
     {
         return itemType;
     }

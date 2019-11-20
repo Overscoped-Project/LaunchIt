@@ -7,8 +7,8 @@ public class Bullet : Item
     [SerializeField] private float speed = 10;
     [SerializeField] private int damage = 10;
     void Start()
-    {
-        SetItemType((int)itemTypes.Ammunition);       
+    {       
+        SetItemType((int)itemTypes.Ammunition); 
     }
 
     void Update()
