@@ -7,13 +7,11 @@ public class Item : MonoBehaviour
     protected enum itemTypes { Basic, Food, Ammunition, Weapon, QuestObject };
     private int itemType;
     private int amount;
-    // Start is called before the first frame update
     void Start()
     {
 
     }
 
-    // Update is called once per frame
     void Update()
     {
 

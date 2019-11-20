@@ -11,7 +11,6 @@ public class Player : MonoBehaviour
     [SerializeField] private float sprintMultiplier = 1;
     private List<GameObject> pickupAbleObjects = new List<GameObject>();
 
-    // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
