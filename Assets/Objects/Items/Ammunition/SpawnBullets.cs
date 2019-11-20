@@ -6,7 +6,8 @@ public class SpawnBullets : MonoBehaviour
 {
 
     [SerializeField] private Bullet shot;
-    [SerializeField] private float fireRate = 0.2f;
+    [SerializeField] private float fireRate = 0.5f;
+    [SerializeField] private float fireTime = 0.0000001f;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,7 +19,7 @@ public class SpawnBullets : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-           InvokeRepeating("shoot", 0.0000001f, fireRate);
+           InvokeRepeating("shoot", fireTime, fireRate);
         }
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
