@@ -7,7 +7,8 @@ public class Bullet : Item
     [SerializeField] private float speed = 10;
     [SerializeField] private int damage = 10;
     void Start()
-    {       
+    {
+        Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), GameObject.FindGameObjectWithTag("Player").GetComponent<CircleCollider2D>());
         SetItemType((int)itemTypes.Ammunition); 
     }
 
@@ -25,12 +26,10 @@ public class Bullet : Item
         return damage;
     }
 
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         Destroy(this.gameObject);
     }
-
 }
 
 

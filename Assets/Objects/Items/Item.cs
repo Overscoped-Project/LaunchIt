@@ -9,16 +9,6 @@ public class Item : MonoBehaviour
     [SerializeField] private int amount;
     [SerializeField] private string description;
     [SerializeField] private Sprite icon;
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-
 
     public int GetAmount()
     {
@@ -36,4 +26,13 @@ public class Item : MonoBehaviour
     {
         this.itemType = itemType;
     }
+    public Sprite GetIcon()
+    {
+        return icon;
+    }
+    public string getDescription()
+    {
+        return description;
+    }
+
 }

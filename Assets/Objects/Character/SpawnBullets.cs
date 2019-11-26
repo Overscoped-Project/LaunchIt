@@ -37,4 +37,9 @@ public class SpawnBullets : MonoBehaviour
         Bullet bullet = Instantiate(shot, transform.position, q) as Bullet;
         bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(lookDir.x * bullet.GetSpeed() * Time.deltaTime, lookDir.y * bullet.GetSpeed() * Time.deltaTime);
     }
+
+    public Bullet getShot()
+    {
+        return shot;
+    }
 }

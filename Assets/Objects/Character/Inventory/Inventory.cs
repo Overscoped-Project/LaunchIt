@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -9,17 +8,15 @@ public class Inventory : MonoBehaviour
     private List<GameObject> pickupAbleObjects = new List<GameObject>();
     private bool invEnable = false;
     [SerializeField] private int invSlots = 6;
-    private List<Item> stored;
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject emptySlot;
     
 
     void Start()
     {
-        stored = new List<Item>();
         for (int i = 0; i < invSlots; i++)
         {
-            Instantiate(emptySlot, GameObject.FindGameObjectWithTag("Inventory").transform);       
+            Instantiate(emptySlot, GameObject.FindGameObjectWithTag("Inventory").transform);
         }
 
     }
@@ -42,37 +39,32 @@ public class Inventory : MonoBehaviour
         {
             if (isPickupRange && (pickupAbleObjects != null))
             {
-                for (int i = 0; i < pickupAbleObjects.Count; i++)
+                for (int j = 0; j < pickupAbleObjects.Count; j++)
                 {
-                    if (stored.Count < invSlots)
+                    for (int i = 0; i < invSlots; i++)
                     {
-                        Item item = pickupAbleObjects[i].gameObject.GetComponent<Item>();
-                        AddItem(item);
-                        pickupAbleObjects.Remove(pickupAbleObjects[i]);
-                    }
-                    
-
-                    if (pickupAbleObjects.Count == 0)
-                    {
-                        isPickupRange = false;
-                    }
-                    
+                        if (inventory.GetComponentsInChildren<Slot>()[i].getEmpty())
+                        {
+                            AddItem(inventory.GetComponentsInChildren<Slot>()[i], pickupAbleObjects[j].gameObject);
+                        }
+                        if (pickupAbleObjects.Count == 0)
+                        {
+                            isPickupRange = false;
+                            break;
+                        }                       
+                    } 
                 }
             }
-
         }
 
     }
-
-
-
-    private void OnTriggerEnter(Collider collider)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
         isPickupRange = true;
         pickupAbleObjects.Add(collider.gameObject);
     }
 
-    private void OnTriggerExit(Collider collider)
+    private void OnTriggerExit2D(Collider2D collider)
     {
         pickupAbleObjects.Remove(collider.gameObject);
         if (pickupAbleObjects.Count == 0)
@@ -81,19 +73,15 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void AddItem(Item item)
+    public void AddItem(Slot slot,GameObject item)
     {
-        stored.Add(item);      
+        slot.AddItem(item.GetComponent<Item>());
+        Destroy(item);
     }
 
-    public Item GetItem(int i)
+    public void RemoveItem(Slot slot)
     {
-        return stored[i];
-    }
-
-    public void RemoveItem(Item item)
-    {
-        stored.Remove(item);
+        slot.ClearSlot();
     }
 
     public void AddInventorySlot(int newSlots)
