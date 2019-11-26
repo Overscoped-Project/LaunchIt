@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    protected enum itemTypes { Basic, Food, Ammunition, Weapon, QuestObject };
+    public enum itemTypes { Basic, Food, Ammunition, Weapon, QuestObject };
     [SerializeField] private int itemType;
     [SerializeField] private int amount;
     [SerializeField] private string description;

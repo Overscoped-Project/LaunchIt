@@ -30,12 +30,12 @@ public class Slot : MonoBehaviour
         empty = true;
     }
 
-    public Item getItem()
+    public Item GetItem()
     {
         return item;
     }
 
-    public bool getEmpty()
+    public bool GetEmpty()
     {
         return empty;
     }

@@ -5,11 +5,14 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     private bool isPickupRange = false;
-    private List<GameObject> pickupAbleObjects = new List<GameObject>();
+    private bool isRepairRange = false;  
     private bool invEnable = false;
+    private List<GameObject> pickupAbleObjects = new List<GameObject>();
+    private List<Item> questObjects = new List<Item>();
     [SerializeField] private int invSlots = 6;
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject emptySlot;
+    private Ship ship;
     
 
     void Start()
@@ -35,48 +38,67 @@ public class Inventory : MonoBehaviour
         {
             inventory.SetActive(false);
         }
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && isPickupRange && (pickupAbleObjects != null))
         {
-            if (isPickupRange && (pickupAbleObjects != null))
+            for (int j = 0; j < pickupAbleObjects.Count; j++)
             {
-                for (int j = 0; j < pickupAbleObjects.Count; j++)
+                for (int i = 0; i < invSlots; i++)
                 {
-                    for (int i = 0; i < invSlots; i++)
+                    if (inventory.GetComponentsInChildren<Slot>()[i].GetEmpty())
                     {
-                        if (inventory.GetComponentsInChildren<Slot>()[i].getEmpty())
-                        {
-                            AddItem(inventory.GetComponentsInChildren<Slot>()[i], pickupAbleObjects[j].gameObject);
-                        }
-                        if (pickupAbleObjects.Count == 0)
-                        {
-                            isPickupRange = false;
-                            break;
-                        }                       
-                    } 
-                }
+                        AddItem(inventory.GetComponentsInChildren<Slot>()[i], pickupAbleObjects[j].gameObject);
+                    }
+                    if (pickupAbleObjects.Count == 0)
+                    {
+                        isPickupRange = false;
+                        break;
+                    }                       
+                } 
             }
+        }
+        Debug.Log(inventory.GetComponentsInChildren<Slot>()[0].GetItem());
+        if (Input.GetKeyDown(KeyCode.E) && isRepairRange && ship != null)
+        {
+            ship.RepairShip(inventory);
         }
 
     }
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        isPickupRange = true;
-        pickupAbleObjects.Add(collider.gameObject);
+        if (collider.gameObject.CompareTag("Item"))
+        {
+            isPickupRange = true;
+            pickupAbleObjects.Add(collider.gameObject);
+        }
+        if (collider.gameObject.CompareTag("Ship"))
+        {
+            ship = collider.gameObject.GetComponent<Ship>();
+            isRepairRange = true;
+        }
+        
     }
 
     private void OnTriggerExit2D(Collider2D collider)
     {
-        pickupAbleObjects.Remove(collider.gameObject);
-        if (pickupAbleObjects.Count == 0)
+        if (collider.gameObject.CompareTag("Item"))
         {
-            isPickupRange = false;
+            pickupAbleObjects.Remove(collider.gameObject);
+            if (pickupAbleObjects.Count == 0)
+            {
+                isPickupRange = false;
+            }
+        }
+        if (collider.gameObject.CompareTag("Ship"))
+        {
+            ship = null;
+            isRepairRange = false;
         }
     }
 
     public void AddItem(Slot slot,GameObject item)
     {
-        slot.AddItem(item.GetComponent<Item>());
-        Destroy(item);
+        slot.AddItem(item.GetComponent<Item>());        
+        //TODO Destroy(item); löscht nach zeit das Item im inventar
     }
 
     public void RemoveItem(Slot slot)
