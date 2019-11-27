@@ -32,11 +32,11 @@ public class SpawnBullets : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 lookDir = mousePos - GetComponent<Rigidbody2D>().position;
         lookDir = lookDir.normalized;
-        Quaternion q = Quaternion.identity;
-        q.eulerAngles = new Vector3(0, 180, 0);
+        Quaternion q = Quaternion.Euler(0, 0, 180 - Vector2.SignedAngle(lookDir*(-1), transform.up));
+        Debug.Log(Vector2.SignedAngle(lookDir, transform.up));
         Bullet bullet = Instantiate(shot, transform.position, q) as Bullet;
-        bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(lookDir.x * bullet.GetSpeed() * Time.deltaTime, lookDir.y * bullet.GetSpeed() * Time.deltaTime);
-    }
+        bullet.setDirection(lookDir);       
+    }   
 
     public Bullet getShot()
     {

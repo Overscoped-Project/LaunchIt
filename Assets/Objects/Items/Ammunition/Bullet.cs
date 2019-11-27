@@ -13,6 +13,7 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
+
     }
 
     public float GetSpeed()
@@ -28,6 +29,11 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Destroy(this.gameObject);
+    }
+
+    public void setDirection(Vector2 lookDir)
+    {
+        GetComponent<Rigidbody2D>().velocity = new Vector2(lookDir.x * GetSpeed() * Time.deltaTime, lookDir.y * GetSpeed() * Time.deltaTime);
     }
 }
 
