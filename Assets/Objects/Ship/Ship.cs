@@ -2,59 +2,66 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Util;
-
 
 public class Ship : MonoBehaviour
 {
     private bool repaired = false;
-    [SerializeField] private HashMap<Item, int> requiredItems = new HashMap<Item, int>();
-   // private List;
-
-    void Start()
+    [System.Serializable] private struct SpawnQuestObject
     {
+        [SerializeField] private Item item;
+        [SerializeField] private int requiredAmount;
 
-       // for (int i = 0; i < requiredItems.Count; i++)
+        public Item GetItem()
         {
-          //  requiredItems[i];
+            return item;
+        }
+        public int GetRequiredAmount()
+        {
+            return requiredAmount;
         }
     }
-
-    void Update()
+    [SerializeField] List<SpawnQuestObject> spawnRequiredItems = new List<SpawnQuestObject>();
+    private List<QuestObject> requiredItems = new List<QuestObject>();
+    private void Start()
     {
-
+        foreach(SpawnQuestObject obj in spawnRequiredItems)
+        {
+            QuestObject newObj = new QuestObject(obj.GetItem(), obj.GetRequiredAmount());
+            requiredItems.Add(newObj);
+        }
     }
-
     public bool GetRepaired()
     {
         return repaired;
     }
     
-    /*public void RepairShip(GameObject inventory)
+    public void RepairShip(GameObject inventory)
     {
-        for (int i = 0; i < inventory.GetComponentsInChildren<Slot>().Length; i++)
+        foreach (Slot slot in inventory.GetComponentsInChildren<Slot>())
         {
-            Slot slot = inventory.GetComponentsInChildren<Slot>()[i];
             if (!slot.GetEmpty())
             {
-                if (!itemOne && (slot.GetItem().Equals(one) && slot.GetItem().GetItemType() == one.GetItemType()))
-                {                  
-                    requiredAmountOne -= slot.RemoveItem(requiredAmountOne);
-                    if (requiredAmountOne == 0)
-                    {
-                        itemOne = true;
-                    }          
-                }
-                else
+                foreach (QuestObject obj in requiredItems)
                 {
-
+                    if ((obj.GetRequiredAmount() != 0 ) && (slot.GetItem().Equals(obj.GetItem())))
+                    {
+                        obj.SetRequiredAmount(obj.GetRequiredAmount() - slot.RemoveItem(obj.GetRequiredAmount()));
+                    }
                 }
             }          
         }
-        if (itemOne && itemTwo && itemThree)
+        int finished = 0;
+        foreach (QuestObject obj in requiredItems)
+        {
+            if (obj.GetRequiredAmount() == 0)
+            {
+                finished++;
+            }
+        }
+        if (finished == requiredItems.Count)
         {
             repaired = true;
+            Debug.Log(repaired);
         }
-
-    }*/
+    }
 }
