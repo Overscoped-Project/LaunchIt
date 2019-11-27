@@ -13,12 +13,18 @@ public class Ship : MonoBehaviour
     [SerializeField] private Item one;
     [SerializeField] private Item two;
     [SerializeField] private Item three;
+
+    [SerializeField] private int requiredAmountOne = 1;
+    [SerializeField] private int requiredAmountTwo = 1;
+    [SerializeField] private int requiredAmountThree = 1;
     void Start()
     {
+
     }
 
     void Update()
     {
+
     }
 
     public bool GetRepaired()
@@ -31,31 +37,43 @@ public class Ship : MonoBehaviour
         for (int i = 0; i < inventory.GetComponentsInChildren<Slot>().Length; i++)
         {
             Slot slot = inventory.GetComponentsInChildren<Slot>()[i];
-            if (slot.GetItem().Equals(one) && slot.GetItem().GetItemType() == one.GetItemType())
+            if (!slot.GetEmpty())
             {
-                itemOne = true;
-                slot.ClearSlot();
-            }
-            else if (slot.GetItem() == two && slot.GetItem().GetItemType() == two.GetItemType())
-            {
-                itemTwo = true;
-                slot.ClearSlot();
-            }
-            else if (slot.GetItem() == three && slot.GetItem().GetItemType() == three.GetItemType())
-            {
-                itemThree = true;
-                slot.ClearSlot();
-            }
-            else
-            {
+                if (!itemOne && (slot.GetItem().Equals(one) && slot.GetItem().GetItemType() == one.GetItemType()))
+                {                  
+                    requiredAmountOne -= slot.RemoveItem(requiredAmountOne);
+                    if (requiredAmountOne == 0)
+                    {
+                        itemOne = true;
+                    }
+                }
+                else if (!itemTwo && (slot.GetItem() == two && slot.GetItem().GetItemType() == two.GetItemType()))
+                {
+                    requiredAmountTwo -= slot.RemoveItem(requiredAmountTwo);
+                    if (requiredAmountTwo == 0)
+                    {
+                        itemTwo = true;
+                    }
+                }
+                else if (!itemThree && (slot.GetItem() == three && slot.GetItem().GetItemType() == three.GetItemType()))
+                {
+                    requiredAmountThree -= slot.RemoveItem(requiredAmountThree);
+                    if (requiredAmountThree == 0)
+                    {
+                        itemThree = true;
+                    }
 
-            }
+                }
+                else
+                {
+
+                }
+            }          
         }
         if (itemOne && itemTwo && itemThree)
         {
             repaired = true;
         }
-        Debug.Log(repaired);
 
     }
 }

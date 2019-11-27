@@ -13,13 +13,15 @@ public class Inventory : MonoBehaviour
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject emptySlot;
     private Ship ship;
+    private Transform inventoryTransform;
     
 
     void Start()
     {
+        inventoryTransform = GameObject.FindGameObjectWithTag("Inventory").transform;
         for (int i = 0; i < invSlots; i++)
         {
-            Instantiate(emptySlot, GameObject.FindGameObjectWithTag("Inventory").transform);
+            Instantiate(emptySlot, inventoryTransform);
         }
 
     }
@@ -56,7 +58,7 @@ public class Inventory : MonoBehaviour
                 } 
             }
         }
-        Debug.Log(inventory.GetComponentsInChildren<Slot>()[0].GetItem());
+        
         if (Input.GetKeyDown(KeyCode.E) && isRepairRange && ship != null)
         {
             ship.RepairShip(inventory);
@@ -97,8 +99,9 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(Slot slot,GameObject item)
     {
-        slot.AddItem(item.GetComponent<Item>());        
-        //TODO Destroy(item); löscht nach zeit das Item im inventar
+        slot.AddItem(item.GetComponent<ConnectorItem>().GetItem());
+        Destroy(item);
+        
     }
 
     public void RemoveItem(Slot slot)
@@ -106,12 +109,22 @@ public class Inventory : MonoBehaviour
         slot.ClearSlot();
     }
 
-    public void AddInventorySlot(int newSlots)
+    public void AddInventorySlot(int newSlots, bool addSlot)
     {
         for (int i = 0; i < newSlots; i++)
         {
-            Instantiate(emptySlot, GameObject.FindGameObjectWithTag("Inventory").transform);
-            invSlots++;
+            Instantiate(emptySlot, inventoryTransform);
+            if (addSlot)
+            {
+                invSlots++;
+            }
         }      
     }
+
+    public void RecreateInventorySlot(GameObject slot)
+    {
+        Destroy(slot);
+        AddInventorySlot(1, false);
+    }
+
 }
