@@ -25,7 +25,7 @@ public class SpawnBullets : MonoBehaviour
         }
         if (!canShoot)
         {
-            timeSinceShoot += fireRate *Time.deltaTime;
+            timeSinceShoot += fireRate * Time.deltaTime;
             if (timeSinceShoot >= 1)
             {
                 timeSinceShoot = 0;
@@ -40,8 +40,8 @@ public class SpawnBullets : MonoBehaviour
         Vector2 lookDir = mousePos - GetComponent<Rigidbody2D>().position;
         lookDir = lookDir.normalized;
         Quaternion q = Quaternion.Euler(0, 0, 180 - Vector2.SignedAngle(lookDir*(-1), transform.up));
-        Bullet bullet = Instantiate(shot, transform.position, q) as Bullet;
-        bullet.setDirection(lookDir);
+        Bullet bullet = Instantiate(shot, transform.position, q);
+        bullet.SetDirection(lookDir);
     }   
 
     public Bullet getShot()

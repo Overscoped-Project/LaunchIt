@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
     }
 
 
@@ -32,22 +31,22 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W))
         {
-            player.transform.position += new Vector3(0, playerSpeed * Time.deltaTime, 0);
+            transform.position += new Vector3(0, playerSpeed * Time.deltaTime, 0);
            
         }
         else if(Input.GetKey(KeyCode.S))
         {
-            player.transform.position -= new Vector3(0, playerSpeed * Time.deltaTime, 0);
+            transform.position -= new Vector3(0, playerSpeed * Time.deltaTime, 0);
         }
 
 
         if (Input.GetKey(KeyCode.D))
         {
-            player.transform.position += new Vector3(playerSpeed * Time.deltaTime, 0, 0);
+            transform.position += new Vector3(playerSpeed * Time.deltaTime, 0, 0);
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            player.transform.position -= new Vector3(playerSpeed * Time.deltaTime, 0, 0);
+            transform.position -= new Vector3(playerSpeed * Time.deltaTime, 0, 0);
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && sprintAvailable)

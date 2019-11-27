@@ -31,7 +31,7 @@ public class Bullet : MonoBehaviour
         Destroy(this.gameObject);
     }
 
-    public void setDirection(Vector2 lookDir)
+    public void SetDirection(Vector2 lookDir)
     {
         GetComponent<Rigidbody2D>().velocity = new Vector2(lookDir.x * GetSpeed() * Time.deltaTime, lookDir.y * GetSpeed() * Time.deltaTime);
     }
