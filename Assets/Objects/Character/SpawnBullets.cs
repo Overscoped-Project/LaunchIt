@@ -6,24 +6,31 @@ public class SpawnBullets : MonoBehaviour
 {
     [SerializeField] private Bullet shot;
     [SerializeField] private float fireRate = 0.5f;
-    [SerializeField] private float fireTime = 0.0000001f;
-    // Start is called before the first frame update
+    private float timeSinceShoot = 0;
+    private bool canShoot = true;
+
+
     void Start()
     {
-
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.Mouse0) && canShoot)
         {
-           InvokeRepeating("Shoot", fireTime, fireRate);
+            Shoot();
+            canShoot = false;
+
         }
-        if (Input.GetKeyUp(KeyCode.Mouse0))
+        if (!canShoot)
         {
-            CancelInvoke("Shoot");
+            timeSinceShoot += fireRate * Time.deltaTime;
+            if (timeSinceShoot >= 1)
+            {
+                timeSinceShoot = 0;
+                canShoot = true;
+            }
         }
     }
 
@@ -32,11 +39,10 @@ public class SpawnBullets : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 lookDir = mousePos - GetComponent<Rigidbody2D>().position;
         lookDir = lookDir.normalized;
-        Quaternion q = Quaternion.identity;
-        q.eulerAngles = new Vector3(0, 180, 0);
-        Bullet bullet = Instantiate(shot, transform.position, q) as Bullet;
-        bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(lookDir.x * bullet.GetSpeed() * Time.deltaTime, lookDir.y * bullet.GetSpeed() * Time.deltaTime);
-    }
+        Quaternion q = Quaternion.Euler(0, 0, 180 - Vector2.SignedAngle(lookDir*(-1), transform.up));
+        Bullet bullet = Instantiate(shot, transform.position, q);
+        bullet.SetDirection(lookDir);
+    }   
 
     public Bullet getShot()
     {
