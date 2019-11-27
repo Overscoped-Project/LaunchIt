@@ -2,24 +2,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Util;
+
 
 public class Ship : MonoBehaviour
 {
     private bool repaired = false;
-    [SerializeField] private bool itemOne = false;
-    [SerializeField] private bool itemTwo = false;
-    [SerializeField] private bool itemThree = false;
+    [SerializeField] private HashMap<Item, int> requiredItems = new HashMap<Item, int>();
+    public List<string>t;
+   // private List;
 
-    [SerializeField] private Item one;
-    [SerializeField] private Item two;
-    [SerializeField] private Item three;
-
-    [SerializeField] private int requiredAmountOne = 1;
-    [SerializeField] private int requiredAmountTwo = 1;
-    [SerializeField] private int requiredAmountThree = 1;
     void Start()
     {
 
+       // for (int i = 0; i < requiredItems.Count; i++)
+        {
+          //  requiredItems[i];
+        }
     }
 
     void Update()
@@ -32,7 +31,7 @@ public class Ship : MonoBehaviour
         return repaired;
     }
     
-    public void RepairShip(GameObject inventory)
+    /*public void RepairShip(GameObject inventory)
     {
         for (int i = 0; i < inventory.GetComponentsInChildren<Slot>().Length; i++)
         {
@@ -45,24 +44,7 @@ public class Ship : MonoBehaviour
                     if (requiredAmountOne == 0)
                     {
                         itemOne = true;
-                    }
-                }
-                else if (!itemTwo && (slot.GetItem() == two && slot.GetItem().GetItemType() == two.GetItemType()))
-                {
-                    requiredAmountTwo -= slot.RemoveItem(requiredAmountTwo);
-                    if (requiredAmountTwo == 0)
-                    {
-                        itemTwo = true;
-                    }
-                }
-                else if (!itemThree && (slot.GetItem() == three && slot.GetItem().GetItemType() == three.GetItemType()))
-                {
-                    requiredAmountThree -= slot.RemoveItem(requiredAmountThree);
-                    if (requiredAmountThree == 0)
-                    {
-                        itemThree = true;
-                    }
-
+                    }          
                 }
                 else
                 {
@@ -75,5 +57,5 @@ public class Ship : MonoBehaviour
             repaired = true;
         }
 
-    }
+    }*/
 }

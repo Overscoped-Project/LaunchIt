@@ -8,9 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float playerSpeed = 1;
     private bool sprintAvailable = true;
     [SerializeField] private float sprintMultiplier = 1;
-   
-
-    void Start()
+     void Start()
     {
     }
 

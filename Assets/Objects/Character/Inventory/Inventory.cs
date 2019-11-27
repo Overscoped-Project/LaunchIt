@@ -61,7 +61,7 @@ public class Inventory : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.E) && isRepairRange && ship != null)
         {
-            ship.RepairShip(inventory);
+        //    ship.RepairShip(inventory);
         }
 
     }
