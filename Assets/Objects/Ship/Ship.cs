@@ -9,7 +9,6 @@ public class Ship : MonoBehaviour
 {
     private bool repaired = false;
     [SerializeField] private HashMap<Item, int> requiredItems = new HashMap<Item, int>();
-    public List<string>t;
    // private List;
 
     void Start()
