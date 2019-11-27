@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c327229ce02e254c8420b9fcb646520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemType: 0
+  itemType: 2
   amount: 0
   description: 
   icon: {fileID: 0}

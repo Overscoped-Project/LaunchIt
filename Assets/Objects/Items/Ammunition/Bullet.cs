@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : Item
+public class Bullet : MonoBehaviour
 {
     [SerializeField] private float speed = 10;
     [SerializeField] private int damage = 10;
     void Start()
     {
         Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), GameObject.FindGameObjectWithTag("Player").GetComponent<CircleCollider2D>());
-        SetItemType((int)itemTypes.Ammunition); 
     }
 
     void Update()
