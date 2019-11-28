@@ -8,7 +8,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float playerSpeed = 1;
     private bool sprintAvailable = true;
     [SerializeField] private float sprintMultiplier = 1;
-     void Start()
+    private bool walk = false;
+    private float directionX = 0;
+    private float directionY = 0;
+    void Start()
     {
     }
 
@@ -16,6 +19,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+               
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
@@ -30,22 +34,38 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             transform.position += new Vector3(0, playerSpeed * Time.deltaTime, 0);
-           
+            directionY = 1f;
+            walk = true;
         }
         else if(Input.GetKey(KeyCode.S))
         {
             transform.position -= new Vector3(0, playerSpeed * Time.deltaTime, 0);
+            directionY = -1f;
+            walk = true;
+        }
+        else
+        {
+            directionY = 0;
         }
 
 
         if (Input.GetKey(KeyCode.D))
         {
             transform.position += new Vector3(playerSpeed * Time.deltaTime, 0, 0);
+            directionX = 1f;
+            walk = true;
         }
         else if (Input.GetKey(KeyCode.A))
         {
             transform.position -= new Vector3(playerSpeed * Time.deltaTime, 0, 0);
+            directionX = -1f;
+            walk = true;
         }
+        else
+        {
+            directionX = 0;
+        }
+        
 
         if (Input.GetKey(KeyCode.LeftShift) && sprintAvailable)
         {
@@ -58,6 +78,10 @@ public class Player : MonoBehaviour
             sprintAvailable = true;
         }
 
+        GetComponent<Animator>().SetFloat("WalkDirectionX", directionX);
+        GetComponent<Animator>().SetFloat("WalkDirectionY", directionY);
+        GetComponent<Animator>().SetBool("walk", walk);
+        walk = false;
     }
 
 }

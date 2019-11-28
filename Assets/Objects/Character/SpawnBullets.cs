@@ -8,6 +8,8 @@ public class SpawnBullets : MonoBehaviour
     [SerializeField] private float fireRate = 0.5f;
     private float timeSinceShoot = 0;
     private bool canShoot = true;
+    private Vector2 lookDir;
+    private float angle = 0;
 
 
     void Start()
@@ -17,6 +19,11 @@ public class SpawnBullets : MonoBehaviour
 
     void Update()
     {
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        lookDir = mousePos - GetComponent<Rigidbody2D>().position;
+        lookDir = lookDir.normalized;
+        angle = 180 - Vector2.SignedAngle(lookDir * (-1), transform.up);
+        GetComponent<Animator>().SetFloat("Rotation", angle);
         if (Input.GetKey(KeyCode.Mouse0) && canShoot)
         {
             Shoot();
@@ -36,10 +43,7 @@ public class SpawnBullets : MonoBehaviour
 
     public void Shoot()
     {
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 lookDir = mousePos - GetComponent<Rigidbody2D>().position;
-        lookDir = lookDir.normalized;
-        Quaternion q = Quaternion.Euler(0, 0, 180 - Vector2.SignedAngle(lookDir*(-1), transform.up));
+        Quaternion q = Quaternion.Euler(0, 0, angle);
         Bullet bullet = Instantiate(shot, transform.position, q);
         bullet.SetDirection(lookDir);
     }   
