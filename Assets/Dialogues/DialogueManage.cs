@@ -5,12 +5,10 @@ using UnityEngine.UI;
 
 public class DialogueManage : MonoBehaviour
 {
-    [SerializeField]
-    private Text textDisplay;
+    [SerializeField] private Text textDisplay;
     public string[] sentences;
     private int index;
-    [SerializeField]
-    private float typingSpeed;
+    [SerializeField] private float typingSpeed;
 
     public GameObject continueButton;
 
