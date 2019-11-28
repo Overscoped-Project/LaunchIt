@@ -28,16 +28,16 @@ public class ScriptForAnimator : MonoBehaviour
         {
             animator.SetBool("PressedW", true);
         }
-        else if (Input.GetKeyUp(KeyCode.S))
+        else if (Input.GetKeyUp(KeyCode.W))
         {
             animator.SetBool("PressedW", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.A))
         {
             animator.SetBool("PressedA", true);
         }
-        else if (Input.GetKeyUp(KeyCode.S))
+        else if (Input.GetKeyUp(KeyCode.A))
         {
             animator.SetBool("PressedA", false);
         }
