@@ -1010,6 +1010,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
         type: 3}
+      propertyPath: t.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: questObjects.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: requiredItems.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: spawnRequiredItems.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
       propertyPath: one
       value: 
       objectReference: {fileID: 11400000, guid: 4087e37e0a9162945a07dfbb2b98ac72,
@@ -1030,6 +1050,72 @@ PrefabInstance:
         type: 3}
       propertyPath: itemOne
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: requiredItems.Array.data[0].item
+      value: 
+      objectReference: {fileID: 11400000, guid: 4087e37e0a9162945a07dfbb2b98ac72,
+        type: 2}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: requiredItems.Array.data[1].item
+      value: 
+      objectReference: {fileID: 11400000, guid: 6b393bc29c8af724ebea370f52003554,
+        type: 2}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: requiredItems.Array.data[2].item
+      value: 
+      objectReference: {fileID: 11400000, guid: d904020536b08dd4c8f6cbda560d059f,
+        type: 2}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: requiredItems.Array.data[1].requiredAmount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: requiredItems.Array.data[2].requiredAmount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: requiredItems.Array.data[0].requiredAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: spawnRequiredItems.Array.data[0].item
+      value: 
+      objectReference: {fileID: 11400000, guid: 4087e37e0a9162945a07dfbb2b98ac72,
+        type: 2}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: spawnRequiredItems.Array.data[1].item
+      value: 
+      objectReference: {fileID: 11400000, guid: 6b393bc29c8af724ebea370f52003554,
+        type: 2}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: spawnRequiredItems.Array.data[2].item
+      value: 
+      objectReference: {fileID: 11400000, guid: d904020536b08dd4c8f6cbda560d059f,
+        type: 2}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: spawnRequiredItems.Array.data[2].requiredAmount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: spawnRequiredItems.Array.data[1].requiredAmount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669117825889136328, guid: 358ce3d9ee57f1d4d998ddd2824044f9,
+        type: 3}
+      propertyPath: spawnRequiredItems.Array.data[0].requiredAmount
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 358ce3d9ee57f1d4d998ddd2824044f9, type: 3}
