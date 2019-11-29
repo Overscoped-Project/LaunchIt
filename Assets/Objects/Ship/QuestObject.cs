@@ -12,6 +12,7 @@ public class QuestObject : MonoBehaviour
         this.item = item;
         this.requiredAmount = requiredAmount;
     }
+
     public Item GetItem()
     {
         return item;
