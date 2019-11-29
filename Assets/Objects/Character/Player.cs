@@ -93,11 +93,12 @@ public class Player : MonoBehaviour
 
         }
     }
+    public ContactPoint2D[] t =  new ContactPoint2D[100];
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.tag != "Bullet")
         {
-
+            
         }
     }
 
