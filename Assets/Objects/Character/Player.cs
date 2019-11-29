@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private GameObject player;
     [SerializeField] private int health = 100;
     [SerializeField] private float playerSpeed = 1;
     [SerializeField] private float sprintMultiplier = 1;
@@ -66,6 +65,7 @@ public class Player : MonoBehaviour
         else
         {
             directionX = 0;
+
         }
         
 
@@ -84,6 +84,21 @@ public class Player : MonoBehaviour
         GetComponent<Animator>().SetFloat("WalkDirectionY", directionY);
         GetComponent<Animator>().SetBool("walk", walk);
         walk = false;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag != "Bullet")
+        {
+
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag != "Bullet")
+        {
+
+        }
     }
 
 }
