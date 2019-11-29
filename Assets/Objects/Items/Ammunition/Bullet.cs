@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private float speed = 10;
+    [SerializeField] private float speed = 10f;
     [SerializeField] private int damage = 10;
+    [SerializeField] private float range = 100f;
     void Start()
     {
         Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), GameObject.FindGameObjectWithTag("Player").GetComponent<CircleCollider2D>());
@@ -13,7 +14,10 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-
+        if (transform.position.magnitude > range)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     public float GetSpeed()
