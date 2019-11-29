@@ -5,9 +5,11 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private GameObject player;
+    [SerializeField] private int health = 100;
     [SerializeField] private float playerSpeed = 1;
-    private bool sprintAvailable = true;
     [SerializeField] private float sprintMultiplier = 1;
+    [SerializeField] private int aggression = 30;
+    private bool sprintAvailable = true;    
     private bool walk = false;
     private float directionX = 0;
     private float directionY = 0;
