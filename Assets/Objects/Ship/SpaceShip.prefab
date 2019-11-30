@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 1669117825889136326}
   - component: {fileID: 1669117825889136329}
   - component: {fileID: 1669117825889136328}
-  - component: {fileID: 1669117825889136331}
-  - component: {fileID: 1669117825889136330}
   - component: {fileID: 1669117825889136327}
   - component: {fileID: 1669117825889136324}
   m_Layer: 0
@@ -97,58 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96d35c0181dbdd74db059cafe38a668f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!61 &1669117825889136331
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1669117825889136333}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.070273876, y: -1.7217093}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 10.24, y: 10.24}
-    newSize: {x: 10.24, y: 10.24}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 9.818358, y: 5.6721954}
-  m_EdgeRadius: 0
---- !u!61 &1669117825889136330
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1669117825889136333}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.10541159, y: 2.6704082}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 10.24, y: 10.24}
-    newSize: {x: 10.24, y: 10.24}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 2.8612442, y: 3.2126064}
-  m_EdgeRadius: 0
+  spawnRequiredItems: []
 --- !u!61 &1669117825889136327
 BoxCollider2D:
   m_ObjectHideFlags: 0
