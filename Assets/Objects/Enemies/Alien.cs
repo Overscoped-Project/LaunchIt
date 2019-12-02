@@ -89,10 +89,17 @@ public class Alien : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             collision.gameObject.GetComponent<Player>().Hit(damage);
+            //Little Knockback
             Vector3 moveToPlayer = collision.transform.position - transform.position;
             moveToPlayer = moveToPlayer.normalized;
             transform.position -= new Vector3((moveToPlayer.x * speed * Time.deltaTime) * hitJumpBack, (moveToPlayer.y * speed * Time.deltaTime) * hitJumpBack, 0);
+
             canAttack = false;
+        }
+
+        if (collision.gameObject.tag == "Entity")
+        {
+            //Warum auch immer die aliens ineinander buggen und nicht gegeneinander knallen. laufen durch einander durch
         }
     }
 }
