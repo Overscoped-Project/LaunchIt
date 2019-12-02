@@ -40,13 +40,13 @@ public class Player : MonoBehaviour
         //Player Movement
         if (Input.GetKey(KeyCode.W) && !collisionUp)
         {
-            transform.position += new Vector3(0, playerSpeed * Time.deltaTime, 0);
+            GetComponent<Rigidbody2D>().position += new Vector2(0, playerSpeed * Time.deltaTime);
             directionY = 1f;
             walk = true;
         }
         else if (Input.GetKey(KeyCode.S) && !collisionDown)
         {
-            transform.position -= new Vector3(0, playerSpeed * Time.deltaTime, 0);
+            GetComponent<Rigidbody2D>().position -= new Vector2(0, playerSpeed * Time.deltaTime);
             directionY = -1f;
             walk = true;
         }
@@ -58,13 +58,13 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.D) && !collisionRight)
         {
-            transform.position += new Vector3(playerSpeed * Time.deltaTime, 0, 0);
+            GetComponent<Rigidbody2D>().position += new Vector2(playerSpeed * Time.deltaTime, 0);
             directionX = 1f;
             walk = true;
         }
         else if (Input.GetKey(KeyCode.A) && !collisionLeft)
         {
-            transform.position -= new Vector3(playerSpeed * Time.deltaTime, 0, 0);
+            GetComponent<Rigidbody2D>().position -= new Vector2(playerSpeed * Time.deltaTime, 0);
             directionX = -1f;
             walk = true;
         }
@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Mouse2))
         {
-            transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
+            GetComponent<Rigidbody2D>().position = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
         }
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
@@ -99,7 +99,7 @@ public class Player : MonoBehaviour
         walk = false;
 
         //that the Entitie not has a velocity after a hit
-        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(0, 0, 0);
+        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
     }
 
     private void OnCollisionEnter2D(Collision2D collider)

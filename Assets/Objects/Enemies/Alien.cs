@@ -32,7 +32,7 @@ public class Alien : MonoBehaviour
         }
 
         //that the Entitie not has a velocity after a hit
-        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(0, 0, 0);
+        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
     }
 
     public void Hit(int dmg)
@@ -55,7 +55,7 @@ public class Alien : MonoBehaviour
         {
             Vector3 moveToPlayer = player.transform.position - transform.position;
             moveToPlayer = moveToPlayer.normalized;
-            transform.position += new Vector3(moveToPlayer.x * speed * Time.deltaTime, moveToPlayer.y * speed * Time.deltaTime, 0);
+            GetComponent<Rigidbody2D>().position += new Vector2(moveToPlayer.x * speed * Time.deltaTime, moveToPlayer.y * speed * Time.deltaTime);
         }
         else
         {
@@ -92,14 +92,9 @@ public class Alien : MonoBehaviour
             //Little Knockback
             Vector3 moveToPlayer = collision.transform.position - transform.position;
             moveToPlayer = moveToPlayer.normalized;
-            transform.position -= new Vector3((moveToPlayer.x * speed * Time.deltaTime) * hitJumpBack, (moveToPlayer.y * speed * Time.deltaTime) * hitJumpBack, 0);
+            GetComponent<Rigidbody2D>().position -= new Vector2((moveToPlayer.x * speed * Time.deltaTime) * hitJumpBack, (moveToPlayer.y * speed * Time.deltaTime) * hitJumpBack);
 
             canAttack = false;
-        }
-
-        if (collision.gameObject.tag == "Entity")
-        {
-            //Warum auch immer die aliens ineinander buggen und nicht gegeneinander knallen. laufen durch einander durch
         }
     }
 }
