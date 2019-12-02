@@ -5,16 +5,18 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField] private float speed = 10f;
-    [SerializeField] private int damage = 10;
+    [SerializeField] private int damage = 30;
     [SerializeField] private float range = 100f;
+    private Vector3 startPosition;
     void Start()
     {
         Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), GameObject.FindGameObjectWithTag("Player").GetComponent<CircleCollider2D>());
+        startPosition = transform.position;
     }
 
     void Update()
     {
-        if (transform.position.magnitude > range)
+        if ((transform.position.magnitude - startPosition.magnitude) > range)
         {
             Destroy(this.gameObject);
         }
@@ -32,6 +34,14 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.GetComponent<Player>().Hit(damage);
+        }
+        if (collision.gameObject.tag == "Entity")
+        {
+            collision.gameObject.GetComponent<Alien>().Hit(damage);
+        }
         Destroy(this.gameObject);
     }
 

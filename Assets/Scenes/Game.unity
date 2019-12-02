@@ -127,6 +127,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2749803498790399589, guid: c773b6408b2889b44b25a31260424797,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8668679938294079752, guid: c773b6408b2889b44b25a31260424797,
         type: 3}
       propertyPath: m_Name
@@ -135,7 +140,7 @@ PrefabInstance:
     - target: {fileID: 8668679938294079756, guid: c773b6408b2889b44b25a31260424797,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.6
+      value: 104.5
       objectReference: {fileID: 0}
     - target: {fileID: 8668679938294079756, guid: c773b6408b2889b44b25a31260424797,
         type: 3}
@@ -720,6 +725,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shot: {fileID: 7819643427785643837, guid: 728301dbab5965f4385aabd2ada1e9db, type: 3}
   fireRate: 2
+  offsetRate: 4
+  offset: {x: 0, y: 0, z: 0}
 --- !u!114 &781064475
 MonoBehaviour:
   m_ObjectHideFlags: 0

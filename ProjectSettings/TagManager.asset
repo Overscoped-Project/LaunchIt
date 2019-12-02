@@ -8,6 +8,7 @@ TagManager:
   - Inventory
   - Item
   - Ship
+  - Entity
   layers:
   - Default
   - TransparentFX
