@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     private bool collisionDown = false;
     private bool collisionLeft = false;
     private bool collisionRight = false;
-    private bool sprintAvailable = true;    
+    private bool sprintAvailable = true;
     private bool walk = false;
     private float directionX = 0;
     private float directionY = 0;
@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-               
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
             directionY = 1f;
             walk = true;
         }
-        else if(Input.GetKey(KeyCode.S) && !collisionDown)
+        else if (Input.GetKey(KeyCode.S) && !collisionDown)
         {
             transform.position -= new Vector3(0, playerSpeed * Time.deltaTime, 0);
             directionY = -1f;
@@ -80,12 +80,15 @@ public class Player : MonoBehaviour
         {
             playerSpeed /= sprintMultiplier;
             sprintAvailable = true;
-        }       
+        }
 
         GetComponent<Animator>().SetFloat("WalkDirectionX", directionX);
         GetComponent<Animator>().SetFloat("WalkDirectionY", directionY);
         GetComponent<Animator>().SetBool("walk", walk);
         walk = false;
+
+        //that the Entitie not has a velocity after a hit
+        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(0, 0, 0);
     }
 
     private void OnCollisionEnter2D(Collision2D collider)
@@ -117,7 +120,7 @@ public class Player : MonoBehaviour
             }
         }
 
-    }    
+    }
     private void OnCollisionExit2D(Collision2D collider)
     {
         if (collider.gameObject.tag != "Bullet" && collider.gameObject.tag != "Item")
@@ -125,24 +128,32 @@ public class Player : MonoBehaviour
             Vector3 direction = collider.transform.position - collider.otherCollider.transform.position;
 
             if (direction.x > 0)
-                {
-                    collisionRight = false;
-                }
-                else
-                {
-                    collisionLeft = false;
-                }
+            {
+                collisionRight = false;
+            }
+            else
+            {
+                collisionLeft = false;
+            }
 
-                if (direction.y > 0)
-                {
-                    collisionUp = false;
-                }
-                else
-                {
-                    collisionDown = false;
-                }
-            
+            if (direction.y > 0)
+            {
+                collisionUp = false;
+            }
+            else
+            {
+                collisionDown = false;
+            }
+
         }
     }
 
+    public void Hit(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            Destroy(this.gameObject);
+        }
+    }
 }
