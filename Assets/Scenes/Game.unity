@@ -601,10 +601,10 @@ GameObject:
   m_Component:
   - component: {fileID: 781064471}
   - component: {fileID: 781064470}
-  - component: {fileID: 781064472}
   - component: {fileID: 781064473}
   - component: {fileID: 781064474}
   - component: {fileID: 781064475}
+  - component: {fileID: 781064472}
   - component: {fileID: 781064476}
   - component: {fileID: 781064477}
   - component: {fileID: 781064479}
