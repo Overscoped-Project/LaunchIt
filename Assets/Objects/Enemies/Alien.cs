@@ -8,11 +8,18 @@ public class Alien : MonoBehaviour
     [SerializeField] private float speed = 30f;
     [SerializeField] private int aggression = 70;
     [SerializeField] private int damage = 20;
+
+    private GameObject enemy;
     [SerializeField] private float attackRate = 1f;
-    [SerializeField] private float hitJumpBack = 3f;
     private bool canAttack = true;
     private float timeSinceAttack = 0;
-    private GameObject enemy;
+    [SerializeField] private float hitJumpBack = 3f;
+    
+    private int ambientTime = 0;
+    [SerializeField] private int maxRandomAmbientTime = 100;
+    [SerializeField] private int minRandomAmbientTime = 20;
+    [SerializeField] private float ambientRange = 3f;
+    private Vector2 newPosition;
     void Start()
     {
 
@@ -46,14 +53,31 @@ public class Alien : MonoBehaviour
 
     private void AmbientMovement()
     {
+        if (ambientTime == 0)
+        {
+            ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
+            newPosition = new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
+        }
+        else
+        {
+            ambientTime--;
+        }
+        if ((GetComponent<Rigidbody2D>().position.x >= newPosition.x+1 || GetComponent<Rigidbody2D>().position.x <= newPosition.x-1) && (GetComponent<Rigidbody2D>().position.y >= newPosition.y + 1 || GetComponent<Rigidbody2D>().position.y <= newPosition.y - 1))
+        {
+            Vector2 moveToPoint = newPosition - GetComponent<Rigidbody2D>().position ;
+            moveToPoint = moveToPoint.normalized;
+            GetComponent<Rigidbody2D>().position += new Vector2(moveToPoint.x * (speed / 2) * Time.deltaTime, moveToPoint.y * (speed / 2) * Time.deltaTime);
+        }
 
+
+        
     }
 
     private void AttackMovement(GameObject player)
     {
         if (canAttack)
         {
-            Vector3 moveToPlayer = player.transform.position - transform.position;
+            Vector2 moveToPlayer = player.GetComponent<Rigidbody2D>().position - GetComponent<Rigidbody2D>().position;
             moveToPlayer = moveToPlayer.normalized;
             GetComponent<Rigidbody2D>().position += new Vector2(moveToPlayer.x * speed * Time.deltaTime, moveToPlayer.y * speed * Time.deltaTime);
         }
