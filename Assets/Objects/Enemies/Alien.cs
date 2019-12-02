@@ -52,7 +52,6 @@ public class Alien : MonoBehaviour
     {
         if (canAttack)
         {
-            Debug.Log("hallo");
             Vector3 moveToPlayer = player.transform.position - transform.position;
             moveToPlayer = moveToPlayer.normalized;
             transform.position += new Vector3(moveToPlayer.x * speed * Time.deltaTime, moveToPlayer.y * speed * Time.deltaTime, 0);

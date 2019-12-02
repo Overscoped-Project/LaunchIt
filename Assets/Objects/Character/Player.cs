@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    //DEBUG
+    [SerializeField] private float sprintMultiplier = 1;
+    [SerializeField] private Alien alien;
+    //DEBUG
     [SerializeField] private int health = 100;
     [SerializeField] private float playerSpeed = 1;
-    [SerializeField] private float sprintMultiplier = 1;
     [SerializeField] private int aggression = 30;
     private bool collisionUp = false;
     private bool collisionDown = false;
@@ -70,7 +73,7 @@ public class Player : MonoBehaviour
             directionX = 0;
         }
 
-
+        //DEBUG Controls
         if (Input.GetKey(KeyCode.LeftShift) && sprintAvailable)
         {
             sprintAvailable = false;
@@ -80,6 +83,14 @@ public class Player : MonoBehaviour
         {
             playerSpeed /= sprintMultiplier;
             sprintAvailable = true;
+        }
+        if (Input.GetKeyDown(KeyCode.Mouse2))
+        {
+            transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
+        }
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            Instantiate(alien, new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0), Quaternion.identity);
         }
 
         GetComponent<Animator>().SetFloat("WalkDirectionX", directionX);
