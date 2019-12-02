@@ -24,6 +24,7 @@ public class Alien : MonoBehaviour
         {
             Physics2D.IgnoreCollision(GetComponent<PolygonCollider2D>(), enemy.GetComponent<CircleCollider2D>());
             AttackMovement(enemy);
+            
         }
         else
         {
@@ -59,7 +60,6 @@ public class Alien : MonoBehaviour
         else
         {
             timeSinceAttack += attackRate * Time.deltaTime;
-            Debug.Log(timeSinceAttack);
             if (timeSinceAttack >= 1)
             {
                 timeSinceAttack = 0;
