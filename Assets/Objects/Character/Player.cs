@@ -80,6 +80,11 @@ public class Player : MonoBehaviour
             sprintAvailable = true;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            FindObjectOfType<DialogueManager>().DisplayNextSentence();
+        }
+
         GetComponent<Animator>().SetFloat("WalkDirectionX", directionX);
         GetComponent<Animator>().SetFloat("WalkDirectionY", directionY);
         GetComponent<Animator>().SetBool("walk", walk);
