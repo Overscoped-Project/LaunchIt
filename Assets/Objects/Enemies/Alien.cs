@@ -22,7 +22,7 @@ public class Alien : MonoBehaviour
     private Vector2 newPosition;
     void Start()
     {
-
+        newPosition = transform.position;
     }
 
     void Update()
@@ -56,21 +56,21 @@ public class Alien : MonoBehaviour
         if (ambientTime == 0)
         {
             ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
-            newPosition = new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
+            newPosition += new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
+            Debug.Log(newPosition);
         }
-        else
-        {
-            ambientTime--;
-        }
-        if ((GetComponent<Rigidbody2D>().position.x >= newPosition.x+1 || GetComponent<Rigidbody2D>().position.x <= newPosition.x-1) && (GetComponent<Rigidbody2D>().position.y >= newPosition.y + 1 || GetComponent<Rigidbody2D>().position.y <= newPosition.y - 1))
+        else if ((GetComponent<Rigidbody2D>().position.x >= newPosition.x + 1 || GetComponent<Rigidbody2D>().position.x <= newPosition.x - 1) && (GetComponent<Rigidbody2D>().position.y >= newPosition.y + 1 || GetComponent<Rigidbody2D>().position.y <= newPosition.y - 1))
         {
             Vector2 moveToPoint = newPosition - GetComponent<Rigidbody2D>().position ;
             moveToPoint = moveToPoint.normalized;
             GetComponent<Rigidbody2D>().position += new Vector2(moveToPoint.x * (speed / 2) * Time.deltaTime, moveToPoint.y * (speed / 2) * Time.deltaTime);
         }
+        else
+        {
+            ambientTime--;
+        }
 
 
-        
     }
 
     private void AttackMovement(GameObject player)
