@@ -506,6 +506,16 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 943919051182122638, guid: 826e309f5bebd554ebf167dc7cf86bed,
+        type: 3}
+      propertyPath: minRandomAmbientTime
+      value: 140
+      objectReference: {fileID: 0}
+    - target: {fileID: 943919051182122638, guid: 826e309f5bebd554ebf167dc7cf86bed,
+        type: 3}
+      propertyPath: maxRandomAmbientTime
+      value: 240
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 826e309f5bebd554ebf167dc7cf86bed, type: 3}
 --- !u!1 &519420028
@@ -1196,6 +1206,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Constraints
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 943919051182122638, guid: 826e309f5bebd554ebf167dc7cf86bed,
+        type: 3}
+      propertyPath: minRandomAmbientTime
+      value: 140
+      objectReference: {fileID: 0}
+    - target: {fileID: 943919051182122638, guid: 826e309f5bebd554ebf167dc7cf86bed,
+        type: 3}
+      propertyPath: maxRandomAmbientTime
+      value: 240
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 826e309f5bebd554ebf167dc7cf86bed, type: 3}
