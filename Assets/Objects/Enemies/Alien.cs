@@ -94,16 +94,8 @@ public class Alien : MonoBehaviour
         }
     }
 
-    private Vector2 Pathfinding(Vector2 position, Vector2 moveToPosition)
+    /*private Vector2 Pathfinding(Vector2 position, Vector2 moveToPosition)
     {
-        Vector2 path = moveToPosition - position;
-        /*path = path.normalized;
-        for (int i = 0; (position.x + (path.x * i * speed * Time.deltaTime)) >= (moveToPosition.x + 1) 
-            || (position.x + (path.x * i * speed * Time.deltaTime))  <= (moveToPosition.x - 1)
-            && (position.y + (path.y * i * speed * Time.deltaTime)) >= (moveToPosition.y + 1)
-            || (position.y + (path.y * i * speed * Time.deltaTime))<= (moveToPosition.y - 1); i++)
-        {
-            Vector2 possiblePosition = position + (path * i * speed * Time.deltaTime);*/
         if (objectsInRange != null)
         {
             foreach (GameObject obj in objectsInRange)
@@ -133,7 +125,7 @@ public class Alien : MonoBehaviour
             }
         }
         return new Vector2(0, 0);
-    }
+    }*/
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

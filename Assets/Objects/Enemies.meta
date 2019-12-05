@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Objects/Character/Strich Char/Stand_Still.meta
+guid: 0b67ee1e04488544ba3d41de52500064
+=======
 guid: 8d7f3283964416a40ac6189a0556f72d
+>>>>>>> refs/heads/Enemies:Assets/Objects/Enemies.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
