@@ -9,6 +9,7 @@ TagManager:
   - Item
   - Ship
   - Entity
+  - Dialogue
   layers:
   - Default
   - TransparentFX
