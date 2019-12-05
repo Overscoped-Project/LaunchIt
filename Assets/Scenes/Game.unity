@@ -444,7 +444,7 @@ PrefabInstance:
     - target: {fileID: 943919051182122636, guid: 826e309f5bebd554ebf167dc7cf86bed,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 943919051182122632, guid: 826e309f5bebd554ebf167dc7cf86bed,
         type: 3}
@@ -723,7 +723,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprintMultiplier: 2
-  alien: {fileID: 943919051182122638, guid: 826e309f5bebd554ebf167dc7cf86bed, type: 3}
+  alien: {fileID: 0}
   health: 100
   playerSpeed: 25
   aggression: 30
@@ -741,7 +741,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shot: {fileID: 7819643427785643837, guid: 728301dbab5965f4385aabd2ada1e9db, type: 3}
   fireRate: 2
-  offsetRate: 4
+  offsetRate: 1
 --- !u!114 &781064475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1145,7 +1145,7 @@ PrefabInstance:
     - target: {fileID: 943919051182122636, guid: 826e309f5bebd554ebf167dc7cf86bed,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 943919051182122632, guid: 826e309f5bebd554ebf167dc7cf86bed,
         type: 3}
