@@ -8,7 +8,7 @@ public class DialogueTrigger : MonoBehaviour
 
     public void OnTriggerEnter2D (Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && !other.GetComponent<Player>().GetAttacked())
         {
             Debug.Log("Bugged");
             FindObjectOfType<DialogueManager>().StartDialogue(dialogue);

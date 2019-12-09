@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     private bool walk = false;
     private float directionX = 0;
     private float directionY = 0;
+    private bool isAttacked = false;
     void Start()
     {
     }
@@ -171,5 +172,10 @@ public class Player : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+    public bool GetAttacked()
+    {
+        return isAttacked;
     }
 }
