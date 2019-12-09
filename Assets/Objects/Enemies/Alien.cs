@@ -44,7 +44,7 @@ public class Alien : MonoBehaviour
     void Update()
     {
         //DEBUG
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) && sequencePoint.Count > 0)
         {
             newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Pathfinding(transform.position, newPosition);
@@ -82,7 +82,7 @@ public class Alien : MonoBehaviour
 
     private void AmbientMovement()
     {
-        if (ambientTime <= 0)
+        if (ambientTime <= 0 && sequencePoint.Count > 0)
         {
             ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
             newPosition += new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
@@ -95,7 +95,7 @@ public class Alien : MonoBehaviour
             Vector2 moveToPoint = seqPosition - GetComponent<Rigidbody2D>().position;
             moveToPoint = moveToPoint.normalized;
             GetComponent<Rigidbody2D>().position += new Vector2(moveToPoint.x * (speed / 2) * Time.deltaTime, moveToPoint.y * (speed / 2) * Time.deltaTime);
-            if (reducer <= 0)
+            if (reducer <= 0 && sequencePoint.Count > 0)
             {
                 Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
                 seqPosition = sequencePoint.Dequeue();
@@ -211,7 +211,11 @@ public class Alien : MonoBehaviour
                             dodgePoint.Enqueue(new Vector2(transform.position.x - bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2, transform.position.y));
                         }
                     }
-                    dodgeSequencePoint = dodgePoint.Dequeue();
+
+                    if (dodgePoint.Count > 0)
+                    {
+                        dodgeSequencePoint = dodgePoint.Dequeue();
+                    }
                 }
             }
         }
@@ -227,6 +231,11 @@ public class Alien : MonoBehaviour
             Vector2 pathVector = path.normalized;
             foreach (GameObject obj in objectsInRange)
             {
+                if(obj == null)
+                {
+                    continue;
+                }
+
                 if (obj.tag == "Player" || obj.tag == "Bullet")
                 {
                     //nothing
@@ -374,7 +383,7 @@ public class Alien : MonoBehaviour
     {
         foreach (GameObject obj in objectsInRange)
         {
-            if (obj.tag == "Entity")
+            if (obj.tag == "Entity" && target != null)
             {
                 obj.GetComponent<Alien>().SetEnemy(target);
             }

@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-public class QuestObject : MonoBehaviour
+public class QuestObject
 {
     [SerializeField] private Item item;
     [SerializeField] private int requiredAmount;
