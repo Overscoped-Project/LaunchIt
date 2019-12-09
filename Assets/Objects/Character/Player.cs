@@ -93,6 +93,11 @@ public class Player : MonoBehaviour
             Instantiate(alien, new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0), Quaternion.identity);
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            FindObjectOfType<DialogueManager>().DisplayNextSentence();
+        }
+
         GetComponent<Animator>().SetFloat("WalkDirectionX", directionX);
         GetComponent<Animator>().SetFloat("WalkDirectionY", directionY);
         GetComponent<Animator>().SetBool("walk", walk);
