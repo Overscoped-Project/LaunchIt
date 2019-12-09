@@ -17,6 +17,11 @@ public class Alien : MonoBehaviour
     private float timeSinceAttack = 0;
     [SerializeField] private float hitJumpBack = 3f;
 
+    [SerializeField] private int dodgeChance = 10;
+    private Queue<Vector2> dodgePoint;
+    private Vector2 dodgeSequencePoint;
+    private bool dodge = false;
+
     private int ambientTime = 0;
     private int reducer = 50;
     [SerializeField] private int maxRandomAmbientTime = 100;
@@ -27,10 +32,13 @@ public class Alien : MonoBehaviour
     private Queue<Vector2> sequencePoint;
 
     private List<GameObject> objectsInRange = new List<GameObject>();
+    private List<Bullet> bulletsInRange = new List<Bullet>();
+    private List<Bullet> calculatedBullets = new List<Bullet>();
     void Start()
     {
         newPosition = transform.position;
         sequencePoint = new Queue<Vector2>();
+        dodgePoint = new Queue<Vector2>();
     }
 
     void Update()
@@ -51,7 +59,7 @@ public class Alien : MonoBehaviour
         }
         else
         {
-            AmbientMovement();
+            //AmbientMovement();
         }
         //that the Entitie not has a velocity after a hit
         this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
@@ -80,7 +88,7 @@ public class Alien : MonoBehaviour
             //Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
             seqPosition = sequencePoint.Dequeue();
         }
-        else if ((GetComponent<Rigidbody2D>().position.x >= seqPosition.x + 1 || GetComponent<Rigidbody2D>().position.x <= seqPosition.x - 1) && (GetComponent<Rigidbody2D>().position.y >= seqPosition.y + 1 || GetComponent<Rigidbody2D>().position.y <= seqPosition.y - 1))
+        else if ((Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= 1) && (Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= 1))
         {
             Vector2 moveToPoint = seqPosition - GetComponent<Rigidbody2D>().position;
             moveToPoint = moveToPoint.normalized;
@@ -96,6 +104,8 @@ public class Alien : MonoBehaviour
                 //Debug.Log(reducer);
                 reducer--;
             }
+            //TODO Unsicher ob hier auch richtige Position zum Regeneraten. Nochmal nachprüfen
+            RegenerateAggression();
         }
         else if (sequencePoint.Count > 0)
         {
@@ -103,10 +113,7 @@ public class Alien : MonoBehaviour
         }
         else
         {
-            if (aggression < maxAggression)
-            {
-                aggression += aggressionRegeneration;
-            }
+            RegenerateAggression();
             ambientTime--;
         }
 
@@ -116,19 +123,38 @@ public class Alien : MonoBehaviour
     //TODO neue methode ambesten um nicht bei jeder collsion schaden zu nehmen
     private void AttackMovement(GameObject player)
     {
-        if (aggression < player.GetComponent<Player>().GetAggression())
+        if (dodge && dodgePoint.Count >= 0 && (Mathf.Abs(GetComponent<Rigidbody2D>().position.x - dodgeSequencePoint.x) <= 1) && (Mathf.Abs(GetComponent<Rigidbody2D>().position.y - dodgeSequencePoint.y) <= 1))
+        {
+            if (dodgePoint.Count == 0)
+            {
+                dodge = false;
+            }
+            else
+            {
+                dodgeSequencePoint = dodgePoint.Dequeue();
+            }          
+        }
+        else if (dodge)
+        {
+            Vector2 moveToPosition = dodgeSequencePoint - GetComponent<Rigidbody2D>().position;
+            moveToPosition = moveToPosition.normalized;
+            GetComponent<Rigidbody2D>().position += (new Vector2(moveToPosition.x * speed * Time.deltaTime, moveToPosition.y * speed * Time.deltaTime));
+        }
+
+        if (aggression < player.GetComponent<Player>().GetAggression() && !dodge)
         {
             Vector2 moveToPlayer = player.GetComponent<Rigidbody2D>().position - GetComponent<Rigidbody2D>().position;
             moveToPlayer = moveToPlayer.normalized;
             GetComponent<Rigidbody2D>().position += (new Vector2(moveToPlayer.x * speed * Time.deltaTime, moveToPlayer.y * speed * Time.deltaTime) * (-1));
         }
-        else if (canAttack)
+        else if (canAttack && !dodge)
         {
             Vector2 moveToPlayer = player.GetComponent<Rigidbody2D>().position - GetComponent<Rigidbody2D>().position;
             moveToPlayer = moveToPlayer.normalized;
             GetComponent<Rigidbody2D>().position += new Vector2(moveToPlayer.x * speed * Time.deltaTime, moveToPlayer.y * speed * Time.deltaTime);
+            Dodge(moveToPlayer);
         }
-        else
+        else if (!dodge)
         {
             timeSinceAttack += attackRate * Time.deltaTime;
             if (timeSinceAttack >= 1)
@@ -139,6 +165,56 @@ public class Alien : MonoBehaviour
         }
     }
 
+    private void RegenerateAggression()
+    {
+        if (aggression < maxAggression)
+        {
+            aggression += aggressionRegeneration;
+        }
+    }
+
+    private void Dodge(Vector2 moveToPlayer)
+    {
+        if (Random.Range(1, aggression + 1) < (aggression / 100 * dodgeChance) + (100 - aggression))
+        {
+            foreach (Bullet bullet in bulletsInRange)
+            {
+                Vector2 bulletVelocity = bullet.gameObject.GetComponent<Rigidbody2D>().velocity;
+                Ray ray = new Ray(bullet.transform.position, bulletVelocity);
+                if (gameObject.GetComponent<SpriteRenderer>().bounds.IntersectRay(ray) && !calculatedBullets.Contains(bullet))
+                {
+                    calculatedBullets.Add(bullet);                    
+                    dodge = true;
+                    if (Mathf.Abs(bulletVelocity.x) > Mathf.Abs(bulletVelocity.y))
+                    {
+                        int random = Random.Range(0, 2);
+                        if (random == 0)
+                        {
+                            dodgePoint.Enqueue(new Vector2(transform.position.x, transform.position.y + bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2));
+                        }
+                        else
+                        {
+                            dodgePoint.Enqueue(new Vector2(transform.position.x, transform.position.y - bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2));
+                        }
+                    }
+                    else
+                    {
+                        int random = Random.Range(0, 2);
+                        if (random == 0)
+                        {
+                            dodgePoint.Enqueue(new Vector2(transform.position.x + bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2, transform.position.y));
+                        }
+                        else
+                        {
+                            dodgePoint.Enqueue(new Vector2(transform.position.x - bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2, transform.position.y));
+                        }
+                    }
+                    dodgeSequencePoint = dodgePoint.Dequeue();
+                }
+            }
+        }
+        
+    }
     private void Pathfinding(Vector2 position, Vector2 moveToPosition)
     {
         sequencePoint = new Queue<Vector2>();
@@ -321,6 +397,10 @@ public class Alien : MonoBehaviour
         {
             objectsInRange.Add(collision.gameObject);
         }
+        if (collision.gameObject.tag == "Bullet")
+        {
+            bulletsInRange.Add(collision.GetComponent<Bullet>());
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -331,6 +411,14 @@ public class Alien : MonoBehaviour
         if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet")
         {
             objectsInRange.Remove(gameObject);
+        }
+        if (collision.gameObject.tag == "Bullet")
+        {
+            bulletsInRange.Remove(collision.GetComponent<Bullet>());
+            if (calculatedBullets.Contains(collision.GetComponent<Bullet>()))
+            {
+                calculatedBullets.Remove(collision.GetComponent<Bullet>());
+            } 
         }
     }
 
