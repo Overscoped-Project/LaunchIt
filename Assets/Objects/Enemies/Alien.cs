@@ -44,7 +44,7 @@ public class Alien : MonoBehaviour
     void Update()
     {
         //DEBUG
-        if (Input.GetKeyDown(KeyCode.C) && sequencePoint.Count > 0)
+        if (Input.GetKeyDown(KeyCode.C))
         {
             newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Pathfinding(transform.position, newPosition);
@@ -82,23 +82,29 @@ public class Alien : MonoBehaviour
 
     private void AmbientMovement()
     {
-        if (ambientTime <= 0 && sequencePoint.Count > 0)
+        if (ambientTime <= 0)
         {
             ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
             newPosition += new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
             Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
-            seqPosition = sequencePoint.Dequeue();
+            if (sequencePoint.Count > 0)
+            {
+                seqPosition = sequencePoint.Dequeue();
+            }
         }
-        
+
         else if (!(Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= 1) && !(Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= 1))
         {
             Vector2 moveToPoint = seqPosition - GetComponent<Rigidbody2D>().position;
             moveToPoint = moveToPoint.normalized;
             GetComponent<Rigidbody2D>().position += new Vector2(moveToPoint.x * (speed / 2) * Time.deltaTime, moveToPoint.y * (speed / 2) * Time.deltaTime);
-            if (reducer <= 0 && sequencePoint.Count > 0)
+            if (reducer <= 0)
             {
                 Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
-                seqPosition = sequencePoint.Dequeue();
+                if (sequencePoint.Count > 0)
+                {
+                    seqPosition = sequencePoint.Dequeue();
+                }
                 reducer = 50;
             }
             else
@@ -383,7 +389,7 @@ public class Alien : MonoBehaviour
     {
         foreach (GameObject obj in objectsInRange)
         {
-            if (obj.tag == "Entity" && target != null)
+            if (obj != null && obj.tag == "Entity" && target != null)
             {
                 obj.GetComponent<Alien>().SetEnemy(target);
             }
