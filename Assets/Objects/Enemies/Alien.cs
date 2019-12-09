@@ -41,7 +41,6 @@ public class Alien : MonoBehaviour
 
         }
         //DEBUG
-
         if (enemy != null)
         {
             Physics2D.IgnoreCollision(GetComponent<PolygonCollider2D>(), enemy.GetComponent<CircleCollider2D>());
@@ -72,7 +71,7 @@ public class Alien : MonoBehaviour
         {
             ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
             newPosition += new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
-            Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
+            //Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
             seqPosition = sequencePoint.Dequeue();
         }
         else if ((GetComponent<Rigidbody2D>().position.x >= seqPosition.x + 1 || GetComponent<Rigidbody2D>().position.x <= seqPosition.x - 1) && (GetComponent<Rigidbody2D>().position.y >= seqPosition.y + 1 || GetComponent<Rigidbody2D>().position.y <= seqPosition.y - 1))
@@ -82,13 +81,13 @@ public class Alien : MonoBehaviour
             GetComponent<Rigidbody2D>().position += new Vector2(moveToPoint.x * (speed / 2) * Time.deltaTime, moveToPoint.y * (speed / 2) * Time.deltaTime);
             if (reducer <= 0)
             {
-                Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
+                //Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
                 seqPosition = sequencePoint.Dequeue();
                 reducer = 50;
             }
             else
             {
-                Debug.Log(reducer);
+                //Debug.Log(reducer);
                 reducer--;
             }
         }
@@ -105,6 +104,7 @@ public class Alien : MonoBehaviour
 
     }
 
+    //TODO neue methode ambesten um nicht bei jeder collsion schaden zu nehmen
     private void AttackMovement(GameObject player)
     {
         if (canAttack)
@@ -153,7 +153,7 @@ public class Alien : MonoBehaviour
                         Vector2 extents = obj.GetComponent<SpriteRenderer>().bounds.extents;
                         Vector2 center = (Vector2)obj.GetComponent<SpriteRenderer>().bounds.center;
                         Vector2 vectorCenter = center - position;
-                       if (Mathf.Abs(vectorCenter.x) > Mathf.Abs(vectorCenter.y))
+                        if (Mathf.Abs(vectorCenter.x) > Mathf.Abs(vectorCenter.y))
                         {
                             if (vectorCenter.x > 0)
                             {
@@ -288,6 +288,7 @@ public class Alien : MonoBehaviour
         if (collision.gameObject.tag == "Player" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
             enemy = collision.gameObject;
+            ContactSwarm(enemy);
         }
         if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet")
         {
@@ -323,5 +324,21 @@ public class Alien : MonoBehaviour
     public float GetSpeed()
     {
         return speed;
+    }
+
+    private void ContactSwarm(GameObject target)
+    {
+        foreach (GameObject obj in objectsInRange)
+        {
+            if (obj.tag == "Entity")
+            {
+                obj.GetComponent<Alien>().SetEnemy(target);
+            }                         
+        }
+    }
+
+    public void SetEnemy(GameObject enemy)
+    {
+        this.enemy = enemy;
     }
 }
