@@ -82,7 +82,7 @@ public class Alien : MonoBehaviour
 
     private void AmbientMovement()
     {
-        if (ambientTime == 0)
+        if (ambientTime <= 0)
         {
             ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
             newPosition += new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
@@ -220,7 +220,7 @@ public class Alien : MonoBehaviour
     private void Pathfinding(Vector2 position, Vector2 moveToPosition)
     {
         sequencePoint = new Queue<Vector2>();
-        if (objectsInRange.Count != 0)
+        if (objectsInRange.Count > 0)
         {
 
             Vector2 path = moveToPosition - position;
@@ -250,7 +250,7 @@ public class Alien : MonoBehaviour
                         Vector2 vectorCenter = center - position;
                         if (Mathf.Abs(vectorCenter.x) > Mathf.Abs(vectorCenter.y))
                         {
-                            if (vectorCenter.x > 0)
+                            if (vectorCenter.x < 0) // < oder > nochmal prüfen
                             {
                                 Vector2 tempPos = position;
                                 while (tempPos.x < min.x && (tempPos.y < min.y || tempPos.y > max.y))
@@ -301,7 +301,7 @@ public class Alien : MonoBehaviour
                         }
                         else
                         {
-                            if (vectorCenter.y > 0)
+                            if (vectorCenter.y < 0) // < oder > nochmal prüfen
                             {
                                 Vector2 tempPos = position;
                                 while (tempPos.y > newMin.y && (tempPos.x < newMin.x || tempPos.x > newMax.x))
