@@ -6,7 +6,9 @@ public class Alien : MonoBehaviour
 {
     [SerializeField] private int health = 100;
     [SerializeField] private float speed = 30f;
+    [SerializeField] private int maxAggression = 70;
     [SerializeField] private int aggression = 70;
+    [SerializeField] private int aggressionRegeneration = 10;
     [SerializeField] private int damage = 20;
 
     private GameObject enemy;
@@ -51,7 +53,6 @@ public class Alien : MonoBehaviour
         {
             AmbientMovement();
         }
-
         //that the Entitie not has a velocity after a hit
         this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
     }
@@ -65,7 +66,8 @@ public class Alien : MonoBehaviour
         }
         else
         {
-            aggression -= ((aggression/100)*(100 / (health + dmg)) * dmg);
+            float temp = aggression;
+            aggression -= (int)((temp / 100) * (100 / (health + dmg)) * dmg);
         }
     }
 
@@ -101,7 +103,10 @@ public class Alien : MonoBehaviour
         }
         else
         {
-
+            if (aggression < maxAggression)
+            {
+                aggression += aggressionRegeneration;
+            }
             ambientTime--;
         }
 
