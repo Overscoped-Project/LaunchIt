@@ -47,6 +47,7 @@ public class Alien : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C))
         {
             newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Pathfinding(transform.position, newPosition);
             seqPosition = sequencePoint.Dequeue();
 
         }
@@ -59,7 +60,7 @@ public class Alien : MonoBehaviour
         }
         else
         {
-            //AmbientMovement();
+            AmbientMovement();
         }
         //that the Entitie not has a velocity after a hit
         this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
@@ -85,23 +86,24 @@ public class Alien : MonoBehaviour
         {
             ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
             newPosition += new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
-            //Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
+            Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
             seqPosition = sequencePoint.Dequeue();
         }
-        else if ((Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= 1) && (Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= 1))
+        
+        else if (!(Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= 1) && !(Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= 1))
         {
             Vector2 moveToPoint = seqPosition - GetComponent<Rigidbody2D>().position;
             moveToPoint = moveToPoint.normalized;
             GetComponent<Rigidbody2D>().position += new Vector2(moveToPoint.x * (speed / 2) * Time.deltaTime, moveToPoint.y * (speed / 2) * Time.deltaTime);
             if (reducer <= 0)
             {
-                //Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
+                Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
                 seqPosition = sequencePoint.Dequeue();
                 reducer = 50;
             }
             else
             {
-                //Debug.Log(reducer);
+                Debug.Log(reducer);
                 reducer--;
             }
             //TODO Unsicher ob hier auch richtige Position zum Regeneraten. Nochmal nachprüfen
@@ -132,7 +134,7 @@ public class Alien : MonoBehaviour
             else
             {
                 dodgeSequencePoint = dodgePoint.Dequeue();
-            }          
+            }
         }
         else if (dodge)
         {
@@ -152,7 +154,7 @@ public class Alien : MonoBehaviour
             Vector2 moveToPlayer = player.GetComponent<Rigidbody2D>().position - GetComponent<Rigidbody2D>().position;
             moveToPlayer = moveToPlayer.normalized;
             GetComponent<Rigidbody2D>().position += new Vector2(moveToPlayer.x * speed * Time.deltaTime, moveToPlayer.y * speed * Time.deltaTime);
-            Dodge(moveToPlayer);
+            Dodge();
         }
         else if (!dodge)
         {
@@ -173,7 +175,7 @@ public class Alien : MonoBehaviour
         }
     }
 
-    private void Dodge(Vector2 moveToPlayer)
+    private void Dodge()
     {
         if (Random.Range(1, aggression + 1) < (aggression / 100 * dodgeChance) + (100 - aggression))
         {
@@ -183,7 +185,7 @@ public class Alien : MonoBehaviour
                 Ray ray = new Ray(bullet.transform.position, bulletVelocity);
                 if (gameObject.GetComponent<SpriteRenderer>().bounds.IntersectRay(ray) && !calculatedBullets.Contains(bullet))
                 {
-                    calculatedBullets.Add(bullet);                    
+                    calculatedBullets.Add(bullet);
                     dodge = true;
                     if (Mathf.Abs(bulletVelocity.x) > Mathf.Abs(bulletVelocity.y))
                     {
@@ -213,7 +215,7 @@ public class Alien : MonoBehaviour
                 }
             }
         }
-        
+
     }
     private void Pathfinding(Vector2 position, Vector2 moveToPosition)
     {
@@ -236,101 +238,52 @@ public class Alien : MonoBehaviour
                 else
                 {
 
-                    Ray ray = new Ray(moveToPosition, position);
+                    Ray ray = new Ray(position, moveToPosition);
                     if (obj.GetComponent<SpriteRenderer>().bounds.IntersectRay(ray))
                     {
                         Vector2 min = obj.GetComponent<SpriteRenderer>().bounds.min;
                         Vector2 max = obj.GetComponent<SpriteRenderer>().bounds.max;
                         Vector2 extents = obj.GetComponent<SpriteRenderer>().bounds.extents;
                         Vector2 center = (Vector2)obj.GetComponent<SpriteRenderer>().bounds.center;
+                        Vector2 newMin = new Vector2(center.x + extents.x, center.y - extents.y);
+                        Vector2 newMax = new Vector2(center.x - extents.x, center.y + extents.y);
                         Vector2 vectorCenter = center - position;
                         if (Mathf.Abs(vectorCenter.x) > Mathf.Abs(vectorCenter.y))
                         {
                             if (vectorCenter.x > 0)
                             {
-                                if (newPosition.y < center.y)
+                                Vector2 tempPos = position;
+                                while (tempPos.x < min.x && (tempPos.y < min.y || tempPos.y > max.y))
                                 {
-                                    Vector2 tempPos = position;
-                                    while (tempPos.y < obj.GetComponent<SpriteRenderer>().bounds.min.y)
-                                    {
-                                        tempPos += pathVector;
-                                    }
-                                    if (tempPos.x > obj.GetComponent<SpriteRenderer>().bounds.min.x && tempPos.y < center.y)
-                                    {
-                                        Vector2 newMin = new Vector2(center.x + extents.x, center.y - extents.y);
-                                        Vector2 newMax = new Vector2(center.x - extents.x, center.y + extents.y);
-
-                                        if (CalulateNormals(newMin, pathVector, position) < CalulateNormals(newMax, pathVector, position))
-                                        {
-                                            sequencePoint.Enqueue(new Vector2(newMin.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMin.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
-                                        }
-                                        else
-                                        {
-                                            sequencePoint.Enqueue(new Vector2(newMax.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMax.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        if (CalulateNormals(min, pathVector, position) < CalulateNormals(max, pathVector, position))
-                                        {
-                                            sequencePoint.Enqueue(new Vector2(min.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, min.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
-                                        }
-                                        else
-                                        {
-                                            sequencePoint.Enqueue(new Vector2(max.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, max.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
-                                        }
-                                    }
-
+                                    tempPos += pathVector;
+                                }
+                                if (tempPos.x > min.x && tempPos.y < min.y)
+                                {
+                                    sequencePoint.Enqueue(new Vector2(newMin.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMin.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
                                 }
                                 else
                                 {
                                     if (CalulateNormals(min, pathVector, position) < CalulateNormals(max, pathVector, position))
                                     {
-                                        sequencePoint.Enqueue(new Vector2(min.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, min.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                        sequencePoint.Enqueue(new Vector2(newMin.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMin.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
                                     }
                                     else
                                     {
-                                        sequencePoint.Enqueue(new Vector2(max.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, max.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                        sequencePoint.Enqueue(new Vector2(newMax.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMax.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
                                     }
                                 }
+
                             }
                             else
                             {
-                                if (newPosition.y > center.y)
+                                Vector2 tempPos = position;
+                                while (tempPos.x < newMin.x && (tempPos.y < newMax.y || tempPos.y > newMin.y))
                                 {
-                                    Vector2 tempPos = position;
-                                    while (tempPos.y < obj.GetComponent<SpriteRenderer>().bounds.max.y)
-                                    {
-                                        tempPos += pathVector;
-                                    }
-                                    if (tempPos.x < obj.GetComponent<SpriteRenderer>().bounds.max.x && tempPos.y > center.y)
-                                    {
-                                        Vector2 newMin = new Vector2(center.x + extents.x, center.y - extents.y);
-                                        Vector2 newMax = new Vector2(center.x - extents.x, center.y + extents.y);
-
-                                        if (CalulateNormals(newMin, pathVector, position) < CalulateNormals(newMax, pathVector, position))
-                                        {
-                                            sequencePoint.Enqueue(new Vector2(newMin.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMin.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
-                                        }
-                                        else
-                                        {
-                                            sequencePoint.Enqueue(new Vector2(newMax.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMax.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        if (CalulateNormals(min, pathVector, position) < CalulateNormals(max, pathVector, position))
-                                        {
-                                            sequencePoint.Enqueue(new Vector2(min.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, min.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
-                                        }
-                                        else
-                                        {
-                                            sequencePoint.Enqueue(new Vector2(max.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, max.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
-                                        }
-                                    }
-
+                                    tempPos += pathVector;
+                                }
+                                if (tempPos.x < newMin.x && tempPos.y > newMax.y)
+                                {
+                                    sequencePoint.Enqueue(new Vector2(newMax.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMax.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
                                 }
                                 else
                                 {
@@ -340,7 +293,7 @@ public class Alien : MonoBehaviour
                                     }
                                     else
                                     {
-                                        sequencePoint.Enqueue(new Vector2(max.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, max.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                        sequencePoint.Enqueue(new Vector2(newMax.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMax.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
                                     }
                                 }
                             }
@@ -348,23 +301,65 @@ public class Alien : MonoBehaviour
                         }
                         else
                         {
-                            //NEXT TODO
+                            if (vectorCenter.y > 0)
+                            {
+                                Vector2 tempPos = position;
+                                while (tempPos.y > newMin.y && (tempPos.x < newMin.x || tempPos.x > newMax.x))
+                                {
+                                    tempPos += pathVector;
+                                }
+                                if (tempPos.x > newMin.x && tempPos.y > newMin.y)
+                                {
+                                    sequencePoint.Enqueue(new Vector2(max.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, max.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                }
+                                else
+                                {
+                                    if (CalulateNormals(newMin, pathVector, position) < CalulateNormals(newMax, pathVector, position))
+                                    {
+                                        sequencePoint.Enqueue(new Vector2(max.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, max.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                    }
+                                    else
+                                    {
+                                        sequencePoint.Enqueue(new Vector2(newMax.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMax.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                Vector2 tempPos = position;
+                                while (tempPos.y < newMax.y && (tempPos.x < newMin.x || tempPos.x > newMax.x))
+                                {
+                                    tempPos += pathVector;
+                                }
+                                if (tempPos.x < newMax.x && tempPos.y < newMax.y)
+                                {
+                                    sequencePoint.Enqueue(new Vector2(min.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, min.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                }
+                                else
+                                {
+                                    if (CalulateNormals(newMin, pathVector, position) < CalulateNormals(newMax, pathVector, position))
+                                    {
+                                        sequencePoint.Enqueue(new Vector2(newMin.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMin.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                    }
+                                    else
+                                    {
+                                        sequencePoint.Enqueue(new Vector2(min.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, min.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                    }
+                                }
+                            }
                         }
                     }
                     if (sequencePoint.Count == 0)
                     {
                         sequencePoint.Enqueue(moveToPosition);
                     }
-
                 }
             }
-
-        }
-        else
-        {
-            sequencePoint.Enqueue(moveToPosition);
         }
     }
+
+
 
 
     private float CalulateNormals(Vector2 point, Vector2 path, Vector2 position)
@@ -418,7 +413,7 @@ public class Alien : MonoBehaviour
             if (calculatedBullets.Contains(collision.GetComponent<Bullet>()))
             {
                 calculatedBullets.Remove(collision.GetComponent<Bullet>());
-            } 
+            }
         }
     }
 
