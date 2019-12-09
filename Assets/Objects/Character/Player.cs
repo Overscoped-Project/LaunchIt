@@ -167,4 +167,9 @@ public class Player : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    public int GetAggression()
+    {
+        return aggression;
+    }
 }

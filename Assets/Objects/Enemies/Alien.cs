@@ -63,6 +63,10 @@ public class Alien : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+        else
+        {
+            aggression -= ((aggression/100)*(100 / (health + dmg)) * dmg);
+        }
     }
 
     private void AmbientMovement()
@@ -107,7 +111,13 @@ public class Alien : MonoBehaviour
     //TODO neue methode ambesten um nicht bei jeder collsion schaden zu nehmen
     private void AttackMovement(GameObject player)
     {
-        if (canAttack)
+        if (aggression < player.GetComponent<Player>().GetAggression())
+        {
+            Vector2 moveToPlayer = player.GetComponent<Rigidbody2D>().position - GetComponent<Rigidbody2D>().position;
+            moveToPlayer = moveToPlayer.normalized;
+            GetComponent<Rigidbody2D>().position += (new Vector2(moveToPlayer.x * speed * Time.deltaTime, moveToPlayer.y * speed * Time.deltaTime) * (-1));
+        }
+        else if (canAttack)
         {
             Vector2 moveToPlayer = player.GetComponent<Rigidbody2D>().position - GetComponent<Rigidbody2D>().position;
             moveToPlayer = moveToPlayer.normalized;
@@ -283,6 +293,18 @@ public class Alien : MonoBehaviour
         return length;
     }
 
+
+    private void ContactSwarm(GameObject target)
+    {
+        foreach (GameObject obj in objectsInRange)
+        {
+            if (obj.tag == "Entity")
+            {
+                obj.GetComponent<Alien>().SetEnemy(target);
+            }
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
@@ -324,17 +346,6 @@ public class Alien : MonoBehaviour
     public float GetSpeed()
     {
         return speed;
-    }
-
-    private void ContactSwarm(GameObject target)
-    {
-        foreach (GameObject obj in objectsInRange)
-        {
-            if (obj.tag == "Entity")
-            {
-                obj.GetComponent<Alien>().SetEnemy(target);
-            }                         
-        }
     }
 
     public void SetEnemy(GameObject enemy)
