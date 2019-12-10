@@ -38,13 +38,37 @@ public class Alien : MonoBehaviour
     private List<Bullet> bulletsInRange = new List<Bullet>();
     private List<Bullet> calculatedBullets = new List<Bullet>();
 
-    
+    [SerializeField] private int maxGapToPoint = 5;
+    private int gapToPoint = 1;
+
+    public enum LabyrinthIds { Top, Left, Right, Bottom };
+    [SerializeField] private LabyrinthIds labyrinthId;
+    [SerializeField] private bool patrouilleUnit = false;
+    [SerializeField] private List<GameObject> patrouillePoints = new List<GameObject>();
+    [SerializeField] private GameObject triggerZone;
+    [SerializeField] private int maxGuardingTicks = 500;
+    private int guardingTicks;
+    private int currentPoint = 0;
+    private bool pointRun = true;
+    private List<Alien> patrouilleAlly = new List<Alien>();
+
     void Start()
     {
+        foreach (GameObject ally in GameObject.FindGameObjectsWithTag("Entity"))
+        {
+            if (ally.GetComponent<Alien>().GetPatrouilleUnit() && ally.GetComponent<Alien>().GetLabyrinthId() == labyrinthId)
+            {
+                patrouilleAlly.Add(ally.GetComponent<Alien>());
+            }
+        }
         newPosition = transform.position;
         sequencePoint = new Queue<Vector2>();
         dodgePoint = new Queue<Vector2>();
         reducer = pathfindingTimer;
+        if (patrouilleUnit)
+        {
+            SetNewPosition((Vector2)patrouillePoints[currentPoint].transform.position);
+        }
     }
 
     void Update()
@@ -86,57 +110,94 @@ public class Alien : MonoBehaviour
             aggression -= (int)((temp / 100) * (100 / (health + dmg)) * dmg);
         }
     }
-
+    public void SetNewPosition(Vector2 newPos)
+    {
+        newPosition = newPos;
+        seqPosition = newPosition;
+        guardingTicks = maxGuardingTicks;
+        gapToPoint = maxGapToPoint;
+    }
     private void AmbientMovement()
     {
-        if (!(Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= 1) && !(Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= 1))
+        if (patrouilleUnit && guardingTicks <= 0)
         {
-            Vector2 moveToPoint = seqPosition - GetComponent<Rigidbody2D>().position;
-            moveToPoint = moveToPoint.normalized;
-            GetComponent<Rigidbody2D>().position += new Vector2(moveToPoint.x * (speed / 2) * Time.deltaTime, moveToPoint.y * (speed / 2) * Time.deltaTime);
-
-            if (reducer <= 0)
+            if (currentPoint+1 == patrouillePoints.Count)
             {
+                pointRun = false;
+            }
+            else if(currentPoint == 0)
+            {
+                pointRun = true;
+            }
+
+            if (pointRun)
+            {
+                currentPoint += 1;
+            }
+            else
+            {
+                currentPoint -= 1;
+            }
+            foreach (Alien ally in patrouilleAlly)
+            {
+                ally.SetNewPosition((Vector2)patrouillePoints[currentPoint].transform.position);
+            }
+        }
+        else
+        {
+            if (!(Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= gapToPoint) && !(Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= gapToPoint))
+            {
+                Vector2 moveToPoint = seqPosition - GetComponent<Rigidbody2D>().position;
+                moveToPoint = moveToPoint.normalized;
+                GetComponent<Rigidbody2D>().position += new Vector2(moveToPoint.x * (speed / 2) * Time.deltaTime, moveToPoint.y * (speed / 2) * Time.deltaTime);
+
+                if (reducer <= 0)
+                {
+                    Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
+                    if (sequencePoint.Count > 0)
+                    {
+                        seqPosition = sequencePoint.Dequeue();
+                    }
+                    reducer = pathfindingTimer;
+                }
+                else
+                {
+                    reducer--;
+                }
+                RegenerateAggression();
+            }
+            else if (sequencePoint.Count > 0 && (Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= gapToPoint) && (Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= gapToPoint))
+            {
+                gapToPoint = 1;
+                seqPosition = sequencePoint.Dequeue();
+            }
+            else if (ambientTime <= 0)
+            {
+                ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
+                newPosition += new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
+
+                //TODO Befindet sich die neue position in einem Objekt?
                 Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
                 if (sequencePoint.Count > 0)
                 {
                     seqPosition = sequencePoint.Dequeue();
                 }
-                reducer = pathfindingTimer;
             }
             else
             {
-                reducer--;
+                if (patrouilleUnit)
+                {
+                    guardingTicks--;
+                }
+                //TODO buggt noch rum und läuft nicht immer wenn er soll.
+                //Debug.Log("ambientTime: " + ambientTime);
+                //Debug.Log("mep: " + sequencePoint.Count);
+                RegenerateAggression();
+                ambientTime--;
             }
-            RegenerateAggression();
-        }
-        else if (sequencePoint.Count > 0 && (Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= 1) && (Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= 1))
-        {
-            seqPosition = sequencePoint.Dequeue();
-        }
-        else if (ambientTime <= 0)
-        {
-            ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
-            newPosition += new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
 
-            //TODO Befindet sich die neue position in einem Objekt?
-            Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
-            if (sequencePoint.Count > 0)
-            {
-                seqPosition = sequencePoint.Dequeue();
-            }
+            
         }
-        else
-        {
-            //TODO buggt noch rum und läuft nicht immer wenn er soll.
-            Debug.Log("ambientTime: "+ ambientTime);
-            Debug.Log("mep: "+sequencePoint.Count);
-            RegenerateAggression();
-            ambientTime--;
-        }
-
-        
-
     }
 
     private void AttackMovement(GameObject player)
@@ -174,7 +235,7 @@ public class Alien : MonoBehaviour
             Dodge();
         }
         else if (!dodge)
-        { 
+        {
             timeSinceAttack += attackRate * Time.deltaTime;
             if (timeSinceAttack >= 1)
             {
@@ -470,18 +531,18 @@ public class Alien : MonoBehaviour
                                 }
                             }
                         }
-                        if(sequencePoint.Contains(pathfindingPos))
+                        if (sequencePoint.Contains(pathfindingPos))
                         {
-                            Debug.Log("Enthält schon: "+ pathfindingPos);
+                            Debug.Log("Enthält schon: " + pathfindingPos);
                         }
                         else
                         {
                             sequencePoint.Enqueue(pathfindingPos);
                         }
                     }
-  
+
                 }
-            }   
+            }
         }
         if (sequencePoint.Count == 0)
         {
@@ -572,5 +633,14 @@ public class Alien : MonoBehaviour
     public void SetEnemy(GameObject enemy)
     {
         this.enemy = enemy;
+    }
+
+    public bool GetPatrouilleUnit()
+    {
+        return patrouilleUnit;
+    }
+    public LabyrinthIds GetLabyrinthId()
+    {
+        return labyrinthId;
     }
 }
