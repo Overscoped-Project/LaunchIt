@@ -37,6 +37,8 @@ public class Alien : MonoBehaviour
     private List<GameObject> objectsInRange = new List<GameObject>();
     private List<Bullet> bulletsInRange = new List<Bullet>();
     private List<Bullet> calculatedBullets = new List<Bullet>();
+
+    
     void Start()
     {
         newPosition = transform.position;
@@ -56,6 +58,7 @@ public class Alien : MonoBehaviour
 
         }
         //DEBUG
+
         if (enemy != null)
         {
             Physics2D.IgnoreCollision(GetComponent<PolygonCollider2D>(), enemy.GetComponent<CircleCollider2D>());
@@ -105,7 +108,6 @@ public class Alien : MonoBehaviour
             {
                 reducer--;
             }
-            //TODO Unsicher ob hier auch richtige Position zum Regeneraten. Nochmal nachprüfen
             RegenerateAggression();
         }
         else if (sequencePoint.Count > 0 && (Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= 1) && (Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= 1))
@@ -116,6 +118,8 @@ public class Alien : MonoBehaviour
         {
             ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
             newPosition += new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
+
+            //TODO Befindet sich die neue position in einem Objekt?
             Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
             if (sequencePoint.Count > 0)
             {
@@ -124,6 +128,7 @@ public class Alien : MonoBehaviour
         }
         else
         {
+            //TODO buggt noch rum und läuft nicht immer wenn er soll.
             Debug.Log("ambientTime: "+ ambientTime);
             Debug.Log("mep: "+sequencePoint.Count);
             RegenerateAggression();
@@ -134,7 +139,6 @@ public class Alien : MonoBehaviour
 
     }
 
-    //TODO neue methode ambesten um nicht bei jeder collsion schaden zu nehmen
     private void AttackMovement(GameObject player)
     {
         if (dodge && dodgePoint.Count >= 0 && (Mathf.Abs(GetComponent<Rigidbody2D>().position.x - dodgeSequencePoint.x) <= 1) && (Mathf.Abs(GetComponent<Rigidbody2D>().position.y - dodgeSequencePoint.y) <= 1))
@@ -157,6 +161,7 @@ public class Alien : MonoBehaviour
 
         if (aggression < player.GetComponent<Player>().GetAggression() && !dodge)
         {
+            //TODO er könnte gegen die wand laufen
             Vector2 moveToPlayer = player.GetComponent<Rigidbody2D>().position - GetComponent<Rigidbody2D>().position;
             moveToPlayer = moveToPlayer.normalized;
             GetComponent<Rigidbody2D>().position += (new Vector2(moveToPlayer.x * speed * Time.deltaTime, moveToPlayer.y * speed * Time.deltaTime) * (-1));
@@ -169,7 +174,7 @@ public class Alien : MonoBehaviour
             Dodge();
         }
         else if (!dodge)
-        {
+        { 
             timeSinceAttack += attackRate * Time.deltaTime;
             if (timeSinceAttack >= 1)
             {
@@ -546,13 +551,16 @@ public class Alien : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<Player>().Hit(damage);
-            //Little Knockback
-            Vector3 moveToPlayer = collision.transform.position - transform.position;
-            moveToPlayer = moveToPlayer.normalized;
-            GetComponent<Rigidbody2D>().position -= new Vector2((moveToPlayer.x * speed * Time.deltaTime) * hitJumpBack, (moveToPlayer.y * speed * Time.deltaTime) * hitJumpBack);
+            if (canAttack)
+            {
+                collision.gameObject.GetComponent<Player>().Hit(damage);
+                //Little Knockback
+                Vector3 moveToPlayer = collision.transform.position - transform.position;
+                moveToPlayer = moveToPlayer.normalized;
+                GetComponent<Rigidbody2D>().position -= new Vector2((moveToPlayer.x * speed * Time.deltaTime) * hitJumpBack, (moveToPlayer.y * speed * Time.deltaTime) * hitJumpBack);
 
-            canAttack = false;
+                canAttack = false;
+            }
         }
     }
 
