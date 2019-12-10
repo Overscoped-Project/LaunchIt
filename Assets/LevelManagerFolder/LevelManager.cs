@@ -9,4 +9,19 @@ public class LevelManager : MonoBehaviour
     {
         SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }
+
+    public void GoToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+    }
+
+    public void GoToSettings()
+    {
+        SceneManager.LoadScene("Options", LoadSceneMode.Single);
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit(0);
+    }
 }
