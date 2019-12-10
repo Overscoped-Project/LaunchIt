@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
+    Scene scene;
+    private int previousScene;
+
+
     public void GoToGame()
     {
         SceneManager.LoadScene("Game", LoadSceneMode.Single);
@@ -17,7 +21,21 @@ public class LevelManager : MonoBehaviour
 
     public void GoToSettings()
     {
-        SceneManager.LoadScene("Options", LoadSceneMode.Single);
+        SceneManager.LoadScene("Settings", LoadSceneMode.Single);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene(previousScene);
+            Debug.Log("Previous Scene");
+        }
+    }
+   
+    private void PreviousScene()
+    {
+        previousScene = SceneManager.GetActiveScene().buildIndex - 1;
     }
 
     public void ExitGame()
