@@ -22,8 +22,11 @@ public class Alien : MonoBehaviour
     private Vector2 dodgeSequencePoint;
     private bool dodge = false;
 
+    [SerializeField] private int pathfindingTimer = 20;
+    private int reducer;
+    [SerializeField] private float gapToObject = 0.5f;
+
     private int ambientTime = 0;
-    private int reducer = 50;
     [SerializeField] private int maxRandomAmbientTime = 100;
     [SerializeField] private int minRandomAmbientTime = 20;
     [SerializeField] private float ambientRange = 3f;
@@ -39,6 +42,7 @@ public class Alien : MonoBehaviour
         newPosition = transform.position;
         sequencePoint = new Queue<Vector2>();
         dodgePoint = new Queue<Vector2>();
+        reducer = pathfindingTimer;
     }
 
     void Update()
@@ -82,7 +86,33 @@ public class Alien : MonoBehaviour
 
     private void AmbientMovement()
     {
-        if (ambientTime <= 0)
+        if (!(Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= 1) && !(Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= 1))
+        {
+            Vector2 moveToPoint = seqPosition - GetComponent<Rigidbody2D>().position;
+            moveToPoint = moveToPoint.normalized;
+            GetComponent<Rigidbody2D>().position += new Vector2(moveToPoint.x * (speed / 2) * Time.deltaTime, moveToPoint.y * (speed / 2) * Time.deltaTime);
+
+            if (reducer <= 0)
+            {
+                Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
+                if (sequencePoint.Count > 0)
+                {
+                    seqPosition = sequencePoint.Dequeue();
+                }
+                reducer = pathfindingTimer;
+            }
+            else
+            {
+                reducer--;
+            }
+            //TODO Unsicher ob hier auch richtige Position zum Regeneraten. Nochmal nachprüfen
+            RegenerateAggression();
+        }
+        else if (sequencePoint.Count > 0 && (Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= 1) && (Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= 1))
+        {
+            seqPosition = sequencePoint.Dequeue();
+        }
+        else if (ambientTime <= 0)
         {
             ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
             newPosition += new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
@@ -92,39 +122,15 @@ public class Alien : MonoBehaviour
                 seqPosition = sequencePoint.Dequeue();
             }
         }
-
-        else if (!(Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= 1) && !(Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= 1))
-        {
-            Vector2 moveToPoint = seqPosition - GetComponent<Rigidbody2D>().position;
-            moveToPoint = moveToPoint.normalized;
-            GetComponent<Rigidbody2D>().position += new Vector2(moveToPoint.x * (speed / 2) * Time.deltaTime, moveToPoint.y * (speed / 2) * Time.deltaTime);
-            if (reducer <= 0)
-            {
-                Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
-                if (sequencePoint.Count > 0)
-                {
-                    seqPosition = sequencePoint.Dequeue();
-                }
-                reducer = 50;
-            }
-            else
-            {
-                Debug.Log(reducer);
-                reducer--;
-            }
-            //TODO Unsicher ob hier auch richtige Position zum Regeneraten. Nochmal nachprüfen
-            RegenerateAggression();
-        }
-        else if (sequencePoint.Count > 0)
-        {
-            seqPosition = sequencePoint.Dequeue();
-        }
         else
         {
+            Debug.Log("ambientTime: "+ ambientTime);
+            Debug.Log("mep: "+sequencePoint.Count);
             RegenerateAggression();
             ambientTime--;
         }
 
+        
 
     }
 
@@ -237,12 +243,11 @@ public class Alien : MonoBehaviour
             Vector2 pathVector = path.normalized;
             foreach (GameObject obj in objectsInRange)
             {
-                if(obj == null)
+                if (obj == null)
                 {
                     continue;
                 }
-
-                if (obj.tag == "Player" || obj.tag == "Bullet")
+                else if (obj.tag == "Player" || obj.tag == "Bullet")
                 {
                     //nothing
                 }
@@ -256,6 +261,8 @@ public class Alien : MonoBehaviour
                     Ray ray = new Ray(position, moveToPosition);
                     if (obj.GetComponent<SpriteRenderer>().bounds.IntersectRay(ray))
                     {
+                        Vector2 pathfindingPos;
+                        Bounds bounds = gameObject.GetComponent<SpriteRenderer>().bounds;
                         Vector2 min = obj.GetComponent<SpriteRenderer>().bounds.min;
                         Vector2 max = obj.GetComponent<SpriteRenderer>().bounds.max;
                         Vector2 extents = obj.GetComponent<SpriteRenderer>().bounds.extents;
@@ -265,50 +272,96 @@ public class Alien : MonoBehaviour
                         Vector2 vectorCenter = center - position;
                         if (Mathf.Abs(vectorCenter.x) > Mathf.Abs(vectorCenter.y))
                         {
-                            if (vectorCenter.x < 0) // < oder > nochmal prüfen
+                            //Calculation Right Side
+                            if (vectorCenter.x < 0)
                             {
                                 Vector2 tempPos = position;
-                                while (tempPos.x < min.x && (tempPos.y < min.y || tempPos.y > max.y))
+                                while (tempPos.x < min.x && (tempPos.y < min.y && tempPos.y > max.y))
                                 {
                                     tempPos += pathVector;
                                 }
+                                //If Ray goes out of box at bottom
                                 if (tempPos.x > min.x && tempPos.y < min.y)
                                 {
-                                    sequencePoint.Enqueue(new Vector2(newMin.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMin.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                    if (position.x - bounds.extents.x <= max.x)
+                                    {
+                                        pathfindingPos = new Vector2(position.x + gapToObject + bounds.extents.x, position.y - gapToObject - bounds.extents.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y);
+                                    }
+                                    else
+                                    {
+                                        pathfindingPos = new Vector2(position.x + gapToObject, position.y - gapToObject - bounds.extents.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y);
+                                    }
                                 }
                                 else
                                 {
                                     if (CalulateNormals(min, pathVector, position) < CalulateNormals(max, pathVector, position))
                                     {
-                                        sequencePoint.Enqueue(new Vector2(newMin.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMin.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                        if (position.x - bounds.extents.x < max.x)
+                                        {
+                                            pathfindingPos = new Vector2(position.x + gapToObject + bounds.extents.x, position.y - gapToObject - bounds.extents.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y);
+                                        }
+                                        else
+                                        {
+                                            pathfindingPos = new Vector2(position.x + gapToObject, position.y - gapToObject - bounds.extents.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y);
+                                        }
                                     }
                                     else
                                     {
-                                        sequencePoint.Enqueue(new Vector2(newMax.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMax.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                        if (position.x - bounds.extents.x < max.x)
+                                        {
+                                            pathfindingPos = new Vector2(position.x + gapToObject + bounds.extents.x, position.y + gapToObject + bounds.extents.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y);
+                                        }
+                                        else
+                                        {
+                                            pathfindingPos = new Vector2(position.x + gapToObject, position.y + gapToObject + bounds.extents.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y);
+                                        }
                                     }
                                 }
 
                             }
+                            //Calculation Left Side
                             else
                             {
                                 Vector2 tempPos = position;
-                                while (tempPos.x < newMin.x && (tempPos.y < newMax.y || tempPos.y > newMin.y))
+                                while (tempPos.x < newMin.x && (tempPos.y < newMax.y && tempPos.y > newMin.y))
                                 {
                                     tempPos += pathVector;
                                 }
+                                //If Ray goes out of box at top
                                 if (tempPos.x < newMin.x && tempPos.y > newMax.y)
                                 {
-                                    sequencePoint.Enqueue(new Vector2(newMax.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMax.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                    if (position.x + bounds.extents.x > min.x)
+                                    {
+                                        pathfindingPos = new Vector2(position.x - gapToObject - bounds.extents.x, position.y + gapToObject + bounds.extents.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y);
+                                    }
+                                    else
+                                    {
+                                        pathfindingPos = new Vector2(position.x - gapToObject, position.y + gapToObject + bounds.extents.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y);
+                                    }
                                 }
                                 else
                                 {
                                     if (CalulateNormals(min, pathVector, position) < CalulateNormals(max, pathVector, position))
                                     {
-                                        sequencePoint.Enqueue(new Vector2(min.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, min.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                        if (position.x + bounds.extents.x > min.x)
+                                        {
+                                            pathfindingPos = new Vector2(position.x - gapToObject - bounds.extents.x, position.y - gapToObject - bounds.extents.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y);
+                                        }
+                                        else
+                                        {
+                                            pathfindingPos = new Vector2(position.x - gapToObject, position.y - gapToObject - bounds.extents.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y);
+                                        }
                                     }
                                     else
                                     {
-                                        sequencePoint.Enqueue(new Vector2(newMax.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMax.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                        if (position.x + bounds.extents.x > min.x)
+                                        {
+                                            pathfindingPos = new Vector2(position.x - gapToObject - bounds.extents.x, position.y + gapToObject + bounds.extents.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y);
+                                        }
+                                        else
+                                        {
+                                            pathfindingPos = new Vector2(position.x - gapToObject, position.y + gapToObject + bounds.extents.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y);
+                                        }
                                     }
                                 }
                             }
@@ -316,61 +369,118 @@ public class Alien : MonoBehaviour
                         }
                         else
                         {
-                            if (vectorCenter.y < 0) // < oder > nochmal prüfen
+                            //Calculation Top Side
+                            if (vectorCenter.y < 0)
                             {
                                 Vector2 tempPos = position;
-                                while (tempPos.y > newMin.y && (tempPos.x < newMin.x || tempPos.x > newMax.x))
+                                while (tempPos.y > newMin.y && (tempPos.x < newMin.x && tempPos.x > newMax.x))
                                 {
                                     tempPos += pathVector;
                                 }
+                                //If Ray goes out of box at right
                                 if (tempPos.x > newMin.x && tempPos.y > newMin.y)
                                 {
-                                    sequencePoint.Enqueue(new Vector2(max.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, max.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                    if (position.y - bounds.extents.y < max.y)
+                                    {
+                                        pathfindingPos = new Vector2(position.x + gapToObject + bounds.extents.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, position.y + gapToObject + bounds.extents.y);
+                                    }
+                                    else
+                                    {
+                                        pathfindingPos = new Vector2(position.x + gapToObject + bounds.extents.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, position.y + gapToObject);
+                                    }
                                 }
                                 else
                                 {
                                     if (CalulateNormals(newMin, pathVector, position) < CalulateNormals(newMax, pathVector, position))
                                     {
-                                        sequencePoint.Enqueue(new Vector2(max.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, max.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                        if (position.y - bounds.extents.y < max.y)
+                                        {
+                                            pathfindingPos = new Vector2(position.x + gapToObject + bounds.extents.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, position.y + gapToObject + bounds.extents.y);
+                                        }
+                                        else
+                                        {
+                                            pathfindingPos = new Vector2(position.x + gapToObject + bounds.extents.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, position.y + gapToObject);
+                                        }
                                     }
                                     else
                                     {
-                                        sequencePoint.Enqueue(new Vector2(newMax.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMax.y + gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                        if (position.y - bounds.extents.y < max.y)
+                                        {
+                                            pathfindingPos = new Vector2(position.x - gapToObject - bounds.extents.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, position.y + gapToObject + bounds.extents.y);
+                                        }
+                                        else
+                                        {
+                                            pathfindingPos = new Vector2(position.x - gapToObject - bounds.extents.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, position.y + gapToObject);
+                                        }
                                     }
                                 }
 
                             }
+                            //Calculation Bottom Side
                             else
                             {
                                 Vector2 tempPos = position;
-                                while (tempPos.y < newMax.y && (tempPos.x < newMin.x || tempPos.x > newMax.x))
+                                while (tempPos.y < newMax.y && (tempPos.x < newMin.x && tempPos.x > newMax.x))
                                 {
                                     tempPos += pathVector;
                                 }
+                                //If Ray goes out of box at left
                                 if (tempPos.x < newMax.x && tempPos.y < newMax.y)
                                 {
-                                    sequencePoint.Enqueue(new Vector2(min.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, min.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                    if (position.y + bounds.extents.y > min.y)
+                                    {
+                                        pathfindingPos = new Vector2(position.x - gapToObject - bounds.extents.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, position.y - gapToObject - bounds.extents.y);
+                                    }
+                                    else
+                                    {
+                                        pathfindingPos = new Vector2(position.x - gapToObject - bounds.extents.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, position.y - gapToObject);
+                                    }
                                 }
                                 else
                                 {
                                     if (CalulateNormals(newMin, pathVector, position) < CalulateNormals(newMax, pathVector, position))
                                     {
-                                        sequencePoint.Enqueue(new Vector2(newMin.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, newMin.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                        if (position.y + bounds.extents.y > min.y)
+                                        {
+                                            pathfindingPos = new Vector2(position.x + gapToObject + +bounds.extents.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, position.y - gapToObject - bounds.extents.y);
+                                        }
+                                        else
+                                        {
+                                            pathfindingPos = new Vector2(position.x + gapToObject + +bounds.extents.x + gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, position.y - gapToObject);
+                                        }
+
                                     }
                                     else
                                     {
-                                        sequencePoint.Enqueue(new Vector2(min.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, min.y - gameObject.GetComponent<SpriteRenderer>().bounds.extents.y));
+                                        if (position.y + bounds.extents.y > min.y)
+                                        {
+                                            pathfindingPos = new Vector2(position.x - gapToObject - bounds.extents.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, position.y - gapToObject - bounds.extents.y);
+                                        }
+                                        else
+                                        {
+                                            pathfindingPos = new Vector2(position.x - gapToObject - bounds.extents.x - gameObject.GetComponent<SpriteRenderer>().bounds.extents.x, position.y - gapToObject);
+                                        }
+
                                     }
                                 }
                             }
                         }
+                        if(sequencePoint.Contains(pathfindingPos))
+                        {
+                            Debug.Log("Enthält schon: "+ pathfindingPos);
+                        }
+                        else
+                        {
+                            sequencePoint.Enqueue(pathfindingPos);
+                        }
                     }
-                    if (sequencePoint.Count == 0)
-                    {
-                        sequencePoint.Enqueue(moveToPosition);
-                    }
+  
                 }
-            }
+            }   
+        }
+        if (sequencePoint.Count == 0)
+        {
+            sequencePoint.Enqueue(moveToPosition);
         }
     }
 
