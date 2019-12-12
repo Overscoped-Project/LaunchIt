@@ -6,8 +6,9 @@ public class SpawnBullets : MonoBehaviour
 {
     [SerializeField] private Bullet shot;
     [SerializeField] private float fireRate = 0.5f;
-    [SerializeField] private float offsetRate = 1f;
-    private Vector3 offset = new Vector3(0, 0, 0);
+    [SerializeField] private float offsetRateX = 1.5f;
+    [SerializeField] private float offsetRateY = 3.5f;
+    private Vector2 offset = new Vector2(0, 0);
     private float timeSinceShoot = 0;
     private bool canShoot = true;
     private Vector2 lookDir;
@@ -25,29 +26,30 @@ public class SpawnBullets : MonoBehaviour
         lookDir = mousePos - GetComponent<Rigidbody2D>().position;
         lookDir = lookDir.normalized;
 
-        if (Mathf.Abs(mousePos.x) > Mathf.Abs(mousePos.y))
+        if (Mathf.Abs(lookDir.x) > Mathf.Abs(lookDir.y))
         {
-            if (mousePos.x > 0)
+            if (lookDir.x > 0)
             {
-                offset = new Vector3(offsetRate, 0, 0);
+                offset.x = offsetRateX;
             }
             else
             {
-                offset = new Vector3(-offsetRate, 0, 0);
+                offset.x = -offsetRateX;
             }
+            offset.y = 0;
         }
         else
         {
-            if (mousePos.y > 0)
+            if (lookDir.y > 0)
             {
-                offset = new Vector3(0, offsetRate, 0);
+                offset.y = offsetRateY;
             }
             else
             {
-                offset = new Vector3(0, -offsetRate, 0);
+                offset.y = -offsetRateY;
             }
+            offset.x = 0;
         }
-
         angle = 180 - Vector2.SignedAngle(lookDir * (-1), transform.up);
         GetComponent<Animator>().SetFloat("Rotation", angle);
         if (Input.GetKey(KeyCode.Mouse0) && canShoot)
@@ -70,7 +72,7 @@ public class SpawnBullets : MonoBehaviour
     public void Shoot()
     {
         Quaternion q = Quaternion.Euler(0, 0, angle);
-        Bullet bullet = Instantiate(shot, transform.position + offset, q);
+        Bullet bullet = Instantiate(shot, GetComponent<Rigidbody2D>().position + offset, q);
         bullet.SetDirection(lookDir);
     }   
 

@@ -174,6 +174,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    public int GetAggression()
+    {
+        return aggression;
     public bool GetAttacked()
     {
         return isAttacked;
