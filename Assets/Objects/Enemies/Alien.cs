@@ -541,7 +541,7 @@ public class Alien : MonoBehaviour
                         }
                         if (sequencePoint.Contains(pathfindingPos))
                         {
-                            Debug.Log("Enthält schon: " + pathfindingPos);
+                            //Debug.Log("Enthält schon: " + pathfindingPos);
                         }
                         else
                         {
