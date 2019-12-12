@@ -51,6 +51,7 @@ public class Alien : MonoBehaviour
     private int currentPoint = 0;
     private bool pointRun = true;
     private List<Alien> patrouilleAlly = new List<Alien>();
+    [SerializeField] private GameObject freezeTrigger;
 
     void Start()
     {
@@ -73,28 +74,35 @@ public class Alien : MonoBehaviour
 
     void Update()
     {
-        //DEBUG
-        if (Input.GetKeyDown(KeyCode.C))
+        if (freezeTrigger.GetComponent<FreezeTrigger>().GetFreezed())
         {
-            newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Pathfinding(transform.position, newPosition);
-            seqPosition = sequencePoint.Dequeue();
-
-        }
-        //DEBUG
-
-        if (enemy != null)
-        {
-            Physics2D.IgnoreCollision(GetComponent<PolygonCollider2D>(), enemy.GetComponent<CircleCollider2D>());
-            AttackMovement(enemy);
 
         }
         else
         {
-            AmbientMovement();
+            //DEBUG
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Pathfinding(transform.position, newPosition);
+                seqPosition = sequencePoint.Dequeue();
+
+            }
+            //DEBUG
+
+            if (enemy != null)
+            {
+                Physics2D.IgnoreCollision(GetComponent<PolygonCollider2D>(), enemy.GetComponent<CircleCollider2D>());
+                AttackMovement(enemy);
+
+            }
+            else
+            {
+                AmbientMovement();
+            }
+            //that the Entitie not has a velocity after a hit
+            this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
         }
-        //that the Entitie not has a velocity after a hit
-        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
     }
 
     public void Hit(int dmg)
@@ -121,11 +129,11 @@ public class Alien : MonoBehaviour
     {
         if (patrouilleUnit && guardingTicks <= 0)
         {
-            if (currentPoint+1 == patrouillePoints.Count)
+            if (currentPoint + 1 == patrouillePoints.Count)
             {
                 pointRun = false;
             }
-            else if(currentPoint == 0)
+            else if (currentPoint == 0)
             {
                 pointRun = true;
             }
@@ -196,7 +204,7 @@ public class Alien : MonoBehaviour
                 ambientTime--;
             }
 
-            
+
         }
     }
 
@@ -583,7 +591,7 @@ public class Alien : MonoBehaviour
         {
             objectsInRange.Add(collision.gameObject);
         }
-        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet" && collision.gameObject.tag != "Entity")
+        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet" && collision.gameObject.tag != "Entity" && !collision.gameObject.Equals(freezeTrigger))
         {
             objectsInRange.Add(collision.gameObject);
         }
@@ -602,7 +610,7 @@ public class Alien : MonoBehaviour
         {
             objectsInRange.Remove(collision.gameObject);
         }
-        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet" && collision.gameObject.tag == "Entity")
+        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet" && collision.gameObject.tag == "Entity" && !collision.gameObject.Equals(freezeTrigger))
         {
             objectsInRange.Remove(gameObject);
         }
@@ -632,7 +640,6 @@ public class Alien : MonoBehaviour
             }
         }
     }
-
     public float GetSpeed()
     {
         return speed;
