@@ -50,7 +50,6 @@ public class SpawnBullets : MonoBehaviour
             }
             offset.x = 0;
         }
-        Debug.Log(offset);
         angle = 180 - Vector2.SignedAngle(lookDir * (-1), transform.up);
         GetComponent<Animator>().SetFloat("Rotation", angle);
         if (Input.GetKey(KeyCode.Mouse0) && canShoot)

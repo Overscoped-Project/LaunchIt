@@ -1819,7 +1819,7 @@ PrefabInstance:
         type: 3}
       propertyPath: freezeTrigger
       value: 
-      objectReference: {fileID: 1143546104}
+      objectReference: {fileID: 1143546101}
     - target: {fileID: 544788359361848323, guid: 568cee62653e2d5448cea5bd35864675,
         type: 3}
       propertyPath: m_LocalPosition.x
