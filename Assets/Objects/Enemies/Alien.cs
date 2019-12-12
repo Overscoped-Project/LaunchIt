@@ -579,7 +579,11 @@ public class Alien : MonoBehaviour
             enemy = collision.gameObject;
             ContactSwarm(enemy);
         }
-        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet")
+        if (collision.gameObject.tag == "Entity" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<PolygonCollider2D>()))
+        {
+            objectsInRange.Add(collision.gameObject);
+        }
+        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet" && collision.gameObject.tag != "Entity")
         {
             objectsInRange.Add(collision.gameObject);
         }
@@ -594,7 +598,11 @@ public class Alien : MonoBehaviour
         {
             enemy = null;
         }
-        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet")
+        if (collision.gameObject.tag == "Entity")
+        {
+            objectsInRange.Remove(collision.gameObject);
+        }
+        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet" && collision.gameObject.tag == "Entity")
         {
             objectsInRange.Remove(gameObject);
         }
