@@ -652,7 +652,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shot: {fileID: 7819643427785643837, guid: 728301dbab5965f4385aabd2ada1e9db, type: 3}
   fireRate: 2
-  offsetRate: 1
+  offsetRateX: 1.5
+  offsetRateY: 4
 --- !u!114 &781064475
 MonoBehaviour:
   m_ObjectHideFlags: 0

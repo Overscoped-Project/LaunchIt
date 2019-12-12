@@ -6,7 +6,8 @@ public class SpawnBullets : MonoBehaviour
 {
     [SerializeField] private Bullet shot;
     [SerializeField] private float fireRate = 0.5f;
-    [SerializeField] private float offsetRate = 1f;
+    [SerializeField] private float offsetRateX = 1.5f;
+    [SerializeField] private float offsetRateY = 3.5f;
     private Vector3 offset = new Vector3(0, 0, 0);
     private float timeSinceShoot = 0;
     private bool canShoot = true;
@@ -29,22 +30,22 @@ public class SpawnBullets : MonoBehaviour
         {
             if (mousePos.x > 0)
             {
-                offset = new Vector3(offsetRate, 0, 0);
+                offset = transform.position + new Vector3(offsetRateX, 0, 0);
             }
             else
             {
-                offset = new Vector3(-offsetRate, 0, 0);
+                offset = transform.position + new Vector3(-offsetRateX, 0, 0);
             }
         }
         else
         {
             if (mousePos.y > 0)
             {
-                offset = new Vector3(0, offsetRate, 0);
+                offset = transform.position + new Vector3(0, offsetRateY, 0);
             }
             else
             {
-                offset = new Vector3(0, -offsetRate, 0);
+                offset = transform.position + new Vector3(0, -offsetRateY, 0);
             }
         }
 
