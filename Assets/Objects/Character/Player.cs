@@ -99,6 +99,22 @@ public class Player : MonoBehaviour
             FindObjectOfType<DialogueManager>().DisplayNextSentence();
         }
 
+        if (Input.GetKey(KeyCode.End))
+        {
+            Camera.main.orthographicSize = 40;
+        }
+        if (Input.GetKey(KeyCode.PageUp))
+        {
+            Camera.main.orthographicSize += 10;
+        }
+        if (Input.GetKey(KeyCode.PageDown))
+        {
+            if (Camera.main.orthographicSize-10 > 0)
+            {
+                Camera.main.orthographicSize -= 10;
+            }
+        }
+
         GetComponent<Animator>().SetFloat("WalkDirectionX", directionX);
         GetComponent<Animator>().SetFloat("WalkDirectionY", directionY);
         GetComponent<Animator>().SetBool("walk", walk);
