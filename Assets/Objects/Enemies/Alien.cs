@@ -198,8 +198,8 @@ public class Alien : MonoBehaviour
                     guardingTicks--;
                 }
                 //TODO buggt noch rum und läuft nicht immer wenn er soll.
-                //Debug.Log("ambientTime: " + ambientTime);
-                //Debug.Log("mep: " + sequencePoint.Count);
+                Debug.Log("ambientTime: " + ambientTime);
+                Debug.Log("mep: " + sequencePoint.Count);
                 RegenerateAggression();
                 ambientTime--;
             }
@@ -541,7 +541,7 @@ public class Alien : MonoBehaviour
                         }
                         if (sequencePoint.Contains(pathfindingPos))
                         {
-                            //Debug.Log("Enthält schon: " + pathfindingPos);
+                            Debug.Log("Enthält schon: " + pathfindingPos);
                         }
                         else
                         {
