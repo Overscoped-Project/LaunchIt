@@ -151,8 +151,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700f0381167f46748b69eb2b0fb19baa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  portal: {fileID: 1817124450}
+  portal: {fileID: 1817124451}
   player: {fileID: 1584757947}
+  timeToTeleport: 0
 --- !u!61 &317234698
 BoxCollider2D:
   m_ObjectHideFlags: 0
