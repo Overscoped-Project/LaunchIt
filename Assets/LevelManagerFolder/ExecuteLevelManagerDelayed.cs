@@ -29,7 +29,7 @@ public class ExecuteLevelManagerDelayed : MonoBehaviour
 
         if(timer > delaySeconds)
         {
-            SceneManager.LoadSceneAsync((int)level, LoadSceneMode.Single);
+            SceneManager.LoadScene((int)level, LoadSceneMode.Single);
         }
     }
 }

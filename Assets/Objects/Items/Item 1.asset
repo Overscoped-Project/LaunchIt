@@ -15,4 +15,4 @@ MonoBehaviour:
   itemType: 4
   amount: 2
   description: eata
-  icon: {fileID: 21300000, guid: f1596e9d7a8628243b5ef0ad5cb15bba, type: 3}
+  icon: {fileID: 21300000, guid: 4cb15fcc38ad2a74ea50b3650dd7b4d3, type: 3}

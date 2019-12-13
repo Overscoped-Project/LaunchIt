@@ -8,8 +8,10 @@ public class DialogueManager : MonoBehaviour
     public Queue<string> sentences;
     public Text descriptionText;
     public Text nameItem;
-    
+
     public Animator animator;
+
+    Dialogue currentDialogue;
 
     private void Start ()
     {
@@ -19,6 +21,7 @@ public class DialogueManager : MonoBehaviour
     
     public void StartDialogue(Dialogue dialogue)
     {
+        currentDialogue = dialogue;
         animator.SetBool("IsOpen", true);
         nameItem.text = dialogue.name;
         sentences.Clear();
@@ -47,5 +50,12 @@ public class DialogueManager : MonoBehaviour
     {
         Debug.Log("End of the dialogue");
         animator.SetBool("IsOpen", false);
+
+        if(currentDialogue != null && currentDialogue.destroyWhenDone)
+        {
+            Destroy(currentDialogue.trigger);
+        }
+
+        currentDialogue = null;
     }
 }

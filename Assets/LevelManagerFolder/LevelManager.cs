@@ -17,7 +17,27 @@ public class LevelManager : MonoBehaviour
 
     public void GoToSettings()
     {
-        SceneManager.LoadScene("Options", LoadSceneMode.Single);
+        SceneManager.LoadScene("Settings", LoadSceneMode.Single);
+    }
+
+    public void GoToCredits()
+    {
+        SceneManager.LoadScene("Credits", LoadSceneMode.Single);
+    }
+
+    public void GoToIntro()
+    {
+        SceneManager.LoadScene("Intro", LoadSceneMode.Single);
+    }
+
+
+    public void GoToOutro()
+    {
+        SceneManager.LoadScene("Outro", LoadSceneMode.Single);
+    }
+    public void GoToDeathScreen()
+    {
+        SceneManager.LoadScene("DeathScreen", LoadSceneMode.Single);
     }
 
     public void ExitGame()
@@ -25,3 +45,4 @@ public class LevelManager : MonoBehaviour
         Application.Quit(0);
     }
 }
+

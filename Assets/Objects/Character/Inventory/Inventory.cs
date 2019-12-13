@@ -67,6 +67,7 @@ public class Inventory : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        Debug.Log("Enter");
         if (collider.gameObject.CompareTag("Item"))
         {
             isPickupRange = true;
@@ -76,6 +77,7 @@ public class Inventory : MonoBehaviour
         {
             ship = collider.gameObject.GetComponent<Ship>();
             isRepairRange = true;
+            Debug.Log("Ship");
         }
         
     }

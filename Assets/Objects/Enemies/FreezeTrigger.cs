@@ -18,15 +18,16 @@ public class FreezeTrigger : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        /*
         if (collision.gameObject.tag == "Player" && GetComponent<BoxCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
             enteredPosition = collision.transform.position;
         }
+        */
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        
-        if (collision.gameObject.tag == "Player")
+        /*if (collision.gameObject.tag == "Player")
         {
             Bounds bounds = GetComponent<BoxCollider2D>().bounds;
             Vector2 direction = bounds.center - enteredPosition;
@@ -64,11 +65,16 @@ public class FreezeTrigger : MonoBehaviour
                     }
                 }   
             }
-        }
+        }*/
     }
 
     public bool GetFreezed()
     {
         return freezed;
+    }
+
+    public void SetFreezed(bool freez)
+    {
+        freezed = freez;
     }
 }

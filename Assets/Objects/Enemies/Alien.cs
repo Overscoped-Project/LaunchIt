@@ -333,7 +333,7 @@ public class Alien : MonoBehaviour
                 {
 
                     Ray ray = new Ray(position, moveToPosition);
-                    if (obj.GetComponent<SpriteRenderer>().bounds.IntersectRay(ray))
+                    if (obj.GetComponent<SpriteRenderer>() != null && obj.GetComponent<SpriteRenderer>().bounds.IntersectRay(ray))
                     {
                         Vector2 pathfindingPos;
                         Bounds bounds = gameObject.GetComponent<SpriteRenderer>().bounds;
@@ -584,6 +584,7 @@ public class Alien : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
+            Debug.Log("Attack");
             enemy = collision.gameObject;
             ContactSwarm(enemy);
         }

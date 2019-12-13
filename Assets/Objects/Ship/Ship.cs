@@ -62,6 +62,7 @@ public class Ship : MonoBehaviour
         {
             repaired = true;
             Debug.Log(repaired);
+            GameObject.Find("GameController").GetComponent<LevelManager>().GoToOutro();
         }
     }
 }

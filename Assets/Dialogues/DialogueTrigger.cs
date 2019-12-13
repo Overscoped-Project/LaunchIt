@@ -6,6 +6,11 @@ public class DialogueTrigger : MonoBehaviour
 {
     public Dialogue dialogue;
 
+    private void Start()
+    {
+        dialogue.trigger = gameObject;
+    }
+
     public void OnTriggerEnter2D (Collider2D other)
     {
         if (other.tag == "Player" && !other.GetComponent<Player>().GetAttacked())
@@ -21,6 +26,7 @@ public class DialogueTrigger : MonoBehaviour
         {
             Debug.Log("left");
             FindObjectOfType<DialogueManager>().EndDialogue();
+
         }
     }
 }
