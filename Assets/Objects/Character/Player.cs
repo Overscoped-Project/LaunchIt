@@ -6,7 +6,6 @@ public class Player : MonoBehaviour
 {
     //DEBUG
     [SerializeField] private float sprintMultiplier = 1;
-    [SerializeField] private Alien alien;
     //DEBUG
     [SerializeField] private int health = 100;
     [SerializeField] private float playerSpeed = 1;
@@ -93,10 +92,6 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse2))
         {
             GetComponent<Rigidbody2D>().position = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
-        }
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            Instantiate(alien, new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0), Quaternion.identity);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))

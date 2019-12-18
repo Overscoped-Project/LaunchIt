@@ -92,7 +92,7 @@ public class Alien : MonoBehaviour
 
             if (enemy != null)
             {
-                Physics2D.IgnoreCollision(GetComponent<PolygonCollider2D>(), enemy.GetComponent<CircleCollider2D>());
+                Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), enemy.GetComponent<CircleCollider2D>());
                 AttackMovement(enemy);
 
             }
@@ -587,7 +587,7 @@ public class Alien : MonoBehaviour
             enemy = collision.gameObject;
             ContactSwarm(enemy);
         }
-        if (collision.gameObject.tag == "Entity" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<PolygonCollider2D>()))
+        if (collision.gameObject.tag == "Entity" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
             objectsInRange.Add(collision.gameObject);
         }
