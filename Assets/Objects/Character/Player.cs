@@ -43,13 +43,13 @@ public class Player : MonoBehaviour
         //Player Movement
         if (Input.GetKey(KeyCode.W) && !collisionUp)
         {
-            direction.y += 1;
+            direction += Vector2.up;
             directionY = 1f;
             walk = true;
         }
         else if (Input.GetKey(KeyCode.S) && !collisionDown)
         {
-            direction.y -= 1;
+            direction += Vector2.down;
             directionY = -1f;
             walk = true;
         }
@@ -61,13 +61,13 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.D) && !collisionRight)
         {
-            direction.x += 1;
+            direction += Vector2.right;
             directionX = 1f;
             walk = true;
         }
         else if (Input.GetKey(KeyCode.A) && !collisionLeft)
         {
-            direction.x -= 1;
+            direction += Vector2.left;
             directionX = -1f;
             walk = true;
         }
