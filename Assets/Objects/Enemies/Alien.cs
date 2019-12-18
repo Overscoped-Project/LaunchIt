@@ -100,6 +100,7 @@ public class Alien : MonoBehaviour
             {
                 AmbientMovement();
             }
+            Debug.Log(seqPosition);
             //that the Entitie not has a velocity after a hit
             this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
         }
@@ -182,7 +183,8 @@ public class Alien : MonoBehaviour
             else if (ambientTime <= 0)
             {
                 ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
-                newPosition += new Vector2(Random.Range(-ambientRange, ambientRange), Random.Range(-ambientRange, ambientRange));
+                newPosition = new Vector2(GetComponent<Rigidbody2D>().position.x + Random.Range(-ambientRange, ambientRange), GetComponent<Rigidbody2D>().position.y + Random.Range(-ambientRange, ambientRange));
+                
 
                 //TODO Befindet sich die neue position in einem Objekt?
                 Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
@@ -197,9 +199,6 @@ public class Alien : MonoBehaviour
                 {
                     guardingTicks--;
                 }
-                //TODO buggt noch rum und läuft nicht immer wenn er soll.
-                Debug.Log("ambientTime: " + ambientTime);
-                Debug.Log("mep: " + sequencePoint.Count);
                 RegenerateAggression();
                 ambientTime--;
             }
@@ -333,14 +332,14 @@ public class Alien : MonoBehaviour
                 {
 
                     Ray ray = new Ray(position, moveToPosition);
-                    if (obj.GetComponent<SpriteRenderer>().bounds.IntersectRay(ray))
+                    if(obj.GetComponent<Collider2D>().bounds.IntersectRay(ray))
                     {
                         Vector2 pathfindingPos;
-                        Bounds bounds = gameObject.GetComponent<SpriteRenderer>().bounds;
-                        Vector2 min = obj.GetComponent<SpriteRenderer>().bounds.min;
-                        Vector2 max = obj.GetComponent<SpriteRenderer>().bounds.max;
-                        Vector2 extents = obj.GetComponent<SpriteRenderer>().bounds.extents;
-                        Vector2 center = (Vector2)obj.GetComponent<SpriteRenderer>().bounds.center;
+                        Bounds bounds = gameObject.GetComponent<Collider2D>().bounds;
+                        Vector2 min = obj.GetComponent<Collider2D>().bounds.min;
+                        Vector2 max = obj.GetComponent<Collider2D>().bounds.max;
+                        Vector2 extents = obj.GetComponent<Collider2D>().bounds.extents;
+                        Vector2 center = (Vector2)obj.GetComponent<Collider2D>().bounds.center;
                         Vector2 newMin = new Vector2(center.x + extents.x, center.y - extents.y);
                         Vector2 newMax = new Vector2(center.x - extents.x, center.y + extents.y);
                         Vector2 vectorCenter = center - position;
