@@ -25,10 +25,13 @@ public class Player : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+    private void LateUpdate()
     {
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
-        
+    }
+    void Update()
+    {
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
@@ -76,7 +79,7 @@ public class Player : MonoBehaviour
             directionX = 0;
         }
 
-        
+
 
         //DEBUG Controls
         if (Input.GetKey(KeyCode.LeftShift) && sprintAvailable)
@@ -91,7 +94,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Mouse2))
         {
-            GetComponent<Rigidbody2D>().position = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
+            GetComponent<Rigidbody2D>().position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -109,7 +112,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.PageDown))
         {
-            if (Camera.main.orthographicSize-10 > 0)
+            if (Camera.main.orthographicSize - 10 > 0)
             {
                 Camera.main.orthographicSize -= 10;
             }

@@ -343,6 +343,7 @@ public class Alien : MonoBehaviour
                         Vector2 newMin = new Vector2(center.x + extents.x, center.y - extents.y);
                         Vector2 newMax = new Vector2(center.x - extents.x, center.y + extents.y);
                         Vector2 vectorCenter = center - position;
+
                         if (Mathf.Abs(vectorCenter.x) > Mathf.Abs(vectorCenter.y))
                         {
                             //Calculation Right Side
