@@ -8,7 +8,7 @@ public class FreezeTrigger : MonoBehaviour
     private Vector3 enteredPosition;
     void Start()
     {
-       
+        Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), GameObject.FindGameObjectWithTag("Player").GetComponent<CircleCollider2D>());
     }
 
     // Update is called once per frame

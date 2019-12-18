@@ -38,16 +38,18 @@ public class Player : MonoBehaviour
 
         }
 
+        Vector2 direction = Vector2.zero;
+
         //Player Movement
         if (Input.GetKey(KeyCode.W) && !collisionUp)
         {
-            GetComponent<Rigidbody2D>().position += new Vector2(0, playerSpeed * Time.deltaTime);
+            direction.y += 1;
             directionY = 1f;
             walk = true;
         }
         else if (Input.GetKey(KeyCode.S) && !collisionDown)
         {
-            GetComponent<Rigidbody2D>().position -= new Vector2(0, playerSpeed * Time.deltaTime);
+            direction.y -= 1;
             directionY = -1f;
             walk = true;
         }
@@ -59,13 +61,13 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.D) && !collisionRight)
         {
-            GetComponent<Rigidbody2D>().position += new Vector2(playerSpeed * Time.deltaTime, 0);
+            direction.x += 1;
             directionX = 1f;
             walk = true;
         }
         else if (Input.GetKey(KeyCode.A) && !collisionLeft)
         {
-            GetComponent<Rigidbody2D>().position -= new Vector2(playerSpeed * Time.deltaTime, 0);
+            direction.x -= 1;
             directionX = -1f;
             walk = true;
         }
@@ -73,6 +75,8 @@ public class Player : MonoBehaviour
         {
             directionX = 0;
         }
+
+        
 
         //DEBUG Controls
         if (Input.GetKey(KeyCode.LeftShift) && sprintAvailable)
@@ -115,6 +119,9 @@ public class Player : MonoBehaviour
             }
         }
 
+        direction.Normalize();
+        direction *= playerSpeed * Time.deltaTime;
+        GetComponent<Rigidbody2D>().position += direction;
         GetComponent<Animator>().SetFloat("WalkDirectionX", directionX);
         GetComponent<Animator>().SetFloat("WalkDirectionY", directionY);
         GetComponent<Animator>().SetBool("walk", walk);
