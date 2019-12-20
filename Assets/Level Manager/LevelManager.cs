@@ -14,6 +14,10 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }
 
+    public void GoToDeathScreen()
+    {
+        SceneManager.LoadScene("DeathScreen", LoadSceneMode.Single);
+    }
     public void GoToMainMenu()
     {
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
@@ -22,6 +26,11 @@ public class LevelManager : MonoBehaviour
     public void GoToSettings()
     {
         SceneManager.LoadScene("Settings", LoadSceneMode.Single);
+    }
+
+    public void GoToOutro()
+    {
+        SceneManager.LoadScene("Outro", LoadSceneMode.Single);
     }
 
     private void Update()
