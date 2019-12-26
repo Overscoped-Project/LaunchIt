@@ -309,6 +309,127 @@ public class Alien : MonoBehaviour
     private void Pathfinding(Vector2 position, Vector2 moveToPosition)
     {
         sequencePoint = new Queue<Vector2>();
+        Ray ray = new Ray(position, moveToPosition);
+        foreach (GameObject obj in objectsInRange){
+            if ((moveToPosition - (Vector2) obj.transform.position).magnitude < (moveToPosition - position).magnitude)
+            {
+                Bounds objBounds = obj.GetComponent<Collider2D>().bounds;
+                if (objBounds.IntersectRay(ray))
+                {
+                    //drum herum checken wo der nächte punkt ist wovon weiter berechnet wird. (pathfinding doppelt callen?)
+                }
+            }
+        }
+    }
+
+
+
+
+    private float CalulateNormals(Vector2 point, Vector2 path, Vector2 position)
+    {
+        point = point - position;
+        float length = (Vector3.Cross(point, path).magnitude) / path.magnitude;
+        return length;
+    }
+
+
+    private void ContactSwarm(GameObject target)
+    {
+        foreach (GameObject obj in objectsInRange)
+        {
+            if (obj != null && obj.tag == "Entity" && target != null)
+            {
+                obj.GetComponent<Alien>().SetEnemy(target);
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
+        {
+            enemy = collision.gameObject;
+            ContactSwarm(enemy);
+        }
+        if (collision.gameObject.tag == "Entity" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
+        {
+            objectsInRange.Add(collision.gameObject);
+        }
+        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet" && collision.gameObject.tag != "Entity" && !collision.gameObject.Equals(freezeTrigger))
+        {
+            objectsInRange.Add(collision.gameObject);
+        }
+        if (collision.gameObject.tag == "Bullet")
+        {
+            bulletsInRange.Add(collision.GetComponent<Bullet>());
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            enemy = null;
+        }
+        if (collision.gameObject.tag == "Entity")
+        {
+            objectsInRange.Remove(collision.gameObject);
+        }
+        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet" && collision.gameObject.tag == "Entity" && !collision.gameObject.Equals(freezeTrigger))
+        {
+            objectsInRange.Remove(gameObject);
+        }
+        if (collision.gameObject.tag == "Bullet")
+        {
+            bulletsInRange.Remove(collision.GetComponent<Bullet>());
+            if (calculatedBullets.Contains(collision.GetComponent<Bullet>()))
+            {
+                calculatedBullets.Remove(collision.GetComponent<Bullet>());
+            }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            if (canAttack)
+            {
+                collision.gameObject.GetComponent<Player>().Hit(damage);
+                //Little Knockback
+                Vector3 moveToPlayer = collision.transform.position - transform.position;
+                moveToPlayer = moveToPlayer.normalized;
+                GetComponent<Rigidbody2D>().position -= new Vector2((moveToPlayer.x * speed * Time.deltaTime) * hitJumpBack, (moveToPlayer.y * speed * Time.deltaTime) * hitJumpBack);
+
+                canAttack = false;
+            }
+        }
+    }
+    public float GetSpeed()
+    {
+        return speed;
+    }
+
+    public void SetEnemy(GameObject enemy)
+    {
+        this.enemy = enemy;
+    }
+
+    public bool GetPatrouilleUnit()
+    {
+        return patrouilleUnit;
+    }
+    public LabyrinthIds GetLabyrinthId()
+    {
+        return labyrinthId;
+    }
+
+
+
+
+    /*
+      private void Pathfinding(Vector2 position, Vector2 moveToPosition)
+    {
+        sequencePoint = new Queue<Vector2>();
         if (objectsInRange.Count > 0)
         {
 
@@ -557,105 +678,5 @@ public class Alien : MonoBehaviour
             sequencePoint.Enqueue(moveToPosition);
         }
     }
-
-
-
-
-    private float CalulateNormals(Vector2 point, Vector2 path, Vector2 position)
-    {
-        point = point - position;
-        float length = (Vector3.Cross(point, path).magnitude) / path.magnitude;
-        return length;
-    }
-
-
-    private void ContactSwarm(GameObject target)
-    {
-        foreach (GameObject obj in objectsInRange)
-        {
-            if (obj != null && obj.tag == "Entity" && target != null)
-            {
-                obj.GetComponent<Alien>().SetEnemy(target);
-            }
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Player" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
-        {
-            enemy = collision.gameObject;
-            ContactSwarm(enemy);
-        }
-        if (collision.gameObject.tag == "Entity" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
-        {
-            objectsInRange.Add(collision.gameObject);
-        }
-        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet" && collision.gameObject.tag != "Entity" && !collision.gameObject.Equals(freezeTrigger))
-        {
-            objectsInRange.Add(collision.gameObject);
-        }
-        if (collision.gameObject.tag == "Bullet")
-        {
-            bulletsInRange.Add(collision.GetComponent<Bullet>());
-        }
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            enemy = null;
-        }
-        if (collision.gameObject.tag == "Entity")
-        {
-            objectsInRange.Remove(collision.gameObject);
-        }
-        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet" && collision.gameObject.tag == "Entity" && !collision.gameObject.Equals(freezeTrigger))
-        {
-            objectsInRange.Remove(gameObject);
-        }
-        if (collision.gameObject.tag == "Bullet")
-        {
-            bulletsInRange.Remove(collision.GetComponent<Bullet>());
-            if (calculatedBullets.Contains(collision.GetComponent<Bullet>()))
-            {
-                calculatedBullets.Remove(collision.GetComponent<Bullet>());
-            }
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            if (canAttack)
-            {
-                collision.gameObject.GetComponent<Player>().Hit(damage);
-                //Little Knockback
-                Vector3 moveToPlayer = collision.transform.position - transform.position;
-                moveToPlayer = moveToPlayer.normalized;
-                GetComponent<Rigidbody2D>().position -= new Vector2((moveToPlayer.x * speed * Time.deltaTime) * hitJumpBack, (moveToPlayer.y * speed * Time.deltaTime) * hitJumpBack);
-
-                canAttack = false;
-            }
-        }
-    }
-    public float GetSpeed()
-    {
-        return speed;
-    }
-
-    public void SetEnemy(GameObject enemy)
-    {
-        this.enemy = enemy;
-    }
-
-    public bool GetPatrouilleUnit()
-    {
-        return patrouilleUnit;
-    }
-    public LabyrinthIds GetLabyrinthId()
-    {
-        return labyrinthId;
-    }
+     */
 }

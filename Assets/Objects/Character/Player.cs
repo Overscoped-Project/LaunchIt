@@ -79,7 +79,10 @@ public class Player : MonoBehaviour
             directionX = 0;
         }
 
-
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            FindObjectOfType<DialogueManager>().DisplayNextSentence();
+        }
 
         //DEBUG Controls
         if (Input.GetKey(KeyCode.LeftShift) && sprintAvailable)
@@ -97,10 +100,7 @@ public class Player : MonoBehaviour
             GetComponent<Rigidbody2D>().position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            FindObjectOfType<DialogueManager>().DisplayNextSentence();
-        }
+        
 
         if (Input.GetKey(KeyCode.End))
         {
