@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Alien : MonoBehaviour
 {
@@ -184,7 +185,7 @@ public class Alien : MonoBehaviour
             {
                 ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
                 newPosition = new Vector2(GetComponent<Rigidbody2D>().position.x + Random.Range(-ambientRange, ambientRange), GetComponent<Rigidbody2D>().position.y + Random.Range(-ambientRange, ambientRange));
-                
+
 
                 //TODO Befindet sich die neue position in einem Objekt?
                 Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
@@ -306,23 +307,95 @@ public class Alien : MonoBehaviour
         }
 
     }
+
+    /*
+    private Vector2 newPosition;
+    private Vector2 seqPosition;
+    private Queue<Vector2> sequencePoint;
+         */
+         
+    private LinkedList<Node> openList = new LinkedList<Node>();
+    private LinkedList<NodeStruct> closedList = new LinkedList<NodeStruct>();
+    private struct NodeStruct
+    {
+        public Vector3 position;
+        public float distance;       
+    }
+    private struct Node
+    {
+        public NodeStruct node;
+        public NodeStruct previousNode;
+        public NodeStruct nextNode;
+    }
     private void Pathfinding(Vector2 position, Vector2 moveToPosition)
     {
-        sequencePoint = new Queue<Vector2>();
         Ray ray = new Ray(position, moveToPosition);
-        foreach (GameObject obj in objectsInRange){
-            if ((moveToPosition - (Vector2) obj.transform.position).magnitude < (moveToPosition - position).magnitude)
+        bool notBlocked = true;
+        bool found = true;
+        float notBlockedDistance = 0;
+        Vector3 point;
+        PhysicsScene2D physicScene2D = GetComponent<Scene>().GetPhysicsScene2D();  
+        do
+        {
+            NodeStruct currentNode;
+            NodeStruct lastNode = new NodeStruct();
+            Node node = new Node();
+            notBlockedDistance += speed;
+            point = ray.GetPoint(notBlockedDistance);           
+            if (physicScene2D.OverlapPoint(point) != null)
             {
-                Bounds objBounds = obj.GetComponent<Collider2D>().bounds;
-                if (objBounds.IntersectRay(ray))
+                notBlocked = false;
+                found = false;
+                break;
+            }
+            else
+            {
+                currentNode.position = point;
+                currentNode.distance = Mathf.Abs((moveToPosition - (Vector2)point).magnitude);
+               
+                node.node = currentNode;
+                node.previousNode = lastNode;
+                if (openList.Count != 0)
                 {
-                    //drum herum checken wo der nächte punkt ist wovon weiter berechnet wird. (pathfinding doppelt callen?)
-                }
+                    Node temp = openList.Last.Value;
+                    openList.RemoveLast();
+                    temp.previousNode = currentNode;
+                    openList.AddLast(temp);
+                }                
+                openList.AddLast(node);
+                lastNode = currentNode;
             }
         }
+        while (notBlocked && (Mathf.Abs(notBlockedDistance) < Mathf.Abs((moveToPosition - position).magnitude)));
+
+        
+        while(!found && openList.Count > 0)
+        {
+            Node currentNode = openList.First.Value;
+            openList.RemoveFirst();
+
+            if ((Vector2)currentNode.node.position == moveToPosition)
+            {
+                found = true;
+                break;
+            }
+            expandeNode(currentNode);
+        }
+
     }
 
-
+    private void expandeNode(Node currentNode) 
+    {
+        
+        if (closedList.Contains(currentNode.nextNode))
+        {
+            return;
+        }
+        else
+        {
+            //muss weitergemacht werden
+        }
+    }
 
 
     private float CalulateNormals(Vector2 point, Vector2 path, Vector2 position)
