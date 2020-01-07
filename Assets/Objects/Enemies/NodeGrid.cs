@@ -11,6 +11,8 @@ public class NodeGrid : MonoBehaviour
     [SerializeField] private Grid gridWorld;
     [SerializeField] private LayerMask collisionMask;
 
+    public Alien alien;
+
     private Node[,] nodeArray;
 
     private float nodeDiameter;
@@ -50,10 +52,8 @@ public class NodeGrid : MonoBehaviour
         gridSizeX = Mathf.RoundToInt((maxX - minX) / nodeDiameter);
         gridSizeY = Mathf.RoundToInt((maxY - minY) / nodeDiameter);
 
-        Debug.Log(gridSizeX);
-        Debug.Log(gridSizeY);
-        Debug.Log(gridSizeX * gridSizeY);
-        //CreateGrid();
+        Debug.Log(gridSizeX * gridSizeY + "Nodes required");
+        CreateGrid();
     }
 
     private void CreateGrid()
@@ -75,17 +75,74 @@ public class NodeGrid : MonoBehaviour
                 }
 
                 nodeArray[x, y] = new Node(wall, worldPoint, x, y);
-                Debug.Log(i++);
+                i++;
             }
         }
     }
 
-    void Update()
+    public List<Node> GetNeighboringNodes(Node neighborNode)
     {
+        List<Node> neighborList = new List<Node>();
 
+        //Check Right Side
+        int checkX = neighborNode.GetGridX() + 1;
+        int checkY = neighborNode.GetGridY();
+        if (checkX >= 0 && checkX < gridSizeX)
+        {
+            if (checkY >= 0 && checkY < gridSizeY)
+            {
+                neighborList.Add(nodeArray[checkX, checkY]);
+            }
+        }
+
+        //Check Left Side
+        checkX = neighborNode.GetGridX() - 1;
+        checkY = neighborNode.GetGridY();
+        if (checkX >= 0 && checkX < gridSizeX)
+        {
+            if (checkY >= 0 && checkY < gridSizeY)
+            {
+                neighborList.Add(nodeArray[checkX, checkY]);
+            }
+        }
+
+        //Check Up Side
+        checkX = neighborNode.GetGridX();
+        checkY = neighborNode.GetGridY() + 1;
+        if (checkX >= 0 && checkX < gridSizeX)
+        {
+            if (checkY >= 0 && checkY < gridSizeY)
+            {
+                neighborList.Add(nodeArray[checkX, checkY]);
+            }
+        }
+
+        //Check Bottom Side
+        checkX = neighborNode.GetGridX();
+        checkY = neighborNode.GetGridY() - 1;
+        if (checkX >= 0 && checkX < gridSizeX)
+        {
+            if (checkY >= 0 && checkY < gridSizeY)
+            {
+                neighborList.Add(nodeArray[checkX, checkY]);
+            }
+        }
+
+        return neighborList;
     }
 
-    bool f = true;
+    public Node NodeFromWorldPoint(Vector3 worldPosition)
+    {
+        float xPos = ((worldPosition.x + gridSizeX / 2) / gridSizeX);
+        float yPos = ((worldPosition.y + gridSizeY / 2) / gridSizeY);
+        xPos = Mathf.Clamp01(xPos);
+        yPos = Mathf.Clamp01(yPos);
+        int x = Mathf.RoundToInt((gridSizeX - 1) * xPos);
+        int y = Mathf.RoundToInt((gridSizeY - 1) * yPos);
+
+        return nodeArray[x, y];
+    }
+
     void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridSizeX, gridSizeY, 1));//Draw a wire cube with the given dimensions from the Unity inspector
@@ -96,22 +153,20 @@ public class NodeGrid : MonoBehaviour
             {
                 if (n.GetIsWall())//If the current node is a wall node
                 {
-                    if (f)
-                    {
-                        Gizmos.color = Color.yellow;//Set the color of the node
-                        f = !f;
-                    }
-                    else
-                    {
-                        Gizmos.color = Color.blue;//Set the color of the node
-                        f = !f;
-                    }
-                    
-                    
+                    Gizmos.color = Color.yellow;//Set the color of the node
                 }
                 else
                 {
                     Gizmos.color = Color.white;//Set the color of the node
+                }
+
+                if (alien.finalPath != null)//If the final path is not empty
+                {
+                    if (alien.finalPath.Contains(n))//If the current node is in the final path
+                    {
+                        Gizmos.color = Color.red;//Set the color of that node
+                    }
+
                 }
 
                 Gizmos.DrawCube(n.GetNodePosition(), Vector3.one * (nodeDiameter - distanceBetweenNodes));//Draw the node at the position of the node.

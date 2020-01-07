@@ -25,7 +25,6 @@ public class Alien : MonoBehaviour
 
     [SerializeField] private int pathfindingTimer = 20;
     private int reducer;
-    [SerializeField] private float gapToObject = 0.5f;
 
     private int ambientTime = 0;
     [SerializeField] private int maxRandomAmbientTime = 100;
@@ -53,6 +52,9 @@ public class Alien : MonoBehaviour
     private bool pointRun = true;
     private List<Alien> patrouilleAlly = new List<Alien>();
     [SerializeField] private GameObject freezeTrigger;
+
+    [SerializeField] private NodeGrid nodeGrid;
+    public List<Node> finalPath;
 
     void Start()
     {
@@ -307,102 +309,78 @@ public class Alien : MonoBehaviour
         }
 
     }
+    private void Pathfinding(Vector2 position, Vector2 targetPosition)
+    {
+        Node startNode = nodeGrid.NodeFromWorldPoint(position);
+        Node targetNode = nodeGrid.NodeFromWorldPoint(targetPosition);
 
-    /*
-    private Vector2 newPosition;
-    private Vector2 seqPosition;
-    private Queue<Vector2> sequencePoint;
-         */
-         
-    private LinkedList<Node> openList = new LinkedList<Node>();
-    private LinkedList<NodeStruct> closedList = new LinkedList<NodeStruct>();
-    private struct NodeStruct
-    {
-        public Vector3 position;
-        public float distance;       
-    }
-    private struct Node
-    {
-        public NodeStruct node;
-        public NodeStruct previousNode;
-        public NodeStruct nextNode;
-    }
-    private void Pathfinding(Vector2 position, Vector2 moveToPosition)
-    {
-        Ray ray = new Ray(position, moveToPosition);
-        bool notBlocked = true;
-        bool found = true;
-        float notBlockedDistance = 0;
-        Vector3 point;
-        PhysicsScene2D physicScene2D = GetComponent<Scene>().GetPhysicsScene2D();  
-        do
+        List<Node> openList = new List<Node>();
+        HashSet<Node> closedList = new HashSet<Node>();
+
+        openList.Add(startNode);
+
+        while (openList.Count > 0)
         {
-            NodeStruct currentNode;
-            NodeStruct lastNode = new NodeStruct();
-            Node node = new Node();
-            notBlockedDistance += speed;
-            point = ray.GetPoint(notBlockedDistance);           
-            if (physicScene2D.OverlapPoint(point) != null)
+            Node currentNode = openList[0];
+            for (int i = 1; i < openList.Count; i++)
             {
-                notBlocked = false;
-                found = false;
-                break;
-            }
-            else
-            {
-                currentNode.position = point;
-                currentNode.distance = Mathf.Abs((moveToPosition - (Vector2)point).magnitude);
-               
-                node.node = currentNode;
-                node.previousNode = lastNode;
-                if (openList.Count != 0)
+                if (openList[i].GetFCost() <= currentNode.GetFCost() && openList[i].GetHCost() < currentNode.GetHCost())
                 {
-                    Node temp = openList.Last.Value;
-                    openList.RemoveLast();
-                    temp.previousNode = currentNode;
-                    openList.AddLast(temp);
-                }                
-                openList.AddLast(node);
-                lastNode = currentNode;
+                    currentNode = openList[i];
+                }
             }
-        }
-        while (notBlocked && (Mathf.Abs(notBlockedDistance) < Mathf.Abs((moveToPosition - position).magnitude)));
+            openList.Remove(currentNode);
+            closedList.Add(currentNode);
 
-        
-        while(!found && openList.Count > 0)
-        {
-            Node currentNode = openList.First.Value;
-            openList.RemoveFirst();
-
-            if ((Vector2)currentNode.node.position == moveToPosition)
+            if (currentNode == targetNode)
             {
-                found = true;
-                break;
+                GetFinalPath(startNode, targetNode);
             }
-            expandeNode(currentNode);
+
+            foreach (Node neighborNode in nodeGrid.GetNeighboringNodes(currentNode))
+            {
+                if (!neighborNode.GetIsWall() || closedList.Contains(neighborNode))
+                {
+                    continue;
+                }
+                int moveCost = currentNode.GetGCost() + GetManhattenDistance(currentNode, neighborNode);
+
+                if (moveCost < neighborNode.GetGCost() || !openList.Contains(neighborNode))
+                {
+                    neighborNode.SetGCost(moveCost);
+                    neighborNode.SetHCost(GetManhattenDistance(neighborNode, targetNode));
+                    neighborNode.SetParentNode(currentNode);
+
+                    if (!openList.Contains(neighborNode))
+                    {
+                        openList.Add(neighborNode);
+                    }
+                }
+            }
         }
 
     }
 
-    private void expandeNode(Node currentNode) 
+    private void GetFinalPath(Node startingNode, Node endNode)
     {
-        
-        if (closedList.Contains(currentNode.nextNode))
+         finalPath = new List<Node>();
+        Node currentNode = endNode;
+
+        while (currentNode != startingNode)
         {
-            return;
+            finalPath.Add(currentNode);
+            currentNode = currentNode.GetParentNode();
         }
-        else
-        {
-            //muss weitergemacht werden
-        }
+
+        finalPath.Reverse();
     }
 
-
-    private float CalulateNormals(Vector2 point, Vector2 path, Vector2 position)
+    private int GetManhattenDistance(Node nodeA, Node nodeB)
     {
-        point = point - position;
-        float length = (Vector3.Cross(point, path).magnitude) / path.magnitude;
-        return length;
+        int x = Mathf.Abs(nodeA.GetGridX() - nodeB.GetGridX());
+        int y = Mathf.Abs(nodeA.GetGridY() - nodeB.GetGridY());
+
+        return x + y;
     }
 
 
