@@ -10,7 +10,6 @@ public class NodeGrid : MonoBehaviour
     [SerializeField] private float distanceBetweenNodes;
     [SerializeField] private Grid gridWorld;
     [SerializeField] private LayerMask collisionMask;
-    [SerializeField] private Vector2 gridWorldSize = new Vector2(30, 30);
 
     private Node[,] nodeArray;
 

@@ -317,6 +317,8 @@ MonoBehaviour:
     - first monologue
     - second
     - end
+    destroyWhenDone: 0
+    trigger: {fileID: 708908760}
 --- !u!4 &708908762
 Transform:
   m_ObjectHideFlags: 0
@@ -536,6 +538,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   descriptionText: {fileID: 1392679544}
   nameItem: {fileID: 1640750379}
+  destroyWhenDone: 0
   animator: {fileID: 2088991025}
 --- !u!4 &1265792204
 Transform:
@@ -965,6 +968,8 @@ MonoBehaviour:
     sentences:
     - first monologue
     - end
+    destroyWhenDone: 1
+    trigger: {fileID: 1765101884}
 --- !u!61 &1765101886
 BoxCollider2D:
   m_ObjectHideFlags: 0
