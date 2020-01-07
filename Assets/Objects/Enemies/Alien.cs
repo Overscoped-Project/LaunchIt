@@ -32,7 +32,6 @@ public class Alien : MonoBehaviour
     [SerializeField] private float ambientRange = 3f;
     private Vector2 newPosition;
     private Vector2 seqPosition;
-    private Queue<Vector2> sequencePoint;
 
     private List<GameObject> objectsInRange = new List<GameObject>();
     private List<Bullet> bulletsInRange = new List<Bullet>();
@@ -51,33 +50,32 @@ public class Alien : MonoBehaviour
     private int currentPoint = 0;
     private bool pointRun = true;
     private List<Alien> patrouilleAlly = new List<Alien>();
-    [SerializeField] private GameObject freezeTrigger;
+    [SerializeField] private FreezeTrigger freezeTrigger;
 
     [SerializeField] private NodeGrid nodeGrid;
-    public List<Node> finalPath;
+    public List<Node> finalPath =  new List<Node>();
 
     void Start()
-    {
-        foreach (GameObject ally in GameObject.FindGameObjectsWithTag("Entity"))
-        {
-            if (ally.GetComponent<Alien>().GetPatrouilleUnit() && ally.GetComponent<Alien>().GetLabyrinthId() == labyrinthId)
-            {
-                patrouilleAlly.Add(ally.GetComponent<Alien>());
-            }
-        }
+    {       
         newPosition = transform.position;
-        sequencePoint = new Queue<Vector2>();
         dodgePoint = new Queue<Vector2>();
         reducer = pathfindingTimer;
         if (patrouilleUnit)
         {
+            foreach (GameObject ally in GameObject.FindGameObjectsWithTag("Entity"))
+            {
+                if (ally.GetComponent<Alien>().GetPatrouilleUnit() && ally.GetComponent<Alien>().GetLabyrinthId() == labyrinthId)
+                {
+                    patrouilleAlly.Add(ally.GetComponent<Alien>());
+                }
+            }
             SetNewPosition((Vector2)patrouillePoints[currentPoint].transform.position);
         }
     }
 
     void Update()
     {
-        if (freezeTrigger.GetComponent<FreezeTrigger>().GetFreezed())
+        if (freezeTrigger != null && freezeTrigger.GetFreezed())
         {
 
         }
@@ -88,7 +86,9 @@ public class Alien : MonoBehaviour
             {
                 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Pathfinding(transform.position, newPosition);
-                seqPosition = sequencePoint.Dequeue();
+                Debug.Log(finalPath.Count);
+                seqPosition = finalPath[0].GetNodePosition();
+                finalPath.RemoveAt(0);
 
             }
             //DEBUG
@@ -103,7 +103,6 @@ public class Alien : MonoBehaviour
             {
                 AmbientMovement();
             }
-            Debug.Log(seqPosition);
             //that the Entitie not has a velocity after a hit
             this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
         }
@@ -166,9 +165,10 @@ public class Alien : MonoBehaviour
                 if (reducer <= 0)
                 {
                     Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
-                    if (sequencePoint.Count > 0)
+                    if (finalPath.Count > 0)
                     {
-                        seqPosition = sequencePoint.Dequeue();
+                        seqPosition = finalPath[0].GetNodePosition();
+                        finalPath.RemoveAt(0);
                     }
                     reducer = pathfindingTimer;
                 }
@@ -178,10 +178,11 @@ public class Alien : MonoBehaviour
                 }
                 RegenerateAggression();
             }
-            else if (sequencePoint.Count > 0 && (Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= gapToPoint) && (Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= gapToPoint))
+            else if (finalPath.Count > 0 && (Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= gapToPoint) && (Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= gapToPoint))
             {
                 gapToPoint = 1;
-                seqPosition = sequencePoint.Dequeue();
+                seqPosition = finalPath[0].GetNodePosition();
+                finalPath.RemoveAt(0);
             }
             else if (ambientTime <= 0)
             {
@@ -191,9 +192,10 @@ public class Alien : MonoBehaviour
 
                 //TODO Befindet sich die neue position in einem Objekt?
                 Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
-                if (sequencePoint.Count > 0)
+                if (finalPath.Count > 0)
                 {
-                    seqPosition = sequencePoint.Dequeue();
+                    seqPosition = finalPath[0].GetNodePosition();
+                    finalPath.RemoveAt(0);
                 }
             }
             else
@@ -324,7 +326,7 @@ public class Alien : MonoBehaviour
             Node currentNode = openList[0];
             for (int i = 1; i < openList.Count; i++)
             {
-                if (openList[i].GetFCost() <= currentNode.GetFCost() && openList[i].GetHCost() < currentNode.GetHCost())
+                if (openList[i].GetFCost() < currentNode.GetFCost() || openList[i].GetFCost() == currentNode.GetFCost() && openList[i].GetHCost() < currentNode.GetHCost())
                 {
                     currentNode = openList[i];
                 }
@@ -357,8 +359,7 @@ public class Alien : MonoBehaviour
                     }
                 }
             }
-        }
-
+        }        
     }
 
     private void GetFinalPath(Node startingNode, Node endNode)

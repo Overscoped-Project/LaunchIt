@@ -139,7 +139,6 @@ public class NodeGrid : MonoBehaviour
         yPos = Mathf.Clamp01(yPos);
         int x = Mathf.RoundToInt((gridSizeX - 1) * xPos);
         int y = Mathf.RoundToInt((gridSizeY - 1) * yPos);
-
         return nodeArray[x, y];
     }
 
