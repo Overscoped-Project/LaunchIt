@@ -123,6 +123,10 @@ public class Player : MonoBehaviour
         GetComponent<Animator>().SetFloat("WalkDirectionX", directionX);
         GetComponent<Animator>().SetFloat("WalkDirectionY", directionY);
         GetComponent<Animator>().SetBool("walk", walk);
+        if (walk)
+        {
+            FindObjectOfType<AudioManager>().PlayIfNot("PlayerWalk");
+        }
         walk = false;
 
         //that the Entitie not has a velocity after a hit
@@ -189,6 +193,7 @@ public class Player : MonoBehaviour
     public void Hit(int damage)
     {
         health -= damage;
+        FindObjectOfType<AudioManager>().PlayIfNot("HitPlayer");
         if (health <= 0)
         {
             GameObject.Find("GameController").GetComponent<LevelManager>().GoToDeathScreen();

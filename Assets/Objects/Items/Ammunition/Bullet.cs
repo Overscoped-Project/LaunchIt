@@ -12,6 +12,7 @@ public class Bullet : MonoBehaviour
     {
         Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), GameObject.FindGameObjectWithTag("Player").GetComponent<CircleCollider2D>());
         startPosition = transform.position;
+        FindObjectOfType<AudioManager>().Play("PlayerFire");
     }
 
     void Update()
@@ -41,6 +42,11 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.tag == "Entity")
         {
             collision.gameObject.GetComponent<Alien>().Hit(damage);
+            FindObjectOfType<AudioManager>().Play("HitEnemy");
+        }
+        if (collision.gameObject.tag != "Entity")
+        {
+            FindObjectOfType<AudioManager>().Play("HitWall");
         }
         Destroy(this.gameObject);
     }

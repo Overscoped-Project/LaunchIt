@@ -93,6 +93,7 @@ public class Alien : MonoBehaviour
             if (enemy != null)
             {
                 Physics2D.IgnoreCollision(GetComponent<PolygonCollider2D>(), enemy.GetComponent<CircleCollider2D>());
+                FindObjectOfType<AudioManager>().PlayIfNot("EnemyMove");
                 AttackMovement(enemy);
 
             }
@@ -632,6 +633,7 @@ public class Alien : MonoBehaviour
             if (canAttack)
             {
                 collision.gameObject.GetComponent<Player>().Hit(damage);
+                FindObjectOfType<AudioManager>().PlayIfNot("EnemyAttack");
                 //Little Knockback
                 Vector3 moveToPlayer = collision.transform.position - transform.position;
                 moveToPlayer = moveToPlayer.normalized;

@@ -103,12 +103,13 @@ public class Inventory : MonoBehaviour
     {
         slot.AddItem(item.GetComponent<ConnectorItem>().GetItem());
         Destroy(item);
-        
+        FindObjectOfType<AudioManager>().Play("ItemCollect");
     }
 
     public void RemoveItem(Slot slot)
     {
         slot.ClearSlot();
+        FindObjectOfType<AudioManager>().Play("ItemUse");
     }
 
     public void AddInventorySlot(int newSlots, bool addSlot)
