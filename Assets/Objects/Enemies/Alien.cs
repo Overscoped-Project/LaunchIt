@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Alien : MonoBehaviour
 {
@@ -30,15 +29,16 @@ public class Alien : MonoBehaviour
     [SerializeField] private int maxRandomAmbientTime = 100;
     [SerializeField] private int minRandomAmbientTime = 20;
     [SerializeField] private float ambientRange = 3f;
-    private Vector2 newPosition;
-    private Vector2 seqPosition;
+    private Vector3 newPosition;
+    private Vector3 nextPosition;
 
     private List<GameObject> objectsInRange = new List<GameObject>();
     private List<Bullet> bulletsInRange = new List<Bullet>();
     private List<Bullet> calculatedBullets = new List<Bullet>();
 
     [SerializeField] private int maxGapToPoint = 5;
-    private int gapToPoint = 1;
+    [SerializeField] private int gapToPoint = 1;
+    private int defaultGap;
 
     public enum LabyrinthIds { Top, Left, Right, Bottom };
     [SerializeField] private LabyrinthIds labyrinthId;
@@ -52,11 +52,14 @@ public class Alien : MonoBehaviour
     private List<Alien> patrouilleAlly = new List<Alien>();
     [SerializeField] private FreezeTrigger freezeTrigger;
 
-    [SerializeField] private NodeGrid nodeGrid;
+    private NodeGrid nodeGrid;
     public List<Node> finalPath =  new List<Node>();
+    private int nodeIndex = 0;
 
     void Start()
-    {       
+    {
+        nodeGrid = GameObject.FindGameObjectWithTag("NodeManager").GetComponent<NodeGrid>();
+        defaultGap = gapToPoint;
         newPosition = transform.position;
         dodgePoint = new Queue<Vector2>();
         reducer = pathfindingTimer;
@@ -86,9 +89,8 @@ public class Alien : MonoBehaviour
             {
                 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Pathfinding(transform.position, newPosition);
-                Debug.Log(finalPath.Count);
-                seqPosition = finalPath[0].GetNodePosition();
-                finalPath.RemoveAt(0);
+                nodeIndex = 0;
+                nextPosition = finalPath[nodeIndex].GetNodePosition();
 
             }
             //DEBUG
@@ -104,7 +106,7 @@ public class Alien : MonoBehaviour
                 AmbientMovement();
             }
             //that the Entitie not has a velocity after a hit
-            this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+            this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(0, 0, 0);
         }
     }
 
@@ -124,7 +126,9 @@ public class Alien : MonoBehaviour
     public void SetNewPosition(Vector2 newPos)
     {
         newPosition = newPos;
-        seqPosition = newPosition;
+        Pathfinding(transform.position, newPosition);
+        nodeIndex = 0;
+        nextPosition = finalPath[nodeIndex].GetNodePosition();
         guardingTicks = maxGuardingTicks;
         gapToPoint = maxGapToPoint;
     }
@@ -156,57 +160,66 @@ public class Alien : MonoBehaviour
         }
         else
         {
-            if (!(Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= gapToPoint) && !(Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= gapToPoint))
+            if (!(Mathf.Abs(transform.position.x - newPosition.x) <= gapToPoint) && !(Mathf.Abs(transform.position.y - newPosition.y) <= gapToPoint))
             {
-                Vector2 moveToPoint = seqPosition - GetComponent<Rigidbody2D>().position;
-                moveToPoint = moveToPoint.normalized;
-                GetComponent<Rigidbody2D>().position += new Vector2(moveToPoint.x * (speed / 2) * Time.deltaTime, moveToPoint.y * (speed / 2) * Time.deltaTime);
-
-                if (reducer <= 0)
+                Debug.Log("1");
+                if ((Mathf.Abs(transform.position.x - nextPosition.x) <= gapToPoint) && (Mathf.Abs(transform.position.y - nextPosition.y) <= gapToPoint))
                 {
-                    Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
+                    Debug.Log("2");
+                    gapToPoint = defaultGap;
+                    if (nodeIndex < finalPath.Count)
+                    {
+                        Debug.Log(nodeIndex);
+                        nodeIndex++;
+                    }
+                    nextPosition = finalPath[nodeIndex].GetNodePosition();
+                }
+                Vector3 targetPoint = nextPosition - transform.position;
+                targetPoint = targetPoint.normalized;
+                Debug.Log(targetPoint);
+                transform.position += new Vector3(targetPoint.x * (speed / 2) * Time.deltaTime, targetPoint.y * (speed / 2) * Time.deltaTime, 0);
+
+                /*if (reducer <= 0)
+                {
+                    Pathfinding(transform.position, newPosition);
                     if (finalPath.Count > 0)
                     {
-                        seqPosition = finalPath[0].GetNodePosition();
-                        finalPath.RemoveAt(0);
+                        nodeIndex = 0;
+                        nextPosition = finalPath[nodeIndex].GetNodePosition();
                     }
                     reducer = pathfindingTimer;
                 }
                 else
                 {
                     reducer--;
-                }
+                }*/
                 RegenerateAggression();
             }
-            else if (finalPath.Count > 0 && (Mathf.Abs(GetComponent<Rigidbody2D>().position.x - seqPosition.x) <= gapToPoint) && (Mathf.Abs(GetComponent<Rigidbody2D>().position.y - seqPosition.y) <= gapToPoint))
+            /*else if (ambientTime <= 0)
             {
-                gapToPoint = 1;
-                seqPosition = finalPath[0].GetNodePosition();
-                finalPath.RemoveAt(0);
-            }
-            else if (ambientTime <= 0)
-            {
+                Debug.Log("3");
                 ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
-                newPosition = new Vector2(GetComponent<Rigidbody2D>().position.x + Random.Range(-ambientRange, ambientRange), GetComponent<Rigidbody2D>().position.y + Random.Range(-ambientRange, ambientRange));
+                newPosition = new Vector3(transform.position.x + Random.Range(-ambientRange, ambientRange), transform.position.y + Random.Range(-ambientRange, ambientRange), 0);
 
 
                 //TODO Befindet sich die neue position in einem Objekt?
-                Pathfinding(GetComponent<Rigidbody2D>().position, newPosition);
+                Pathfinding(transform.position, newPosition);
                 if (finalPath.Count > 0)
                 {
-                    seqPosition = finalPath[0].GetNodePosition();
-                    finalPath.RemoveAt(0);
+                    nodeIndex = 0;
+                    nextPosition = finalPath[nodeIndex].GetNodePosition();
                 }
             }
             else
             {
+                Debug.Log("4");
                 if (patrouilleUnit)
                 {
                     guardingTicks--;
                 }
                 RegenerateAggression();
                 ambientTime--;
-            }
+            }*/
 
 
         }
@@ -311,7 +324,7 @@ public class Alien : MonoBehaviour
         }
 
     }
-    private void Pathfinding(Vector2 position, Vector2 targetPosition)
+    private void Pathfinding(Vector3 position, Vector3 targetPosition)
     {
         Node startNode = nodeGrid.NodeFromWorldPoint(position);
         Node targetNode = nodeGrid.NodeFromWorldPoint(targetPosition);
@@ -364,7 +377,7 @@ public class Alien : MonoBehaviour
 
     private void GetFinalPath(Node startingNode, Node endNode)
     {
-         finalPath = new List<Node>();
+        finalPath = new List<Node>();
         Node currentNode = endNode;
 
         while (currentNode != startingNode)

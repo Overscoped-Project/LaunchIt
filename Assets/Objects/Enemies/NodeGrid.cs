@@ -18,9 +18,8 @@ public class NodeGrid : MonoBehaviour
     private float nodeDiameter;
     private int gridSizeX;
     private int gridSizeY;
-
-    private int minX;
-    private int minY;
+    private int gridWorldSizeX;
+    private int gridWorldSizeY;
 
     void Start()
     {
@@ -29,6 +28,8 @@ public class NodeGrid : MonoBehaviour
         Tilemap[] tileMaps = gridWorld.GetComponentsInChildren<Tilemap>();
         int maxX = 0;
         int maxY = 0;
+        int minX = 0;
+        int minY = 0;
         foreach (Tilemap map in tileMaps)
         {
             if (map.CellToWorld(map.cellBounds.min).x < minX)
@@ -49,33 +50,32 @@ public class NodeGrid : MonoBehaviour
             }
             
         }
-        gridSizeX = Mathf.RoundToInt((maxX - minX) / nodeDiameter);
-        gridSizeY = Mathf.RoundToInt((maxY - minY) / nodeDiameter);
+        gridWorldSizeX = maxX - minX;
+        gridWorldSizeY = maxY - minY;
+        gridSizeX = Mathf.RoundToInt(gridWorldSizeX / nodeDiameter);
+        gridSizeY = Mathf.RoundToInt(gridWorldSizeY / nodeDiameter);
 
-        Debug.Log(gridSizeX * gridSizeY + "Nodes required");
+        Debug.Log(gridSizeX * gridSizeY + " Nodes required");
         CreateGrid();
     }
 
     private void CreateGrid()
     {
         nodeArray = new Node[gridSizeX, gridSizeY];
-        Vector3 bottomLeft = new Vector3(minX, minY, 0);
-
-        int i = 0;
+        Vector3 bottomLeft = transform.position - Vector3.right * gridWorldSizeX / 2 - Vector3.up * gridWorldSizeY / 2;
         for (int x = 0; x < gridSizeX; x++)
         {
             for (int y = 0; y < gridSizeY; y++)
             {
                 Vector3 worldPoint = bottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.up * (y * nodeDiameter + nodeRadius);
-                bool wall = false;
+                bool wall = true;
 
                 if (Physics2D.OverlapCircle(worldPoint, nodeRadius, collisionMask))
                 {
-                    wall = true;
+                    wall = false;
                 }
 
                 nodeArray[x, y] = new Node(wall, worldPoint, x, y);
-                i++;
             }
         }
     }
@@ -133,8 +133,8 @@ public class NodeGrid : MonoBehaviour
 
     public Node NodeFromWorldPoint(Vector3 worldPosition)
     {
-        float xPos = ((worldPosition.x + gridSizeX / 2) / gridSizeX);
-        float yPos = ((worldPosition.y + gridSizeY / 2) / gridSizeY);
+        float xPos = ((worldPosition.x + gridWorldSizeX / 2) / gridWorldSizeX);
+        float yPos = ((worldPosition.y + gridWorldSizeY / 2) / gridWorldSizeY);
         xPos = Mathf.Clamp01(xPos);
         yPos = Mathf.Clamp01(yPos);
         int x = Mathf.RoundToInt((gridSizeX - 1) * xPos);
@@ -159,7 +159,7 @@ public class NodeGrid : MonoBehaviour
                     Gizmos.color = Color.white;//Set the color of the node
                 }
 
-                if (alien.finalPath != null)//If the final path is not empty
+                if (alien != null && alien.finalPath != null)//If the final path is not empty
                 {
                     if (alien.finalPath.Contains(n))//If the current node is in the final path
                     {
