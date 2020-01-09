@@ -120,7 +120,10 @@ public class Player : MonoBehaviour
 
         direction.Normalize();
         direction *= playerSpeed * Time.deltaTime;
-        GetComponent<Rigidbody2D>().position += direction;
+        //GetComponent<Rigidbody2D>().position += direction;
+        GetComponent<Rigidbody2D>().velocity = direction;
+        
+
         GetComponent<Animator>().SetFloat("WalkDirectionX", directionX);
         GetComponent<Animator>().SetFloat("WalkDirectionY", directionY);
         GetComponent<Animator>().SetBool("walk", walk);

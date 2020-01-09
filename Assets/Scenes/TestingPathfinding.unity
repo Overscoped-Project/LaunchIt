@@ -1310,7 +1310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2af2e22c3a82a3946a6cef7e91878516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodeRadius: 0.5
+  nodeRadius: 0.4
   distanceBetweenNodes: 0
   gridWorld: {fileID: 238090921}
   collisionMask:
@@ -1420,12 +1420,22 @@ PrefabInstance:
       objectReference: {fileID: 1752140391}
     - target: {fileID: 450288344098211465, guid: a9c43d6efbef8cc43a4a7241326be3fe,
         type: 3}
-      propertyPath: speed
+      propertyPath: gapToPoint
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111600792265519294, guid: a9c43d6efbef8cc43a4a7241326be3fe,
+        type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111600792265519294, guid: a9c43d6efbef8cc43a4a7241326be3fe,
+        type: 3}
+      propertyPath: m_Mass
       value: 0.01
       objectReference: {fileID: 0}
-    - target: {fileID: 450288344098211465, guid: a9c43d6efbef8cc43a4a7241326be3fe,
+    - target: {fileID: 9111600792265519294, guid: a9c43d6efbef8cc43a4a7241326be3fe,
         type: 3}
-      propertyPath: gapToPoint
+      propertyPath: m_Simulated
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

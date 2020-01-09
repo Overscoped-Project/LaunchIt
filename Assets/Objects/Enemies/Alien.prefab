@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 6366870600042727910}
   - component: {fileID: 9111600792265519294}
   - component: {fileID: 8605795422720971921}
-  - component: {fileID: -8195599893478781330}
   m_Layer: 0
   m_Name: Alien
   m_TagString: Entity
@@ -98,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  speed: 30
+  speed: 100
   maxAggression: 100
   aggression: 70
   aggressionRegeneration: 10
@@ -111,13 +110,13 @@ MonoBehaviour:
   minRandomAmbientTime: 40
   ambientRange: 10
   maxGapToPoint: 5
+  gapToPoint: 0.5
   labyrinthId: 0
   patrouilleUnit: 0
   patrouillePoints: []
   triggerZone: {fileID: 0}
   maxGuardingTicks: 500
   freezeTrigger: {fileID: 0}
-  nodeGrid: {fileID: 0}
 --- !u!58 &6366870600042727910
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -171,36 +170,3 @@ CapsuleCollider2D:
   m_Offset: {x: -0.3312656, y: -0.883364}
   m_Size: {x: 10.145799, y: 6.3916373}
   m_Direction: 1
---- !u!114 &-8195599893478781330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 450288344098211467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3790c73384b82b341a3f3905708d5e3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 100
-  speed: 30
-  maxAggression: 70
-  aggression: 70
-  aggressionRegeneration: 10
-  damage: 20
-  attackRate: 1
-  hitJumpBack: 3
-  dodgeChance: 10
-  pathfindingTimer: 20
-  maxRandomAmbientTime: 100
-  minRandomAmbientTime: 20
-  ambientRange: 3
-  maxGapToPoint: 5
-  labyrinthId: 0
-  patrouilleUnit: 0
-  patrouillePoints: []
-  triggerZone: {fileID: 0}
-  maxGuardingTicks: 500
-  freezeTrigger: {fileID: 0}
-  nodeGrid: {fileID: 0}

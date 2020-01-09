@@ -36,9 +36,9 @@ public class Alien : MonoBehaviour
     private List<Bullet> bulletsInRange = new List<Bullet>();
     private List<Bullet> calculatedBullets = new List<Bullet>();
 
-    [SerializeField] private int maxGapToPoint = 5;
-    [SerializeField] private int gapToPoint = 1;
-    private int defaultGap;
+    [SerializeField] private float maxGapToPoint = 5;
+    [SerializeField] private float gapToPoint = 1;
+    private float defaultGap;
 
     public enum LabyrinthIds { Top, Left, Right, Bottom };
     [SerializeField] private LabyrinthIds labyrinthId;
@@ -53,11 +53,13 @@ public class Alien : MonoBehaviour
     [SerializeField] private FreezeTrigger freezeTrigger;
 
     private NodeGrid nodeGrid;
-    public List<Node> finalPath =  new List<Node>();
+    public List<Node> finalPath = new List<Node>();
     private int nodeIndex = 0;
+    private Rigidbody2D body;
 
     void Start()
     {
+        body = this.gameObject.GetComponent<Rigidbody2D>();
         nodeGrid = GameObject.FindGameObjectWithTag("NodeManager").GetComponent<NodeGrid>();
         defaultGap = gapToPoint;
         newPosition = transform.position;
@@ -105,8 +107,6 @@ public class Alien : MonoBehaviour
             {
                 AmbientMovement();
             }
-            //that the Entitie not has a velocity after a hit
-            this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(0, 0, 0);
         }
     }
 
@@ -160,67 +160,50 @@ public class Alien : MonoBehaviour
         }
         else
         {
-            if (!(Mathf.Abs(transform.position.x - newPosition.x) <= gapToPoint) && !(Mathf.Abs(transform.position.y - newPosition.y) <= gapToPoint))
+            if (!((Mathf.Abs(transform.position.x - newPosition.x) <= gapToPoint) && (Mathf.Abs(transform.position.y - newPosition.y) <= gapToPoint)))
             {
-                Debug.Log("1");
                 if ((Mathf.Abs(transform.position.x - nextPosition.x) <= gapToPoint) && (Mathf.Abs(transform.position.y - nextPosition.y) <= gapToPoint))
                 {
-                    Debug.Log("2");
                     gapToPoint = defaultGap;
-                    if (nodeIndex < finalPath.Count)
+                    if (nodeIndex < finalPath.Count - 1)
                     {
-                        Debug.Log(nodeIndex);
                         nodeIndex++;
+                        nextPosition = finalPath[nodeIndex].GetNodePosition();
                     }
-                    nextPosition = finalPath[nodeIndex].GetNodePosition();
                 }
                 Vector3 targetPoint = nextPosition - transform.position;
                 targetPoint = targetPoint.normalized;
-                Debug.Log(targetPoint);
-                transform.position += new Vector3(targetPoint.x * (speed / 2) * Time.deltaTime, targetPoint.y * (speed / 2) * Time.deltaTime, 0);
+                body.velocity = targetPoint * (speed / 2) * Time.deltaTime;
 
-                /*if (reducer <= 0)
-                {
-                    Pathfinding(transform.position, newPosition);
-                    if (finalPath.Count > 0)
-                    {
-                        nodeIndex = 0;
-                        nextPosition = finalPath[nodeIndex].GetNodePosition();
-                    }
-                    reducer = pathfindingTimer;
-                }
-                else
-                {
-                    reducer--;
-                }*/
                 RegenerateAggression();
             }
-            /*else if (ambientTime <= 0)
+            else if (ambientTime <= 0)
             {
-                Debug.Log("3");
                 ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
                 newPosition = new Vector3(transform.position.x + Random.Range(-ambientRange, ambientRange), transform.position.y + Random.Range(-ambientRange, ambientRange), 0);
 
-
-                //TODO Befindet sich die neue position in einem Objekt?
+                while (!nodeGrid.NodeFromWorldPoint(newPosition).GetIsWall())
+                {
+                    newPosition = new Vector3(transform.position.x + Random.Range(-ambientRange, ambientRange), transform.position.y + Random.Range(-ambientRange, ambientRange), 0);
+                }
                 Pathfinding(transform.position, newPosition);
                 if (finalPath.Count > 0)
                 {
                     nodeIndex = 0;
                     nextPosition = finalPath[nodeIndex].GetNodePosition();
                 }
+
             }
             else
             {
-                Debug.Log("4");
+                body.velocity = Vector3.zero;
                 if (patrouilleUnit)
                 {
                     guardingTicks--;
                 }
                 RegenerateAggression();
                 ambientTime--;
-            }*/
-
+            }
 
         }
     }
@@ -372,7 +355,7 @@ public class Alien : MonoBehaviour
                     }
                 }
             }
-        }        
+        }
     }
 
     private void GetFinalPath(Node startingNode, Node endNode)
@@ -455,6 +438,8 @@ public class Alien : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //that the Entitie not has a velocity after a hit
+        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(0, 0, 0);
         if (collision.gameObject.tag == "Player")
         {
             if (canAttack)
