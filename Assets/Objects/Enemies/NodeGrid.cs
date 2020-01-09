@@ -95,6 +95,28 @@ public class NodeGrid : MonoBehaviour
             }
         }
 
+        //Check Right Top Side
+        checkX = neighborNode.GetGridX() + 1;
+        checkY = neighborNode.GetGridY() + 1;
+        if (checkX >= 0 && checkX < gridSizeX)
+        {
+            if (checkY >= 0 && checkY < gridSizeY)
+            {
+                neighborList.Add(nodeArray[checkX, checkY]);
+            }
+        }
+
+        //Check Right Bottom Side
+        checkX = neighborNode.GetGridX() + 1;
+        checkY = neighborNode.GetGridY() - 1;
+        if (checkX >= 0 && checkX < gridSizeX)
+        {
+            if (checkY >= 0 && checkY < gridSizeY)
+            {
+                neighborList.Add(nodeArray[checkX, checkY]);
+            }
+        }
+
         //Check Left Side
         checkX = neighborNode.GetGridX() - 1;
         checkY = neighborNode.GetGridY();
@@ -106,7 +128,29 @@ public class NodeGrid : MonoBehaviour
             }
         }
 
-        //Check Up Side
+        //Check Left Top Side
+        checkX = neighborNode.GetGridX() - 1;
+        checkY = neighborNode.GetGridY() + 1;
+        if (checkX >= 0 && checkX < gridSizeX)
+        {
+            if (checkY >= 0 && checkY < gridSizeY)
+            {
+                neighborList.Add(nodeArray[checkX, checkY]);
+            }
+        }
+
+        //Check Left Bottom Side
+        checkX = neighborNode.GetGridX() - 1;
+        checkY = neighborNode.GetGridY() - 1;
+        if (checkX >= 0 && checkX < gridSizeX)
+        {
+            if (checkY >= 0 && checkY < gridSizeY)
+            {
+                neighborList.Add(nodeArray[checkX, checkY]);
+            }
+        }
+
+        //Check Top Side
         checkX = neighborNode.GetGridX();
         checkY = neighborNode.GetGridY() + 1;
         if (checkX >= 0 && checkX < gridSizeX)
