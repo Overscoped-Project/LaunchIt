@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6479395563330743146}
   - component: {fileID: 9205969351475827250}
   - component: {fileID: 5978924909167879899}
+  - component: {fileID: 4422504132708430280}
   m_Layer: 0
   m_Name: Alien
   m_TagString: Entity
@@ -117,6 +118,8 @@ MonoBehaviour:
   triggerZone: {fileID: 0}
   maxGuardingTicks: 500
   freezeTrigger: {fileID: 0}
+  enemyDeathPosition: {fileID: 7276113938277166871, guid: 9ff342a42844d964a9d5ad6597747e3f,
+    type: 3}
 --- !u!58 &6479395563330743146
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -413,3 +416,22 @@ PolygonCollider2D:
       - {x: -0.25, y: 1.86}
       - {x: -0.24, y: 1.8499999}
       - {x: -0.25, y: 1.8499999}
+--- !u!95 &4422504132708430280
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 544788359361848327}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b6a1f63daab284c40b702b7ba78cb765, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

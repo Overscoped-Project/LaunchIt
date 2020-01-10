@@ -52,6 +52,7 @@ public class Alien : MonoBehaviour
     private bool pointRun = true;
     private List<Alien> patrouilleAlly = new List<Alien>();
     [SerializeField] private GameObject freezeTrigger;
+    [SerializeField] private GameObject enemyDeathPosition;
 
     void Start()
     {
@@ -111,6 +112,7 @@ public class Alien : MonoBehaviour
         health -= dmg;
         if (health <= 0)
         {
+            Instantiate(enemyDeathPosition, transform.position, transform.rotation);
             Destroy(this.gameObject);
         }
         else

@@ -117,6 +117,8 @@ MonoBehaviour:
   triggerZone: {fileID: 0}
   maxGuardingTicks: 500
   freezeTrigger: {fileID: 0}
+  enemyDeathPosition: {fileID: 7276113938277166871, guid: 9ff342a42844d964a9d5ad6597747e3f,
+    type: 3}
 --- !u!58 &1140650003532494412
 CircleCollider2D:
   m_ObjectHideFlags: 0
