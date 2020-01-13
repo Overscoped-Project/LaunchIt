@@ -11,7 +11,8 @@ public class NodeGrid : MonoBehaviour
     [SerializeField] private Grid gridWorld;
     [SerializeField] private LayerMask collisionMask;
 
-    public Alien alien;
+    [SerializeField] private List<Alien> Aliens = new List<Alien>();
+    [SerializeField] private int alien = 0;
 
     private Node[,] nodeArray;
 
@@ -20,6 +21,8 @@ public class NodeGrid : MonoBehaviour
     private int gridSizeY;
     private int gridWorldSizeX;
     private int gridWorldSizeY;
+
+    private bool ready = false;
 
     void Start()
     {
@@ -57,8 +60,18 @@ public class NodeGrid : MonoBehaviour
 
         Debug.Log(gridSizeX * gridSizeY + " Nodes required");
         CreateGrid();
+        ready = true;
+
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Entity"))
+        {
+            Aliens.Add(g.GetComponent<Alien>());
+        }
     }
 
+    void OnValidate()
+    {
+        alien = Mathf.Clamp(alien, 0, Aliens.Count);
+    }
     private void CreateGrid()
     {
         nodeArray = new Node[gridSizeX, gridSizeY];
@@ -203,18 +216,23 @@ public class NodeGrid : MonoBehaviour
                     Gizmos.color = Color.white;//Set the color of the node
                 }
 
-                if (alien != null && alien.finalPath != null)//If the final path is not empty
+                if (Aliens != null)//If the final path is not empty
                 {
-                    if (alien.finalPath.Contains(n))//If the current node is in the final path
+                    if (Aliens[alien].GetCurrentPath().Contains(n))//If the current node is in the final path
                     {
                         Gizmos.color = Color.red;//Set the color of that node
                     }
 
                 }
-
                 Gizmos.DrawCube(n.GetNodePosition(), Vector3.one * (nodeDiameter - distanceBetweenNodes));//Draw the node at the position of the node.
             }
         }
+    }
+
+
+    public bool GetReady()
+    {
+        return ready;
     }
 
 }

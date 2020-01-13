@@ -127,10 +127,13 @@ public class Player : MonoBehaviour
         GetComponent<Animator>().SetFloat("WalkDirectionX", directionX);
         GetComponent<Animator>().SetFloat("WalkDirectionY", directionY);
         GetComponent<Animator>().SetBool("walk", walk);
-        walk = false;
-
-        //that the Entitie not has a velocity after a hit
-        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+        if ((!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S)))
+        {
+            walk = false;
+            //that the Entitie not has a velocity after a hit
+            this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+        }
+        
     }
 
     private void OnCollisionEnter2D(Collision2D collider)

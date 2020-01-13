@@ -15,15 +15,12 @@ public class Alien : MonoBehaviour
     [SerializeField] private float attackRate = 1f;
     private bool canAttack = true;
     private float timeSinceAttack = 0;
-    [SerializeField] private float hitJumpBack = 3f;
+    [SerializeField] private float hitJumpBack = 0.5f;
 
     [SerializeField] private int dodgeChance = 10;
     private Queue<Vector2> dodgePoint;
     private Vector2 dodgeSequencePoint;
     private bool dodge = false;
-
-    [SerializeField] private int pathfindingTimer = 20;
-    private int reducer;
 
     private int ambientTime = 0;
     [SerializeField] private int maxRandomAmbientTime = 100;
@@ -32,7 +29,7 @@ public class Alien : MonoBehaviour
     private Vector3 newPosition;
     private Vector3 nextPosition;
 
-    private List<GameObject> objectsInRange = new List<GameObject>();
+    private List<GameObject> UnitInRange = new List<GameObject>();
     private List<Bullet> bulletsInRange = new List<Bullet>();
     private List<Bullet> calculatedBullets = new List<Bullet>();
 
@@ -53,18 +50,23 @@ public class Alien : MonoBehaviour
     [SerializeField] private FreezeTrigger freezeTrigger;
 
     private NodeGrid nodeGrid;
-    public List<Node> finalPath = new List<Node>();
+    private List<Node> ambientPath = new List<Node>();
     private int nodeIndex = 0;
     private Rigidbody2D body;
+    [SerializeField] private GameObject home;
+    private List<Node> homePath = new List<Node>();
 
-    void Start()
+    private bool ready = false;
+
+    IEnumerator Start()
     {
-        body = this.gameObject.GetComponent<Rigidbody2D>();
         nodeGrid = GameObject.FindGameObjectWithTag("NodeManager").GetComponent<NodeGrid>();
+        yield return new WaitUntil(() => nodeGrid.GetReady());
+        body = GetComponent<Rigidbody2D>();
         defaultGap = gapToPoint;
-        newPosition = transform.position;
+        newPosition = body.position;
+        ambientPath.Add(nodeGrid.NodeFromWorldPoint(newPosition));
         dodgePoint = new Queue<Vector2>();
-        reducer = pathfindingTimer;
         if (patrouilleUnit)
         {
             foreach (GameObject ally in GameObject.FindGameObjectsWithTag("Entity"))
@@ -76,13 +78,19 @@ public class Alien : MonoBehaviour
             }
             SetNewPosition((Vector2)patrouillePoints[currentPoint].transform.position);
         }
+        if (home == null)
+        {
+            Debug.Log("!!In " + gameObject + " is option [Home] = null. Please assign a GameObject!!");
+        }
+
+        ready = true;
     }
 
     void Update()
     {
-        if (freezeTrigger != null && freezeTrigger.GetFreezed())
+        if (!ready || (freezeTrigger != null && freezeTrigger.GetFreezed())) 
         {
-
+            //Wait that Start() get's ready or the Freeze ends
         }
         else
         {
@@ -90,9 +98,9 @@ public class Alien : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.C))
             {
                 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Pathfinding(transform.position, newPosition);
+                ambientPath = Pathfinding(transform.position, newPosition);
                 nodeIndex = 0;
-                nextPosition = finalPath[nodeIndex].GetNodePosition();
+                nextPosition = ambientPath[nodeIndex].GetNodePosition();
 
             }
             //DEBUG
@@ -105,6 +113,10 @@ public class Alien : MonoBehaviour
             }
             else
             {
+                if (homePath.Count > 0)
+                {
+                    homePath = new List<Node>();
+                }
                 AmbientMovement();
             }
         }
@@ -126,9 +138,9 @@ public class Alien : MonoBehaviour
     public void SetNewPosition(Vector2 newPos)
     {
         newPosition = newPos;
-        Pathfinding(transform.position, newPosition);
+        ambientPath = Pathfinding(transform.position, newPosition);
         nodeIndex = 0;
-        nextPosition = finalPath[nodeIndex].GetNodePosition();
+        nextPosition = ambientPath[nodeIndex].GetNodePosition();
         guardingTicks = maxGuardingTicks;
         gapToPoint = maxGapToPoint;
     }
@@ -160,37 +172,25 @@ public class Alien : MonoBehaviour
         }
         else
         {
-            if (!((Mathf.Abs(transform.position.x - newPosition.x) <= gapToPoint) && (Mathf.Abs(transform.position.y - newPosition.y) <= gapToPoint)))
+            if (!(Mathf.Abs(transform.position.x - newPosition.x) <= gapToPoint) &&  !(Mathf.Abs(transform.position.y - newPosition.y) <= gapToPoint))
             {
-                if ((Mathf.Abs(transform.position.x - nextPosition.x) <= gapToPoint) && (Mathf.Abs(transform.position.y - nextPosition.y) <= gapToPoint))
-                {
-                    gapToPoint = defaultGap;
-                    if (nodeIndex < finalPath.Count - 1)
-                    {
-                        nodeIndex++;
-                        nextPosition = finalPath[nodeIndex].GetNodePosition();
-                    }
-                }
-                Vector3 targetPoint = nextPosition - transform.position;
-                targetPoint = targetPoint.normalized;
-                body.velocity = targetPoint * (speed / 2) * Time.deltaTime;
-
+                movementPathfinding(ambientPath, speed/2);
                 RegenerateAggression();
             }
             else if (ambientTime <= 0)
             {
+                gapToPoint = defaultGap;
                 ambientTime = Random.Range(minRandomAmbientTime, maxRandomAmbientTime);
-                newPosition = new Vector3(transform.position.x + Random.Range(-ambientRange, ambientRange), transform.position.y + Random.Range(-ambientRange, ambientRange), 0);
-
+                newPosition = new Vector3(body.position.x + Random.Range(-ambientRange, ambientRange), body.position.y + Random.Range(-ambientRange, ambientRange), 0);
                 while (!nodeGrid.NodeFromWorldPoint(newPosition).GetIsWall())
                 {
-                    newPosition = new Vector3(transform.position.x + Random.Range(-ambientRange, ambientRange), transform.position.y + Random.Range(-ambientRange, ambientRange), 0);
+                    newPosition = new Vector3(body.position.x + Random.Range(-ambientRange, ambientRange), body.position.y + Random.Range(-ambientRange, ambientRange), 0);
                 }
-                Pathfinding(transform.position, newPosition);
-                if (finalPath.Count > 0)
+                ambientPath = Pathfinding(body.position, newPosition);
+                if (ambientPath.Count > 0)
                 {
                     nodeIndex = 0;
-                    nextPosition = finalPath[nodeIndex].GetNodePosition();
+                    nextPosition = ambientPath[nodeIndex].GetNodePosition();
                 }
 
             }
@@ -208,9 +208,24 @@ public class Alien : MonoBehaviour
         }
     }
 
+    private void movementPathfinding(List<Node> path, float speed)
+    {
+        if ((Mathf.Abs(transform.position.x - nextPosition.x) <= gapToPoint) && (Mathf.Abs(transform.position.y - nextPosition.y) <= gapToPoint))
+        {           
+            if (nodeIndex < path.Count - 1)
+            {
+                nodeIndex++;
+                nextPosition = path[nodeIndex].GetNodePosition();
+            }
+        }
+        Vector3 targetPoint = nextPosition - transform.position;
+        targetPoint = targetPoint.normalized;
+        body.velocity = targetPoint * speed * Time.deltaTime;
+
+    }
     private void AttackMovement(GameObject player)
     {
-        if (dodge && dodgePoint.Count >= 0 && (Mathf.Abs(GetComponent<Rigidbody2D>().position.x - dodgeSequencePoint.x) <= 1) && (Mathf.Abs(GetComponent<Rigidbody2D>().position.y - dodgeSequencePoint.y) <= 1))
+        if (dodge && dodgePoint.Count >= 0 && (Mathf.Abs(body.position.x - dodgeSequencePoint.x) <= 1) && (Mathf.Abs(body.position.y - dodgeSequencePoint.y) <= 1))
         {
             if (dodgePoint.Count == 0)
             {
@@ -223,23 +238,24 @@ public class Alien : MonoBehaviour
         }
         else if (dodge)
         {
-            Vector2 moveToPosition = dodgeSequencePoint - GetComponent<Rigidbody2D>().position;
-            moveToPosition = moveToPosition.normalized;
-            GetComponent<Rigidbody2D>().position += (new Vector2(moveToPosition.x * speed * Time.deltaTime, moveToPosition.y * speed * Time.deltaTime));
+            Vector2 targetPosition = dodgeSequencePoint - body.position;
+            targetPosition = targetPosition.normalized;
+            body.velocity = targetPosition * speed * Time.deltaTime;
         }
 
         if (aggression < player.GetComponent<Player>().GetAggression() && !dodge)
         {
-            //TODO er könnte gegen die wand laufen
-            Vector2 moveToPlayer = player.GetComponent<Rigidbody2D>().position - GetComponent<Rigidbody2D>().position;
-            moveToPlayer = moveToPlayer.normalized;
-            GetComponent<Rigidbody2D>().position += (new Vector2(moveToPlayer.x * speed * Time.deltaTime, moveToPlayer.y * speed * Time.deltaTime) * (-1));
+            if (homePath == null || homePath.Count < 1)
+            {
+                homePath = Pathfinding(body.position, home.transform.position);
+            }
+            movementPathfinding(homePath, speed);
         }
         else if (canAttack && !dodge)
         {
-            Vector2 moveToPlayer = player.GetComponent<Rigidbody2D>().position - GetComponent<Rigidbody2D>().position;
-            moveToPlayer = moveToPlayer.normalized;
-            GetComponent<Rigidbody2D>().position += new Vector2(moveToPlayer.x * speed * Time.deltaTime, moveToPlayer.y * speed * Time.deltaTime);
+            Vector2 targetPosition = player.GetComponent<Rigidbody2D>().position - body.position;
+            targetPosition = targetPosition.normalized;
+            body.velocity = targetPosition * speed * Time.deltaTime;
             Dodge();
         }
         else if (!dodge)
@@ -307,7 +323,7 @@ public class Alien : MonoBehaviour
         }
 
     }
-    private void Pathfinding(Vector3 position, Vector3 targetPosition)
+    private List<Node> Pathfinding(Vector3 position, Vector3 targetPosition)
     {
         Node startNode = nodeGrid.NodeFromWorldPoint(position);
         Node targetNode = nodeGrid.NodeFromWorldPoint(targetPosition);
@@ -332,7 +348,7 @@ public class Alien : MonoBehaviour
 
             if (currentNode == targetNode)
             {
-                GetFinalPath(startNode, targetNode);
+                return GetFinalPath(startNode, targetNode);
             }
 
             foreach (Node neighborNode in nodeGrid.GetNeighboringNodes(currentNode))
@@ -356,11 +372,13 @@ public class Alien : MonoBehaviour
                 }
             }
         }
+        Debug.Log("## No path found ##");
+        return null;
     }
 
-    private void GetFinalPath(Node startingNode, Node endNode)
+    private List<Node> GetFinalPath(Node startingNode, Node endNode)
     {
-        finalPath = new List<Node>();
+        List<Node> finalPath = new List<Node>();
         Node currentNode = endNode;
 
         while (currentNode != startingNode)
@@ -370,6 +388,7 @@ public class Alien : MonoBehaviour
         }
 
         finalPath.Reverse();
+        return finalPath;
     }
 
     private int GetManhattenDistance(Node nodeA, Node nodeB)
@@ -383,7 +402,7 @@ public class Alien : MonoBehaviour
 
     private void ContactSwarm(GameObject target)
     {
-        foreach (GameObject obj in objectsInRange)
+        foreach (GameObject obj in UnitInRange)
         {
             if (obj != null && obj.tag == "Entity" && target != null)
             {
@@ -401,11 +420,8 @@ public class Alien : MonoBehaviour
         }
         if (collision.gameObject.tag == "Entity" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
-            objectsInRange.Add(collision.gameObject);
-        }
-        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet" && collision.gameObject.tag != "Entity" && !collision.gameObject.Equals(freezeTrigger))
-        {
-            objectsInRange.Add(collision.gameObject);
+            UnitInRange.Add(collision.gameObject);
+            aggression += UnitInRange.Count;
         }
         if (collision.gameObject.tag == "Bullet")
         {
@@ -420,11 +436,8 @@ public class Alien : MonoBehaviour
         }
         if (collision.gameObject.tag == "Entity")
         {
-            objectsInRange.Remove(collision.gameObject);
-        }
-        if (collision.gameObject.tag != "Dialogue" && collision.gameObject.tag != "Bullet" && collision.gameObject.tag == "Entity" && !collision.gameObject.Equals(freezeTrigger))
-        {
-            objectsInRange.Remove(gameObject);
+            aggression -= UnitInRange.Count;
+            UnitInRange.Remove(collision.gameObject);           
         }
         if (collision.gameObject.tag == "Bullet")
         {
@@ -438,21 +451,21 @@ public class Alien : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //that the Entitie not has a velocity after a hit
-        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(0, 0, 0);
+        body.velocity = Vector3.zero;
         if (collision.gameObject.tag == "Player")
         {
             if (canAttack)
             {
                 collision.gameObject.GetComponent<Player>().Hit(damage);
                 //Little Knockback
-                Vector3 moveToPlayer = collision.transform.position - transform.position;
-                moveToPlayer = moveToPlayer.normalized;
-                GetComponent<Rigidbody2D>().position -= new Vector2((moveToPlayer.x * speed * Time.deltaTime) * hitJumpBack, (moveToPlayer.y * speed * Time.deltaTime) * hitJumpBack);
+                Vector3 targetDirection = collision.transform.position - transform.position;
+                targetDirection = targetDirection.normalized;
+                transform.position += new Vector3((-1)* targetDirection.x * speed * Time.deltaTime * hitJumpBack, (-1) * targetDirection.y * speed * Time.deltaTime * hitJumpBack, 0);
 
-                canAttack = false;
+                canAttack = false;                
             }
         }
+        
     }
     public float GetSpeed()
     {
@@ -471,5 +484,17 @@ public class Alien : MonoBehaviour
     public LabyrinthIds GetLabyrinthId()
     {
         return labyrinthId;
+    }
+
+    public List<Node> GetCurrentPath()
+    {
+        if (homePath.Count > 0)
+        {
+            return homePath;
+        }
+        else
+        {
+            return ambientPath;
+        }        
     }
 }
