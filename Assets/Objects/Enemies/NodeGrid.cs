@@ -70,7 +70,7 @@ public class NodeGrid : MonoBehaviour
 
     void OnValidate()
     {
-        alien = Mathf.Clamp(alien, 0, Aliens.Count);
+        alien = Mathf.Clamp(alien, 0, Aliens.Count-1);
     }
     private void CreateGrid()
     {
