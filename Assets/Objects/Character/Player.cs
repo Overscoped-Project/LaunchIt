@@ -6,7 +6,6 @@ public class Player : MonoBehaviour
 {
     //DEBUG
     [SerializeField] private float sprintMultiplier = 1;
-    [SerializeField] private Alien alien;
     //DEBUG
     [SerializeField] private int health = 100;
     [SerializeField] private float playerSpeed = 1;
@@ -20,13 +19,16 @@ public class Player : MonoBehaviour
     private float directionX = 0;
     private float directionY = 0;
     private bool isAttacked = false;
-    [SerializeField] FreezeTrigger freezeTrigger;
     void Start()
     {
     }
 
 
     // Update is called once per frame
+    private void LateUpdate()
+    {
+        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
+    }
     void Update()
     {
 
@@ -39,16 +41,18 @@ public class Player : MonoBehaviour
 
         }
 
+        Vector2 direction = Vector2.zero;
+
         //Player Movement
         if (Input.GetKey(KeyCode.W) && !collisionUp)
         {
-            GetComponent<Rigidbody2D>().position += new Vector2(0, playerSpeed * Time.deltaTime);
+            direction += Vector2.up;
             directionY = 1f;
             walk = true;
         }
         else if (Input.GetKey(KeyCode.S) && !collisionDown)
         {
-            GetComponent<Rigidbody2D>().position -= new Vector2(0, playerSpeed * Time.deltaTime);
+            direction += Vector2.down;
             directionY = -1f;
             walk = true;
         }
@@ -60,19 +64,24 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.D) && !collisionRight)
         {
-            GetComponent<Rigidbody2D>().position += new Vector2(playerSpeed * Time.deltaTime, 0);
+            direction += Vector2.right;
             directionX = 1f;
             walk = true;
         }
         else if (Input.GetKey(KeyCode.A) && !collisionLeft)
         {
-            GetComponent<Rigidbody2D>().position -= new Vector2(playerSpeed * Time.deltaTime, 0);
+            direction += Vector2.left;
             directionX = -1f;
             walk = true;
         }
         else
         {
             directionX = 0;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            FindObjectOfType<DialogueManager>().DisplayNextSentence();
         }
 
         //DEBUG Controls
@@ -90,19 +99,12 @@ public class Player : MonoBehaviour
         {
             GetComponent<Rigidbody2D>().position = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
         }
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            Instantiate(alien, new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0), Quaternion.identity);
-        }
         if (Input.GetKeyDown(KeyCode.X))
         {
             freezeTrigger.SetFreezed(!freezeTrigger.GetFreezed());
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            FindObjectOfType<DialogueManager>().DisplayNextSentence();
-        }
+        
 
         if (Input.GetKey(KeyCode.End))
         {
@@ -114,23 +116,31 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.PageDown))
         {
-            if (Camera.main.orthographicSize-10 > 0)
+            if (Camera.main.orthographicSize - 10 > 0)
             {
                 Camera.main.orthographicSize -= 10;
             }
         }
 
+        direction.Normalize();
+        direction *= playerSpeed * Time.deltaTime;
+        GetComponent<Rigidbody2D>().velocity = direction;
+        
+
         GetComponent<Animator>().SetFloat("WalkDirectionX", directionX);
         GetComponent<Animator>().SetFloat("WalkDirectionY", directionY);
         GetComponent<Animator>().SetBool("walk", walk);
+        if ((!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S)))
+        {
+            walk = false;
+            //that the Entitie not has a velocity after a hit
+            this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+        }
+        
         if (walk)
         {
             FindObjectOfType<AudioManager>().PlayIfNot("PlayerWalk");
         }
-        walk = false;
-
-        //that the Entitie not has a velocity after a hit
-        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
     }
 
     private void OnCollisionEnter2D(Collision2D collider)

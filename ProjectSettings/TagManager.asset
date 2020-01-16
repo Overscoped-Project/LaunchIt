@@ -10,6 +10,8 @@ TagManager:
   - Ship
   - Entity
   - Dialogue
+  - NodeManager
+  - Tilemap
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - UI
   - 
   - 
-  - PostProcessing
+  - Collision
   - 
   - 
   - 
