@@ -99,10 +99,6 @@ public class Player : MonoBehaviour
         {
             GetComponent<Rigidbody2D>().position = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
         }
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            freezeTrigger.SetFreezed(!freezeTrigger.GetFreezed());
-        }
 
         
 
