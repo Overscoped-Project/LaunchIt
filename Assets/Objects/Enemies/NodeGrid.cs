@@ -51,7 +51,7 @@ public class NodeGrid : MonoBehaviour
             {
                 maxY = (int)map.CellToWorld(map.cellBounds.max).y;
             }
-            
+
         }
         gridWorldSizeX = maxX - minX;
         gridWorldSizeY = maxY - minY;
@@ -70,7 +70,14 @@ public class NodeGrid : MonoBehaviour
 
     void OnValidate()
     {
-        alien = Mathf.Clamp(alien, 0, Aliens.Count-1);
+        if (Aliens.Count == 0)
+        {
+            alien = Mathf.Clamp(alien, 0, Aliens.Count);
+        }
+        else
+        {
+            alien = Mathf.Clamp(alien, 0, Aliens.Count - 1);
+        }
     }
     private void CreateGrid()
     {
@@ -218,7 +225,7 @@ public class NodeGrid : MonoBehaviour
 
                 if (Aliens != null)//If the final path is not empty
                 {
-                    if (Aliens[alien].GetCurrentPath().Contains(n))//If the current node is in the final path
+                    if (Aliens.Count != 0 && Aliens[alien].GetCurrentPath().Contains(n))//If the current node is in the final path
                     {
                         Gizmos.color = Color.red;//Set the color of that node
                     }

@@ -19,8 +19,19 @@ public class Player : MonoBehaviour
     private float directionX = 0;
     private float directionY = 0;
     private bool isAttacked = false;
+
+    private DialogueManager dialogueManager;
+    private LevelManager levelManager;
+    private AudioManager audioManager;
+    private Animator animator;
+    private Rigidbody2D body;
     void Start()
     {
+        dialogueManager = FindObjectOfType<DialogueManager>();
+        levelManager = GameObject.Find("GameController").GetComponent<LevelManager>();
+        audioManager = FindObjectOfType<AudioManager>();
+        animator = GetComponent<Animator>();
+        body = GetComponent<Rigidbody2D>();
     }
 
 
@@ -81,7 +92,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            FindObjectOfType<DialogueManager>().DisplayNextSentence();
+            dialogueManager.DisplayNextSentence();
         }
 
         //DEBUG Controls
@@ -97,7 +108,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Mouse2))
         {
-            GetComponent<Rigidbody2D>().position = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
+            body.position = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
         }
 
         
@@ -120,22 +131,22 @@ public class Player : MonoBehaviour
 
         direction.Normalize();
         direction *= playerSpeed * Time.deltaTime;
-        GetComponent<Rigidbody2D>().velocity = direction;
-        
+        body.velocity = direction;
 
-        GetComponent<Animator>().SetFloat("WalkDirectionX", directionX);
-        GetComponent<Animator>().SetFloat("WalkDirectionY", directionY);
-        GetComponent<Animator>().SetBool("walk", walk);
+
+        animator.SetFloat("WalkDirectionX", directionX);
+        animator.SetFloat("WalkDirectionY", directionY);
+        animator.SetBool("walk", walk);
         if ((!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S)))
         {
             walk = false;
             //that the Entitie not has a velocity after a hit
-            this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+            body.velocity = new Vector2(0, 0);
         }
         
         if (walk)
         {
-            FindObjectOfType<AudioManager>().PlayIfNot("PlayerWalk");
+            audioManager.PlayIfNot("PlayerWalk");
         }
     }
 
@@ -199,10 +210,10 @@ public class Player : MonoBehaviour
     public void Hit(int damage)
     {
         health -= damage;
-        FindObjectOfType<AudioManager>().PlayIfNot("HitPlayer");
+        audioManager.PlayIfNot("HitPlayer");
         if (health <= 0)
         {
-            GameObject.Find("GameController").GetComponent<LevelManager>().GoToDeathScreen();
+            levelManager.GoToDeathScreen();
             //Destroy(this.gameObject);
         }
     }

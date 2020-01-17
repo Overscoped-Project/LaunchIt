@@ -37,8 +37,6 @@ public class Alien : MonoBehaviour
     [SerializeField] private float gapToPoint = 1;
     private float defaultGap;
 
-    public enum LabyrinthIds { Top, Left, Right, Bottom };
-    [SerializeField] private LabyrinthIds labyrinthId;
     [SerializeField] private bool patrouilleUnit = false;
     [SerializeField] private List<GameObject> patrouillePoints = new List<GameObject>();
     [SerializeField] private GameObject triggerZone;
@@ -47,7 +45,6 @@ public class Alien : MonoBehaviour
     private int currentPoint = 0;
     private bool pointRun = true;
     private List<Alien> patrouilleAlly = new List<Alien>();
-    [SerializeField] private FreezeTrigger freezeTrigger;
 	[SerializeField] private GameObject enemyDeathPosition;
     private NodeGrid nodeGrid;
     private List<Node> ambientPath = new List<Node>();
@@ -80,7 +77,7 @@ public class Alien : MonoBehaviour
         }
         if (home == null)
         {
-            Debug.Log("!!In " + gameObject + " is option [Home] = null. Please assign a GameObject!!");
+            Debug.Log("!!In " + gameObject.name + " is option [Home] = null. Please assign a GameObject!!");
         }
 
         ready = true;
@@ -88,7 +85,7 @@ public class Alien : MonoBehaviour
 
     void Update()
     {
-        if (!ready || (freezeTrigger != null && freezeTrigger.GetFreezed())) 
+        if (!ready) 
         {
             //Wait that Start() get's ready or the Freeze ends
         }
