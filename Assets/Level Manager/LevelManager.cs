@@ -27,6 +27,10 @@ public class LevelManager : MonoBehaviour
     {
         SceneManager.LoadScene("Settings", LoadSceneMode.Single);
     }
+    public void GoToIntro()
+    {
+        SceneManager.LoadScene("Intro", LoadSceneMode.Single);
+    }
 
     public void GoToOutro()
     {

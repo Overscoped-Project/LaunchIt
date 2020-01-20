@@ -1,0 +1,583 @@
+fileFormatVersion: 2
+guid: d9b8c0d6c55cdc443bb502922b6a6e7f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3423159836404020534
+    second: roof_roof_0
+  - first:
+      213: 938930095028021570
+    second: roof_roof_1
+  - first:
+      213: 4822500832924021389
+    second: roof_roof_2
+  - first:
+      213: -5788996427908100883
+    second: roof_roof_3
+  - first:
+      213: -59357766647271932
+    second: roof_roof_4
+  - first:
+      213: -7365687237176296972
+    second: roof_roof_5
+  - first:
+      213: 4023274681948064117
+    second: roof_roof_6
+  - first:
+      213: 5555813076920439000
+    second: roof_roof_7
+  - first:
+      213: -1784382590418792425
+    second: roof_roof_8
+  - first:
+      213: -6500623760839063102
+    second: roof_roof_9
+  - first:
+      213: -311426162034025079
+    second: roof_roof_10
+  - first:
+      213: 1066946779385844766
+    second: roof_roof_11
+  - first:
+      213: -1954308876013668545
+    second: roof_roof_12
+  - first:
+      213: -4045221403879592022
+    second: roof_roof_13
+  - first:
+      213: -3921486611339387905
+    second: roof_roof_14
+  - first:
+      213: 5258228264570904225
+    second: roof_roof_15
+  - first:
+      213: -3282504225203313504
+    second: roof_roof_16
+  - first:
+      213: -743761566471393979
+    second: roof_roof_17
+  - first:
+      213: 950576405415256771
+    second: roof_roof_18
+  - first:
+      213: -3107542347239414122
+    second: roof_roof_19
+  externalObjects: {}
+  serializedVersion: 10
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: roof_roof_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 668
+        width: 209
+        height: 153
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95a03b6a3322c44439fe69c9d5873706
+      internalID: -3423159836404020534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_1
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 668
+        width: 209
+        height: 153
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f75a72137f323548811945f6566c44a
+      internalID: 938930095028021570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_2
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 668
+        width: 209
+        height: 153
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 216a269709a106f409065707904af478
+      internalID: 4822500832924021389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_3
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 668
+        width: 209
+        height: 153
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9e1414f6f731ea4486e096537076c50
+      internalID: -5788996427908100883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_4
+      rect:
+        serializedVersion: 2
+        x: 836
+        y: 668
+        width: 209
+        height: 153
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: adf722e581f3c06468b5e046358565b1
+      internalID: -59357766647271932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 422
+        width: 209
+        height: 190
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7105b5e8749b1db4890c6d59763085ef
+      internalID: -7365687237176296972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_6
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 421.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04de2eb2ac57fc149886054493619731
+      internalID: 4023274681948064117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_7
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 421.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3d91dfae12ef384ea441e853f72c06a
+      internalID: 5555813076920439000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_8
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 421.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c3c25444d304d84e8b944ff47bd234c
+      internalID: -1784382590418792425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_9
+      rect:
+        serializedVersion: 2
+        x: 836
+        y: 421.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a57812079bc7224f900d7ed471ab0b0
+      internalID: -6500623760839063102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 211.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8f67a57ed84b6041bd2f35c7f328d63
+      internalID: -311426162034025079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_11
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 211.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1d0ae8b7134322459432e8328b518f6
+      internalID: 1066946779385844766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_12
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 211.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12dde0da77656cc40bc114bf697d4171
+      internalID: -1954308876013668545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_13
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 211.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc4ae62775c9f4f4a996200d670cf29d
+      internalID: -4045221403879592022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_14
+      rect:
+        serializedVersion: 2
+        x: 836
+        y: 211.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d4c6e92bac9a5641b4c1a4bae216cbc
+      internalID: -3921486611339387905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48c3f24055f63a145b6bfb0f74629d98
+      internalID: 5258228264570904225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_16
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 1.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 635114c701384fe479b9969d788c6667
+      internalID: -3282504225203313504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_17
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 1.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 474e5832874ac83498b9e7e6eb28c98b
+      internalID: -743761566471393979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_18
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 1.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8aea0296a86195d41b3b29fed234e296
+      internalID: 950576405415256771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roof_roof_19
+      rect:
+        serializedVersion: 2
+        x: 836
+        y: 1.5
+        width: 209.4
+        height: 210.5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edfe8630b245c9b4dbdad9307dc6db10
+      internalID: -3107542347239414122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
