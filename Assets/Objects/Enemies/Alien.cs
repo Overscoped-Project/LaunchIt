@@ -37,6 +37,8 @@ public class Alien : MonoBehaviour
     [SerializeField] private float maxGapToPoint = 5;
     [SerializeField] private float gapToPoint = 1;
     private float defaultGap;
+    private bool nextArrived = false;
+    private bool newArrived = false;
 
     [SerializeField] private bool patrouilleUnit = false;
     [SerializeField] private List<GameObject> patrouillePoints = new List<GameObject>();
@@ -56,11 +58,13 @@ public class Alien : MonoBehaviour
     private List<Node> homePath = new List<Node>();
 
     private bool ready = false;
+    private AudioManager audioManager;
 
     IEnumerator Start()
     {
         nodeGrid = GameObject.FindGameObjectWithTag("NodeManager").GetComponent<NodeGrid>();
         yield return new WaitUntil(() => nodeGrid.GetReady());
+        audioManager = FindObjectOfType<AudioManager>();
         body = GetComponent<Rigidbody2D>();
         defaultGap = gapToPoint;
         newPosition = body.position;
@@ -107,7 +111,7 @@ public class Alien : MonoBehaviour
             if (enemy != null)
             {
                 Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), enemy.GetComponent<CircleCollider2D>());
-                FindObjectOfType<AudioManager>().PlayIfNot("EnemyMove");
+                audioManager.PlayIfNot("EnemyMove");
                 AttackMovement(enemy);
 
             }
@@ -138,12 +142,14 @@ public class Alien : MonoBehaviour
     }
     public void SetNewPosition(Vector2 newPos)
     {
-        newPosition = newPos;
-        ambientPath = Pathfinding(transform.position, newPosition);
+        ambientPath = Pathfinding(transform.position, newPos);     
         nodeIndex = 0;
         if (ambientPath.Count > 0)
         {
+            newPosition = ambientPath[ambientPath.Count - 1].GetNodePosition();
             nextPosition = ambientPath[nodeIndex].GetNodePosition();
+            nextArrived = false;
+            newArrived = false;
         }
         guardingTicks = maxGuardingTicks;
         gapToPoint = maxGapToPoint;
@@ -176,7 +182,7 @@ public class Alien : MonoBehaviour
         }
         else
         {
-            if (!(Mathf.Abs(transform.position.x - newPosition.x) <= gapToPoint) &&  !(Mathf.Abs(transform.position.y - newPosition.y) <= gapToPoint))
+            if (!newArrived && !((Mathf.Abs(transform.position.x - newPosition.x) <= gapToPoint) && (Mathf.Abs(transform.position.y - newPosition.y) <= gapToPoint)))
             {
                 movementPathfinding(ambientPath, speed * ambientsSpeedPercentage);
                 RegenerateAggression();
@@ -190,11 +196,13 @@ public class Alien : MonoBehaviour
                 {
                     newPosition = new Vector3(body.position.x + Random.Range(-ambientRange, ambientRange), body.position.y + Random.Range(-ambientRange, ambientRange), 0);
                 }
+                newArrived = false;
                 ambientPath = Pathfinding(body.position, newPosition);
                 if (ambientPath.Count > 0)
                 {
                     nodeIndex = 0;
                     nextPosition = ambientPath[nodeIndex].GetNodePosition();
+                    nextArrived = false;
                 }
 
             }
@@ -220,12 +228,24 @@ public class Alien : MonoBehaviour
             {
                 nodeIndex++;
                 nextPosition = path[nodeIndex].GetNodePosition();
+                nextArrived = false;               
             }
+            else
+            {
+                newArrived = true;
+                nextArrived = true;
+            }           
         }
-        Vector3 targetPoint = nextPosition - transform.position;
-        targetPoint = targetPoint.normalized;
-        body.velocity = targetPoint * speed * Time.deltaTime;
-
+        else if(!nextArrived)
+        {
+            Vector3 targetPoint = nextPosition - transform.position;
+            targetPoint = targetPoint.normalized;
+            body.velocity = targetPoint * speed * Time.deltaTime;
+        }
+        else
+        {
+            body.velocity = Vector3.zero;
+        }
     }
     private void AttackMovement(GameObject player)
     {
@@ -461,7 +481,7 @@ public class Alien : MonoBehaviour
             if (canAttack)
             {
                 collision.gameObject.GetComponent<Player>().Hit(damage);
-                FindObjectOfType<AudioManager>().PlayIfNot("EnemyAttack");
+                audioManager.PlayIfNot("EnemyAttack");
                 //Little Knockback
                 Vector3 targetDirection = collision.transform.position - transform.position;
                 targetDirection = targetDirection.normalized;
