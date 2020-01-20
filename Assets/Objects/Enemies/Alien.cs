@@ -44,6 +44,7 @@ public class Alien : MonoBehaviour
     private int guardingTicks;
     private int currentPoint = 0;
     private bool pointRun = true;
+    [SerializeField] private int patrouilleId = 0;
     private List<Alien> patrouilleAlly = new List<Alien>();
 	[SerializeField] private GameObject enemyDeathPosition;
     private NodeGrid nodeGrid;
@@ -68,7 +69,7 @@ public class Alien : MonoBehaviour
         {
             foreach (GameObject ally in GameObject.FindGameObjectsWithTag("Entity"))
             {
-                if (ally.GetComponent<Alien>().GetPatrouilleUnit() && ally.GetComponent<Alien>().GetLabyrinthId() == labyrinthId)
+                if (ally.GetComponent<Alien>().GetPatrouilleUnit() && ally.GetComponent<Alien>().GetPatrouilleId() == patrouilleId)
                 {
                     patrouilleAlly.Add(ally.GetComponent<Alien>());
                 }
@@ -481,9 +482,9 @@ public class Alien : MonoBehaviour
     {
         return patrouilleUnit;
     }
-    public LabyrinthIds GetLabyrinthId()
+    public int GetPatrouilleId()
     {
-        return labyrinthId;
+        return patrouilleId;
     }
 
     public List<Node> GetCurrentPath()
