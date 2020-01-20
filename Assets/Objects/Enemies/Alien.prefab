@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f155fb2dbdc5ef94396e05414e35a191, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a039909c2225d1343aa6ab5a84c3782a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   speed: 1200
+  ambientsSpeedPercentage: 0.8
   maxAggression: 100
   aggression: 70
   aggressionRegeneration: 10
@@ -116,6 +117,7 @@ MonoBehaviour:
   - {fileID: 0}
   triggerZone: {fileID: 0}
   maxGuardingTicks: 100
+  patrouilleId: 0
   enemyDeathPosition: {fileID: 7276113938277166871, guid: 9ff342a42844d964a9d5ad6597747e3f,
     type: 3}
   home: {fileID: 0}
@@ -169,6 +171,6 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.3312656, y: -0.883364}
-  m_Size: {x: 10.145799, y: 6.3916373}
-  m_Direction: 1
+  m_Offset: {x: -1.2245026, y: -0.88336515}
+  m_Size: {x: 7.7830505, y: 8.993251}
+  m_Direction: 0
