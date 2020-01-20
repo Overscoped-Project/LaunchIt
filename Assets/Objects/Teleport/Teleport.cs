@@ -26,7 +26,6 @@ public class Teleport : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
-            Debug.Log("true trigger enter");
             inTeleport = true;
         }
     }
@@ -37,13 +36,11 @@ public class Teleport : MonoBehaviour
         {
             inTeleport = false;
             StopCoroutine(coroutine);
-            Debug.Log("false trigger exit");
         }
     }
 
     IEnumerator Teleportation()
     {
-            Debug.Log("started teleport");
             yield return new WaitForSeconds(timeToTeleport);
             player.transform.position = new Vector2(portal.transform.position.x, portal.transform.position.y - portal.bounds.extents.magnitude);
           

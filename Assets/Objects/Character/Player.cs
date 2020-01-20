@@ -10,10 +10,6 @@ public class Player : MonoBehaviour
     [SerializeField] private int health = 100;
     [SerializeField] private float playerSpeed = 1;
     [SerializeField] private int aggression = 30;
-    private bool collisionUp = false;
-    private bool collisionDown = false;
-    private bool collisionLeft = false;
-    private bool collisionRight = false;
     private bool sprintAvailable = true;
     private bool walk = false;
     private float directionX = 0;
@@ -55,13 +51,13 @@ public class Player : MonoBehaviour
         Vector2 direction = Vector2.zero;
 
         //Player Movement
-        if (Input.GetKey(KeyCode.W) && !collisionUp)
+        if (Input.GetKey(KeyCode.W))
         {
             direction += Vector2.up;
             directionY = 1f;
             walk = true;
         }
-        else if (Input.GetKey(KeyCode.S) && !collisionDown)
+        else if (Input.GetKey(KeyCode.S))
         {
             direction += Vector2.down;
             directionY = -1f;
@@ -73,13 +69,13 @@ public class Player : MonoBehaviour
         }
 
 
-        if (Input.GetKey(KeyCode.D) && !collisionRight)
+        if (Input.GetKey(KeyCode.D))
         {
             direction += Vector2.right;
             directionX = 1f;
             walk = true;
         }
-        else if (Input.GetKey(KeyCode.A) && !collisionLeft)
+        else if (Input.GetKey(KeyCode.A))
         {
             direction += Vector2.left;
             directionX = -1f;
@@ -147,63 +143,6 @@ public class Player : MonoBehaviour
         if (walk)
         {
             audioManager.PlayIfNot("PlayerWalk");
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collider)
-    {
-        if (collider.gameObject.tag != "Bullet" && collider.gameObject.tag != "Item")
-        {
-            Vector3 direction = collider.transform.position - collider.otherCollider.transform.position;
-            if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
-            {
-                if (direction.x > 0)
-                {
-                    collisionRight = true;
-                }
-                else
-                {
-                    collisionLeft = true;
-                }
-            }
-            else
-            {
-                if (direction.y > 0)
-                {
-                    collisionUp = true;
-                }
-                else
-                {
-                    collisionDown = true;
-                }
-            }
-        }
-
-    }
-    private void OnCollisionExit2D(Collision2D collider)
-    {
-        if (collider.gameObject.tag != "Bullet" && collider.gameObject.tag != "Item")
-        {
-            Vector3 direction = collider.transform.position - collider.otherCollider.transform.position;
-
-            if (direction.x > 0)
-            {
-                collisionRight = false;
-            }
-            else
-            {
-                collisionLeft = false;
-            }
-
-            if (direction.y > 0)
-            {
-                collisionUp = false;
-            }
-            else
-            {
-                collisionDown = false;
-            }
-
         }
     }
 

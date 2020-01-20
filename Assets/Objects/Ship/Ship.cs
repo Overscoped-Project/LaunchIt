@@ -20,7 +20,7 @@ public class Ship : MonoBehaviour
             return requiredAmount;
         }
     }
-    [SerializeField] List<SpawnQuestObject> spawnRequiredItems = new List<SpawnQuestObject>();
+    [SerializeField] private List<SpawnQuestObject> spawnRequiredItems = new List<SpawnQuestObject>();
     private List<QuestObject> requiredItems = new List<QuestObject>();
     private void Start()
     {
@@ -61,7 +61,6 @@ public class Ship : MonoBehaviour
         if (finished == requiredItems.Count)
         {
             repaired = true;
-            Debug.Log(repaired);
             GameObject.Find("GameController").GetComponent<LevelManager>().GoToOutro();
         }
     }

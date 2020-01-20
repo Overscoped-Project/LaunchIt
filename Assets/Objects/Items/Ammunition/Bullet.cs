@@ -8,11 +8,12 @@ public class Bullet : MonoBehaviour
     [SerializeField] private int damage = 30;
     [SerializeField] private float range = 100f;
     private Vector3 startPosition;
+    private AudioManager audioManager;
     void Start()
     {
-        Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), GameObject.FindGameObjectWithTag("Player").GetComponent<CircleCollider2D>());
         startPosition = transform.position;
-        FindObjectOfType<AudioManager>().Play("PlayerFire");
+        audioManager = FindObjectOfType<AudioManager>();
+        audioManager.Play("PlayerFire");
     }
 
     void Update()
@@ -35,26 +36,24 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            collision.gameObject.GetComponent<Player>().Hit(damage);
-        }
         if (collision.gameObject.tag == "Entity")
         {
             collision.gameObject.GetComponent<Alien>().Hit(damage);
-            FindObjectOfType<AudioManager>().Play("HitEnemy");
+            audioManager.Play("HitEnemy");
+            Destroy(this.gameObject);
         }
-        if (collision.gameObject.tag != "Entity")
+        else
         {
-            FindObjectOfType<AudioManager>().Play("HitWall");
+            audioManager.Play("HitWall");
+            Destroy(this.gameObject);
         }
-        Destroy(this.gameObject);
     }
 
     public void SetDirection(Vector2 lookDir)
     {
-        GetComponent<Rigidbody2D>().velocity = new Vector2(lookDir.x * GetSpeed() * Time.deltaTime, lookDir.y * GetSpeed() * Time.deltaTime);
+        GetComponent<Rigidbody2D>().velocity = lookDir * GetSpeed();
     }
+
 }
 
 
