@@ -48,7 +48,6 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue()
     {
-        Debug.Log("End of the dialogue");
         animator.SetBool("IsOpen", false);
 
         if(currentDialogue != null && currentDialogue.destroyWhenDone)

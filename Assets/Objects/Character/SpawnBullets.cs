@@ -13,17 +13,21 @@ public class SpawnBullets : MonoBehaviour
     private bool canShoot = true;
     private Vector2 lookDir;
     private float angle = 0;
+    private Rigidbody2D body;
+    private Animator animator;
 
 
     void Start()
     {
+        body = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
 
     void Update()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        lookDir = mousePos - GetComponent<Rigidbody2D>().position;
+        lookDir = mousePos - body.position;
         lookDir = lookDir.normalized;
 
         if (Mathf.Abs(lookDir.x) > Mathf.Abs(lookDir.y))
@@ -51,7 +55,7 @@ public class SpawnBullets : MonoBehaviour
             offset.x = 0;
         }
         angle = 180 - Vector2.SignedAngle(lookDir * (-1), transform.up);
-        GetComponent<Animator>().SetFloat("Rotation", angle);
+        animator.SetFloat("Rotation", angle);
         if (Input.GetKey(KeyCode.Mouse0) && canShoot)
         {
             Shoot();
@@ -72,7 +76,7 @@ public class SpawnBullets : MonoBehaviour
     public void Shoot()
     {
         Quaternion q = Quaternion.Euler(0, 0, angle);
-        Bullet bullet = Instantiate(shot, GetComponent<Rigidbody2D>().position + offset, q);
+        Bullet bullet = Instantiate(shot, body.position + offset, q);
         bullet.SetDirection(lookDir);
     }   
 

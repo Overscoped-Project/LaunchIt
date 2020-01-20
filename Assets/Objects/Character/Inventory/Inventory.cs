@@ -14,6 +14,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private GameObject emptySlot;
     private Ship ship;
     private Transform inventoryTransform;
+    private AudioManager audioManager;
     
 
     void Start()
@@ -23,7 +24,7 @@ public class Inventory : MonoBehaviour
         {
             Instantiate(emptySlot, inventoryTransform);
         }
-
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     void Update()
@@ -67,7 +68,6 @@ public class Inventory : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log("Enter");
         if (collider.gameObject.CompareTag("Item"))
         {
             isPickupRange = true;
@@ -77,7 +77,6 @@ public class Inventory : MonoBehaviour
         {
             ship = collider.gameObject.GetComponent<Ship>();
             isRepairRange = true;
-            Debug.Log("Ship");
         }
         
     }
@@ -103,13 +102,13 @@ public class Inventory : MonoBehaviour
     {
         slot.AddItem(item.GetComponent<ConnectorItem>().GetItem());
         Destroy(item);
-        FindObjectOfType<AudioManager>().Play("ItemCollect");
+        audioManager.Play("ItemCollect");
     }
 
     public void RemoveItem(Slot slot)
     {
         slot.ClearSlot();
-        FindObjectOfType<AudioManager>().Play("ItemUse");
+        audioManager.Play("ItemUse");
     }
 
     public void AddInventorySlot(int newSlots, bool addSlot)

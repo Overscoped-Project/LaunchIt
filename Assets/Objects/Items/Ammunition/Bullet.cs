@@ -11,7 +11,6 @@ public class Bullet : MonoBehaviour
     private AudioManager audioManager;
     void Start()
     {
-        Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), GameObject.FindGameObjectWithTag("Player").GetComponent<CircleCollider2D>());
         startPosition = transform.position;
         audioManager = FindObjectOfType<AudioManager>();
         audioManager.Play("PlayerFire");
@@ -37,26 +36,24 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            collision.gameObject.GetComponent<Player>().Hit(damage);
-        }
         if (collision.gameObject.tag == "Entity")
         {
             collision.gameObject.GetComponent<Alien>().Hit(damage);
             audioManager.Play("HitEnemy");
+            Destroy(this.gameObject);
         }
-        if (collision.gameObject.tag != "Entity")
+        else
         {
             audioManager.Play("HitWall");
+            Destroy(this.gameObject);
         }
-        Destroy(this.gameObject);
     }
 
     public void SetDirection(Vector2 lookDir)
     {
         GetComponent<Rigidbody2D>().velocity = lookDir * GetSpeed();
     }
+
 }
 
 
