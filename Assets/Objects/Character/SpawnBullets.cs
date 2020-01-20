@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.LWRP;
 
 public class SpawnBullets : MonoBehaviour
 {
@@ -16,11 +17,20 @@ public class SpawnBullets : MonoBehaviour
     private Rigidbody2D body;
     private Animator animator;
 
+    private Light2D light2D;
+
 
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        foreach (Light2D l in GetComponentsInChildren<Light2D>())
+        {
+            if (l.tag == "Flashlight")
+            {
+                light2D = l;
+            }
+        }
     }
 
 
@@ -55,6 +65,7 @@ public class SpawnBullets : MonoBehaviour
             offset.x = 0;
         }
         angle = 180 - Vector2.SignedAngle(lookDir * (-1), transform.up);
+        light2D.transform.rotation = Quaternion.Euler(0,0,angle);
         animator.SetFloat("Rotation", angle);
         if (Input.GetKey(KeyCode.Mouse0) && canShoot)
         {
