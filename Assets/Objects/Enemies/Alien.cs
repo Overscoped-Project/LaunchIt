@@ -6,6 +6,7 @@ public class Alien : MonoBehaviour
 {
     [SerializeField] private int health = 100;
     [SerializeField] private float speed = 30f;
+    [SerializeField] private float ambientsSpeedPercentage = 0.5f;
     [SerializeField] private int maxAggression = 70;
     [SerializeField] private int aggression = 70;
     [SerializeField] private int aggressionRegeneration = 10;
@@ -140,7 +141,10 @@ public class Alien : MonoBehaviour
         newPosition = newPos;
         ambientPath = Pathfinding(transform.position, newPosition);
         nodeIndex = 0;
-        nextPosition = ambientPath[nodeIndex].GetNodePosition();
+        if (ambientPath.Count > 0)
+        {
+            nextPosition = ambientPath[nodeIndex].GetNodePosition();
+        }
         guardingTicks = maxGuardingTicks;
         gapToPoint = maxGapToPoint;
     }
@@ -174,7 +178,7 @@ public class Alien : MonoBehaviour
         {
             if (!(Mathf.Abs(transform.position.x - newPosition.x) <= gapToPoint) &&  !(Mathf.Abs(transform.position.y - newPosition.y) <= gapToPoint))
             {
-                movementPathfinding(ambientPath, speed/2);
+                movementPathfinding(ambientPath, speed * ambientsSpeedPercentage);
                 RegenerateAggression();
             }
             else if (ambientTime <= 0)
