@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   speed: 30
+  ambientsSpeedPercentage: 0.5
   maxAggression: 100
   aggression: 70
   aggressionRegeneration: 10
@@ -105,20 +106,18 @@ MonoBehaviour:
   attackRate: 1
   hitJumpBack: 5
   dodgeChance: 10
-  pathfindingTimer: 20
-  gapToObject: 0.5
   maxRandomAmbientTime: 140
   minRandomAmbientTime: 40
   ambientRange: 10
   maxGapToPoint: 5
-  labyrinthId: 0
+  gapToPoint: 1
   patrouilleUnit: 0
   patrouillePoints: []
   triggerZone: {fileID: 0}
   maxGuardingTicks: 500
-  freezeTrigger: {fileID: 0}
-  enemyDeathPosition: {fileID: 7276113938277166871, guid: 9ff342a42844d964a9d5ad6597747e3f,
-    type: 3}
+  patrouilleId: 0
+  enemyDeath: {fileID: 0}
+  home: {fileID: 0}
 --- !u!58 &1140650003532494412
 CircleCollider2D:
   m_ObjectHideFlags: 0
