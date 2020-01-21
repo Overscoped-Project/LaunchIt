@@ -59,6 +59,8 @@ public class Alien : MonoBehaviour
 
     private bool ready = false;
     private AudioManager audioManager;
+    private CapsuleCollider2D capsuleCollider2D;
+    private CircleCollider2D circleCollider2D;
 
     IEnumerator Start()
     {
@@ -70,13 +72,16 @@ public class Alien : MonoBehaviour
         newPosition = body.position;
         ambientPath.Add(nodeGrid.NodeFromWorldPoint(newPosition));
         dodgePoint = new Queue<Vector2>();
+        capsuleCollider2D = GetComponent<CapsuleCollider2D>();
+        circleCollider2D = GetComponent<CircleCollider2D>();
         if (patrouilleUnit)
         {
             foreach (GameObject ally in GameObject.FindGameObjectsWithTag("Entity"))
             {
-                if (ally.GetComponent<Alien>().GetPatrouilleUnit() && ally.GetComponent<Alien>().GetPatrouilleId() == patrouilleId)
+                Alien alien = ally.GetComponent<Alien>();
+                if (alien.GetPatrouilleUnit() && alien.GetPatrouilleId() == patrouilleId)
                 {
-                    patrouilleAlly.Add(ally.GetComponent<Alien>());
+                    patrouilleAlly.Add(alien);
                 }
             }
             SetNewPosition((Vector2)patrouillePoints[currentPoint].transform.position);
@@ -110,7 +115,7 @@ public class Alien : MonoBehaviour
 
             if (enemy != null)
             {
-                Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), enemy.GetComponent<CircleCollider2D>());
+                Physics2D.IgnoreCollision(capsuleCollider2D, enemy.GetComponent<CircleCollider2D>());
                 audioManager.PlayIfNot("EnemyMove");
                 AttackMovement(enemy);
 
@@ -313,16 +318,17 @@ public class Alien : MonoBehaviour
                 {
                     calculatedBullets.Add(bullet);
                     dodge = true;
+                    SpriteRenderer spriteRenderer = bullet.GetComponent<SpriteRenderer>();
                     if (Mathf.Abs(bulletVelocity.x) > Mathf.Abs(bulletVelocity.y))
                     {
                         int random = Random.Range(0, 2);
                         if (random == 0)
                         {
-                            dodgePoint.Enqueue(new Vector2(transform.position.x, transform.position.y + bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2));
+                            dodgePoint.Enqueue(new Vector2(transform.position.x, transform.position.y + spriteRenderer.bounds.size.magnitude * 2));
                         }
                         else
                         {
-                            dodgePoint.Enqueue(new Vector2(transform.position.x, transform.position.y - bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2));
+                            dodgePoint.Enqueue(new Vector2(transform.position.x, transform.position.y - spriteRenderer.bounds.size.magnitude * 2));
                         }
                     }
                     else
@@ -330,11 +336,11 @@ public class Alien : MonoBehaviour
                         int random = Random.Range(0, 2);
                         if (random == 0)
                         {
-                            dodgePoint.Enqueue(new Vector2(transform.position.x + bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2, transform.position.y));
+                            dodgePoint.Enqueue(new Vector2(transform.position.x + spriteRenderer.bounds.size.magnitude * 2, transform.position.y));
                         }
                         else
                         {
-                            dodgePoint.Enqueue(new Vector2(transform.position.x - bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2, transform.position.y));
+                            dodgePoint.Enqueue(new Vector2(transform.position.x - spriteRenderer.bounds.size.magnitude * 2, transform.position.y));
                         }
                     }
 
@@ -437,12 +443,12 @@ public class Alien : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
+        if (collision.gameObject.tag == "Player" && circleCollider2D.IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
             enemy = collision.gameObject;
             ContactSwarm(enemy);
         }
-        if (collision.gameObject.tag == "Entity" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
+        if (collision.gameObject.tag == "Entity" && circleCollider2D.IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
             UnitInRange.Add(collision.gameObject);
             aggression += UnitInRange.Count;
