@@ -459,14 +459,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c4597db38f670941a0f5348831151a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Brightness: 1
-  _Contrast: 1
+  _Brightness: 0.7285716
+  _Contrast: 0.94285727
   _Volume: 0
   material: {fileID: 2100000, guid: 9016663f9a9d6434fae6f8d6a4345f52, type: 2}
   audioMixer: {fileID: 24100000, guid: 617158e9d9e903e44a4f957616e0e175, type: 2}
-  brightnessSlider: {fileID: 0}
-  contrastSlider: {fileID: 0}
-  volumeSlider: {fileID: 0}
+  brightnessSlider: {fileID: 1095090140}
+  contrastSlider: {fileID: 1094564844}
+  volumeSlider: {fileID: 1859922692}
+  brightnessVolume: 1
+  contrastVolume: 1
+  volumeVolume: -40
 --- !u!1 &580588099
 GameObject:
   m_ObjectHideFlags: 0
