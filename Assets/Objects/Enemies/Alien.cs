@@ -31,6 +31,7 @@ public class Alien : MonoBehaviour
 
     [SerializeField] private float maxGapToPoint = 5;
     [SerializeField] private float gapToPoint = 1;
+    [SerializeField] private float gapMultiplicator = 1.5f;
     private float defaultGap;
     private bool nextArrived = false;
     private bool newArrived = false;
@@ -49,7 +50,7 @@ public class Alien : MonoBehaviour
     [SerializeField] private int patrouilleId = 0;
     private List<Alien> patrouilleAlly = new List<Alien>();
 
-	[SerializeField] private GameObject enemyDeath;
+    [SerializeField] private GameObject enemyDeath;
     [SerializeField] private GameObject home;
 
     private NodeGrid nodeGrid;
@@ -64,15 +65,16 @@ public class Alien : MonoBehaviour
     private AudioManager audioManager;
     private CapsuleCollider2D capsuleCollider2D;
     private CircleCollider2D circleCollider2D;
+    private SpriteRenderer spriteRenderer;
 
     IEnumerator Start()
     {
         nodeGrid = GameObject.FindGameObjectWithTag("NodeManager").GetComponent<NodeGrid>();
         yield return new WaitUntil(() => nodeGrid.GetReady());
         audioManager = FindObjectOfType<AudioManager>();
-        body = GetComponent<Rigidbody2D>();
-        capsuleCollider2D = GetComponent<CapsuleCollider2D>();
-        circleCollider2D = GetComponent<CircleCollider2D>();
+        body = gameObject.GetComponent<Rigidbody2D>();
+        capsuleCollider2D = gameObject.GetComponent<CapsuleCollider2D>();
+        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
         defaultGap = gapToPoint;
         newPosition = body.position;
@@ -88,9 +90,11 @@ public class Alien : MonoBehaviour
                 if (alien.GetPatrouilleUnit() && alien.GetPatrouilleId() == patrouilleId)
                 {
                     patrouilleAlly.Add(alien);
+                    ambientPath = Pathfinding(transform.position, (Vector2)patrouillePoints[currentPoint].transform.position);
+                    SetNewPosition(ambientPath, patrouilleAlly.Count);
                 }
             }
-            SetNewPosition((Vector2)patrouillePoints[currentPoint].transform.position);
+
         }
         if (home == null)
         {
@@ -102,7 +106,7 @@ public class Alien : MonoBehaviour
 
     void Update()
     {
-        if (!ready) 
+        if (!ready)
         {
             //Wait that Start() get's ready or the Freeze ends
         }
@@ -151,9 +155,19 @@ public class Alien : MonoBehaviour
             aggression -= (int)((temp / 100) * (100 / (health + dmg)) * dmg);
         }
     }
-    public void SetNewPosition(List<Node> ambientPath, int count)
+    public void SetNewPosition(List<Node> path, int count)
     {
-        this.ambientPath = ambientPath;
+        Vector3 direction = path[0].GetNodePosition() - transform.position;
+        float distance = direction.magnitude;
+        direction = direction.normalized;
+        if (!Physics2D.Raycast(transform.position, direction, distance, 8))
+        {
+            this.ambientPath = Pathfinding(transform.position, path[path.Count - 1].GetNodePosition());
+        }
+        else
+        {
+            this.ambientPath = path;
+        }
         nodeIndex = 0;
         if (ambientPath.Count > 0)
         {
@@ -163,7 +177,20 @@ public class Alien : MonoBehaviour
             newArrived = false;
         }
         guardingTicks = maxGuardingTicks;
-        gapToPoint = count + maxGapToPoint;
+        gapToPoint = count * gapMultiplicator + maxGapToPoint;
+    }
+
+    public void SetNewIndex(List<Node> path, int nodeIndex, int count)
+    {
+        Vector3 direction = path[nodeIndex].GetNodePosition() - path[nodeIndex - 1].GetNodePosition();
+        float distance = direction.magnitude;
+        direction = direction.normalized;
+        if (!Physics2D.Raycast(transform.position, direction, distance, 8))
+        {
+            nextPosition = path[nodeIndex].GetNodePosition();
+            gapToPoint = count * gapMultiplicator + maxGapToPoint;
+            nextArrived = false;
+        }
     }
     private void AmbientMovement()
     {
@@ -237,20 +264,29 @@ public class Alien : MonoBehaviour
     private void movementPathfinding(List<Node> path, float speed)
     {
         if ((Mathf.Abs(transform.position.x - nextPosition.x) <= gapToPoint) && (Mathf.Abs(transform.position.y - nextPosition.y) <= gapToPoint))
-        {           
+        {
             if (nodeIndex < path.Count - 1)
             {
                 nodeIndex++;
                 nextPosition = path[nodeIndex].GetNodePosition();
-                nextArrived = false;               
+                nextArrived = false;
+                if (patrouilleUnit)
+                {
+                    int count = 0;
+                    foreach (Alien ally in patrouilleAlly)
+                    {
+                        count++;
+                        SetNewIndex(path, nodeIndex, count);
+                    }
+                }
             }
             else
             {
                 newArrived = true;
                 nextArrived = true;
-            }           
+            }
         }
-        else if(!nextArrived)
+        else if (!nextArrived)
         {
             Vector3 targetPoint = nextPosition - transform.position;
             targetPoint = targetPoint.normalized;
@@ -294,6 +330,7 @@ public class Alien : MonoBehaviour
             Vector2 targetPosition = player.GetComponent<Rigidbody2D>().position - body.position;
             targetPosition = targetPosition.normalized;
             body.velocity = targetPosition * speed * Time.deltaTime;
+
             Dodge();
         }
         else if (!dodge)
@@ -323,7 +360,7 @@ public class Alien : MonoBehaviour
             {
                 Vector2 bulletVelocity = bullet.gameObject.GetComponent<Rigidbody2D>().velocity;
                 Ray ray = new Ray(bullet.transform.position, bulletVelocity);
-                if (gameObject.GetComponent<SpriteRenderer>().bounds.IntersectRay(ray) && !calculatedBullets.Contains(bullet))
+                if (spriteRenderer.bounds.IntersectRay(ray) && !calculatedBullets.Contains(bullet))
                 {
                     calculatedBullets.Add(bullet);
                     dodge = true;
@@ -452,6 +489,7 @@ public class Alien : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        circleCollider2D = gameObject.GetComponent<CircleCollider2D>();
         if (collision.gameObject.tag == "Player" && circleCollider2D.IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
             enemy = collision.gameObject;
@@ -476,7 +514,7 @@ public class Alien : MonoBehaviour
         if (collision.gameObject.tag == "Entity")
         {
             aggression -= UnitInRange.Count;
-            UnitInRange.Remove(collision.gameObject);           
+            UnitInRange.Remove(collision.gameObject);
         }
         if (collision.gameObject.tag == "Bullet")
         {
@@ -500,12 +538,12 @@ public class Alien : MonoBehaviour
                 //Little Knockback
                 Vector3 targetDirection = collision.transform.position - transform.position;
                 targetDirection = targetDirection.normalized;
-                transform.position += new Vector3((-1)* targetDirection.x * speed * Time.deltaTime * hitJumpBack, (-1) * targetDirection.y * speed * Time.deltaTime * hitJumpBack, 0);
+                transform.position += new Vector3((-1) * targetDirection.x * speed * Time.deltaTime * hitJumpBack, (-1) * targetDirection.y * speed * Time.deltaTime * hitJumpBack, 0);
 
-                canAttack = false;                
+                canAttack = false;
             }
         }
-        
+
     }
     public float GetSpeed()
     {
@@ -535,6 +573,6 @@ public class Alien : MonoBehaviour
         else
         {
             return ambientPath;
-        }        
+        }
     }
 }
