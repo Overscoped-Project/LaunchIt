@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Alien : MonoBehaviour
 {
@@ -146,6 +148,27 @@ public class Alien : MonoBehaviour
         health -= dmg;
         if (health <= 0)
         {
+            if (patrouilleUnit)
+            {
+                try
+                {
+                    foreach (Alien ally in patrouilleAlly)
+                    {
+                        if (ally == null)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            ally.RemoveUnit(this);
+                        }
+                    }
+                }
+                catch (InvalidOperationException e)
+                {
+                }
+
+            }
             Instantiate(enemyDeath, transform.position, transform.rotation);
             Destroy(this.gameObject);
         }
@@ -155,29 +178,41 @@ public class Alien : MonoBehaviour
             aggression -= (int)((temp / 100) * (100 / (health + dmg)) * dmg);
         }
     }
+
+    public void RemoveUnit(Alien unit)
+    {
+        patrouilleAlly.Remove(unit);
+    }
     public void SetNewPosition(List<Node> path, int count)
     {
-        Vector3 direction = path[0].GetNodePosition() - transform.position;
-        float distance = direction.magnitude;
-        direction = direction.normalized;
-        if (!Physics2D.Raycast(transform.position, direction, distance, 8))
+        if (path.Count == 0)
         {
-            this.ambientPath = Pathfinding(transform.position, path[path.Count - 1].GetNodePosition());
+
         }
         else
         {
-            this.ambientPath = path;
+            Vector3 direction = path[0].GetNodePosition() - transform.position;
+            float distance = direction.magnitude;
+            direction = direction.normalized;
+            if (!Physics2D.Raycast(transform.position, direction, distance, 8))
+            {
+                this.ambientPath = Pathfinding(transform.position, path[path.Count - 1].GetNodePosition());
+            }
+            else
+            {
+                this.ambientPath = path;
+            }
+            nodeIndex = 0;
+            if (ambientPath.Count > 0)
+            {
+                newPosition = ambientPath[ambientPath.Count - 1].GetNodePosition();
+                nextPosition = ambientPath[nodeIndex].GetNodePosition();
+                nextArrived = false;
+                newArrived = false;
+            }
+            guardingTicks = maxGuardingTicks;
+            gapToPoint = count * gapMultiplicator + maxGapToPoint;
         }
-        nodeIndex = 0;
-        if (ambientPath.Count > 0)
-        {
-            newPosition = ambientPath[ambientPath.Count - 1].GetNodePosition();
-            nextPosition = ambientPath[nodeIndex].GetNodePosition();
-            nextArrived = false;
-            newArrived = false;
-        }
-        guardingTicks = maxGuardingTicks;
-        gapToPoint = count * gapMultiplicator + maxGapToPoint;
     }
 
     public void SetNewIndex(List<Node> path, int nodeIndex, int count)
@@ -216,9 +251,16 @@ public class Alien : MonoBehaviour
             int count = 0;
             foreach (Alien ally in patrouilleAlly)
             {
-                count++;
-                ambientPath = Pathfinding(transform.position, (Vector2)patrouillePoints[currentPoint].transform.position);
-                ally.SetNewPosition(ambientPath, count);
+                if (ally == null)
+                {
+                    continue;
+                }
+                else
+                {
+                    count++;
+                    ambientPath = Pathfinding(transform.position, (Vector2)patrouillePoints[currentPoint].transform.position);
+                    ally.SetNewPosition(ambientPath, count);
+                }    
             }
         }
         else
@@ -275,8 +317,15 @@ public class Alien : MonoBehaviour
                     int count = 0;
                     foreach (Alien ally in patrouilleAlly)
                     {
-                        count++;
-                        SetNewIndex(path, nodeIndex, count);
+                        if (ally == null)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            count++;
+                            SetNewIndex(path, nodeIndex, count);
+                        }
                     }
                 }
             }
@@ -538,7 +587,7 @@ public class Alien : MonoBehaviour
                 //Little Knockback
                 Vector3 targetDirection = collision.transform.position - transform.position;
                 targetDirection = targetDirection.normalized;
-                transform.position += new Vector3((-1) * targetDirection.x * speed * Time.deltaTime * hitJumpBack, (-1) * targetDirection.y * speed * Time.deltaTime * hitJumpBack, 0);
+                body.velocity = targetDirection * (-1) * speed * hitJumpBack * Time.deltaTime;
 
                 canAttack = false;
             }
