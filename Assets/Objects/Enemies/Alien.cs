@@ -511,7 +511,7 @@ public class Alien : MonoBehaviour
         {
             enemy = null;
         }
-        if (collision.gameObject.tag == "Entity")
+        if (collision.gameObject.tag == "Entity" && !collision.isTrigger)
         {
             aggression -= UnitInRange.Count;
             UnitInRange.Remove(collision.gameObject);
