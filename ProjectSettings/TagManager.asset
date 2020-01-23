@@ -12,6 +12,7 @@ TagManager:
   - Dialogue
   - NodeManager
   - Tilemap
+  - Flashlight
   layers:
   - Default
   - TransparentFX

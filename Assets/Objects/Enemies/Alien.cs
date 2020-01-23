@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Alien : MonoBehaviour
 {
@@ -12,7 +14,6 @@ public class Alien : MonoBehaviour
     [SerializeField] private int aggressionRegeneration = 10;
     [SerializeField] private int damage = 20;
 
-    private GameObject enemy;
     [SerializeField] private float attackRate = 1f;
     private bool canAttack = true;
     private float timeSinceAttack = 0;
@@ -30,15 +31,16 @@ public class Alien : MonoBehaviour
     private Vector3 newPosition;
     private Vector3 nextPosition;
 
-    private List<GameObject> UnitInRange = new List<GameObject>();
-    private List<Bullet> bulletsInRange = new List<Bullet>();
-    private List<Bullet> calculatedBullets = new List<Bullet>();
-
     [SerializeField] private float maxGapToPoint = 5;
     [SerializeField] private float gapToPoint = 1;
+    [SerializeField] private float gapMultiplicator = 1.5f;
     private float defaultGap;
     private bool nextArrived = false;
     private bool newArrived = false;
+
+    private List<GameObject> UnitInRange = new List<GameObject>();
+    private List<Bullet> bulletsInRange = new List<Bullet>();
+    private List<Bullet> calculatedBullets = new List<Bullet>();
 
     [SerializeField] private bool patrouilleUnit = false;
     [SerializeField] private List<GameObject> patrouillePoints = new List<GameObject>();
@@ -49,37 +51,52 @@ public class Alien : MonoBehaviour
     private bool pointRun = true;
     [SerializeField] private int patrouilleId = 0;
     private List<Alien> patrouilleAlly = new List<Alien>();
-	[SerializeField] private GameObject enemyDeathPosition;
+
+    [SerializeField] private GameObject enemyDeath;
+    [SerializeField] private GameObject home;
+
     private NodeGrid nodeGrid;
     private List<Node> ambientPath = new List<Node>();
     private int nodeIndex = 0;
-    private Rigidbody2D body;
-    [SerializeField] private GameObject home;
-    private List<Node> homePath = new List<Node>();
 
+    private List<Node> homePath = new List<Node>();
     private bool ready = false;
+
+    private GameObject enemy;
+    private Rigidbody2D body;
     private AudioManager audioManager;
+    private CapsuleCollider2D capsuleCollider2D;
+    private CircleCollider2D circleCollider2D;
+    private SpriteRenderer spriteRenderer;
 
     IEnumerator Start()
     {
         nodeGrid = GameObject.FindGameObjectWithTag("NodeManager").GetComponent<NodeGrid>();
         yield return new WaitUntil(() => nodeGrid.GetReady());
         audioManager = FindObjectOfType<AudioManager>();
-        body = GetComponent<Rigidbody2D>();
+        body = gameObject.GetComponent<Rigidbody2D>();
+        capsuleCollider2D = gameObject.GetComponent<CapsuleCollider2D>();
+        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+
         defaultGap = gapToPoint;
         newPosition = body.position;
         ambientPath.Add(nodeGrid.NodeFromWorldPoint(newPosition));
+
         dodgePoint = new Queue<Vector2>();
+
         if (patrouilleUnit)
         {
             foreach (GameObject ally in GameObject.FindGameObjectsWithTag("Entity"))
             {
-                if (ally.GetComponent<Alien>().GetPatrouilleUnit() && ally.GetComponent<Alien>().GetPatrouilleId() == patrouilleId)
+                Alien alien = ally.GetComponent<Alien>();
+                if (alien.GetPatrouilleUnit() && alien.GetPatrouilleId() == patrouilleId)
                 {
-                    patrouilleAlly.Add(ally.GetComponent<Alien>());
+                    patrouilleAlly.Add(alien);
+                    ambientPath = Pathfinding(transform.position, (Vector2)patrouillePoints[currentPoint].transform.position);
+                    SetNewPosition(ambientPath, patrouilleAlly.Count);
                 }
             }
-            SetNewPosition((Vector2)patrouillePoints[currentPoint].transform.position);
+
         }
         if (home == null)
         {
@@ -91,7 +108,7 @@ public class Alien : MonoBehaviour
 
     void Update()
     {
-        if (!ready) 
+        if (!ready)
         {
             //Wait that Start() get's ready or the Freeze ends
         }
@@ -110,7 +127,7 @@ public class Alien : MonoBehaviour
 
             if (enemy != null)
             {
-                Physics2D.IgnoreCollision(GetComponent<CapsuleCollider2D>(), enemy.GetComponent<CircleCollider2D>());
+                Physics2D.IgnoreCollision(capsuleCollider2D, enemy.GetComponent<CircleCollider2D>());
                 audioManager.PlayIfNot("EnemyMove");
                 AttackMovement(enemy);
 
@@ -131,7 +148,28 @@ public class Alien : MonoBehaviour
         health -= dmg;
         if (health <= 0)
         {
-            Instantiate(enemyDeathPosition, transform.position, transform.rotation);
+            if (patrouilleUnit)
+            {
+                try
+                {
+                    foreach (Alien ally in patrouilleAlly)
+                    {
+                        if (ally == null)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            ally.RemoveUnit(this);
+                        }
+                    }
+                }
+                catch (InvalidOperationException e)
+                {
+                }
+
+            }
+            Instantiate(enemyDeath, transform.position, transform.rotation);
             Destroy(this.gameObject);
         }
         else
@@ -140,19 +178,54 @@ public class Alien : MonoBehaviour
             aggression -= (int)((temp / 100) * (100 / (health + dmg)) * dmg);
         }
     }
-    public void SetNewPosition(Vector2 newPos)
+
+    public void RemoveUnit(Alien unit)
     {
-        ambientPath = Pathfinding(transform.position, newPos);     
-        nodeIndex = 0;
-        if (ambientPath.Count > 0)
+        patrouilleAlly.Remove(unit);
+    }
+    public void SetNewPosition(List<Node> path, int count)
+    {
+        if (path.Count == 0)
         {
-            newPosition = ambientPath[ambientPath.Count - 1].GetNodePosition();
-            nextPosition = ambientPath[nodeIndex].GetNodePosition();
-            nextArrived = false;
-            newArrived = false;
+
         }
-        guardingTicks = maxGuardingTicks;
-        gapToPoint = maxGapToPoint;
+        else
+        {
+            Vector3 direction = path[0].GetNodePosition() - transform.position;
+            float distance = direction.magnitude;
+            direction = direction.normalized;
+            if (!Physics2D.Raycast(transform.position, direction, distance, 8))
+            {
+                this.ambientPath = Pathfinding(transform.position, path[path.Count - 1].GetNodePosition());
+            }
+            else
+            {
+                this.ambientPath = path;
+            }
+            nodeIndex = 0;
+            if (ambientPath.Count > 0)
+            {
+                newPosition = ambientPath[ambientPath.Count - 1].GetNodePosition();
+                nextPosition = ambientPath[nodeIndex].GetNodePosition();
+                nextArrived = false;
+                newArrived = false;
+            }
+            guardingTicks = maxGuardingTicks;
+            gapToPoint = count * gapMultiplicator + maxGapToPoint;
+        }
+    }
+
+    public void SetNewIndex(List<Node> path, int nodeIndex, int count)
+    {
+        Vector3 direction = path[nodeIndex].GetNodePosition() - path[nodeIndex - 1].GetNodePosition();
+        float distance = direction.magnitude;
+        direction = direction.normalized;
+        if (!Physics2D.Raycast(transform.position, direction, distance, 8))
+        {
+            nextPosition = path[nodeIndex].GetNodePosition();
+            gapToPoint = count * gapMultiplicator + maxGapToPoint;
+            nextArrived = false;
+        }
     }
     private void AmbientMovement()
     {
@@ -175,9 +248,19 @@ public class Alien : MonoBehaviour
             {
                 currentPoint -= 1;
             }
+            int count = 0;
             foreach (Alien ally in patrouilleAlly)
             {
-                ally.SetNewPosition((Vector2)patrouillePoints[currentPoint].transform.position);
+                if (ally == null)
+                {
+                    continue;
+                }
+                else
+                {
+                    count++;
+                    ambientPath = Pathfinding(transform.position, (Vector2)patrouillePoints[currentPoint].transform.position);
+                    ally.SetNewPosition(ambientPath, count);
+                }    
             }
         }
         else
@@ -223,25 +306,40 @@ public class Alien : MonoBehaviour
     private void movementPathfinding(List<Node> path, float speed)
     {
         if ((Mathf.Abs(transform.position.x - nextPosition.x) <= gapToPoint) && (Mathf.Abs(transform.position.y - nextPosition.y) <= gapToPoint))
-        {           
+        {
             if (nodeIndex < path.Count - 1)
             {
                 nodeIndex++;
                 nextPosition = path[nodeIndex].GetNodePosition();
-                nextArrived = false;               
+                nextArrived = false;
+                if (patrouilleUnit)
+                {
+                    int count = 0;
+                    foreach (Alien ally in patrouilleAlly)
+                    {
+                        if (ally == null)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            count++;
+                            SetNewIndex(path, nodeIndex, count);
+                        }
+                    }
+                }
             }
             else
             {
                 newArrived = true;
                 nextArrived = true;
-            }           
+            }
         }
-        else if(!nextArrived)
+        else if (!nextArrived)
         {
             Vector3 targetPoint = nextPosition - transform.position;
             targetPoint = targetPoint.normalized;
             body.velocity = targetPoint * speed * Time.deltaTime;
-            GetComponent<Animator>().SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPoint));
         }
         else
         {
@@ -281,7 +379,7 @@ public class Alien : MonoBehaviour
             Vector2 targetPosition = player.GetComponent<Rigidbody2D>().position - body.position;
             targetPosition = targetPosition.normalized;
             body.velocity = targetPosition * speed * Time.deltaTime;
-            GetComponent<Animator>().SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPosition));
+
             Dodge();
         }
         else if (!dodge)
@@ -311,20 +409,21 @@ public class Alien : MonoBehaviour
             {
                 Vector2 bulletVelocity = bullet.gameObject.GetComponent<Rigidbody2D>().velocity;
                 Ray ray = new Ray(bullet.transform.position, bulletVelocity);
-                if (gameObject.GetComponent<SpriteRenderer>().bounds.IntersectRay(ray) && !calculatedBullets.Contains(bullet))
+                if (spriteRenderer.bounds.IntersectRay(ray) && !calculatedBullets.Contains(bullet))
                 {
                     calculatedBullets.Add(bullet);
                     dodge = true;
+                    SpriteRenderer spriteRenderer = bullet.GetComponent<SpriteRenderer>();
                     if (Mathf.Abs(bulletVelocity.x) > Mathf.Abs(bulletVelocity.y))
                     {
                         int random = Random.Range(0, 2);
                         if (random == 0)
                         {
-                            dodgePoint.Enqueue(new Vector2(transform.position.x, transform.position.y + bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2));
+                            dodgePoint.Enqueue(new Vector2(transform.position.x, transform.position.y + spriteRenderer.bounds.size.magnitude * 2));
                         }
                         else
                         {
-                            dodgePoint.Enqueue(new Vector2(transform.position.x, transform.position.y - bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2));
+                            dodgePoint.Enqueue(new Vector2(transform.position.x, transform.position.y - spriteRenderer.bounds.size.magnitude * 2));
                         }
                     }
                     else
@@ -332,11 +431,11 @@ public class Alien : MonoBehaviour
                         int random = Random.Range(0, 2);
                         if (random == 0)
                         {
-                            dodgePoint.Enqueue(new Vector2(transform.position.x + bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2, transform.position.y));
+                            dodgePoint.Enqueue(new Vector2(transform.position.x + spriteRenderer.bounds.size.magnitude * 2, transform.position.y));
                         }
                         else
                         {
-                            dodgePoint.Enqueue(new Vector2(transform.position.x - bullet.GetComponent<SpriteRenderer>().bounds.size.magnitude * 2, transform.position.y));
+                            dodgePoint.Enqueue(new Vector2(transform.position.x - spriteRenderer.bounds.size.magnitude * 2, transform.position.y));
                         }
                     }
 
@@ -439,12 +538,13 @@ public class Alien : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
+        circleCollider2D = gameObject.GetComponent<CircleCollider2D>();
+        if (collision.gameObject.tag == "Player" && circleCollider2D.IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
             enemy = collision.gameObject;
             ContactSwarm(enemy);
         }
-        if (collision.gameObject.tag == "Entity" && GetComponent<CircleCollider2D>().IsTouching(collision.GetComponent<CapsuleCollider2D>()))
+        if (collision.gameObject.tag == "Entity" && circleCollider2D.IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
             UnitInRange.Add(collision.gameObject);
             aggression += UnitInRange.Count;
@@ -460,10 +560,10 @@ public class Alien : MonoBehaviour
         {
             enemy = null;
         }
-        if (collision.gameObject.tag == "Entity")
+        if (collision.gameObject.tag == "Entity" && !collision.isTrigger)
         {
             aggression -= UnitInRange.Count;
-            UnitInRange.Remove(collision.gameObject);           
+            UnitInRange.Remove(collision.gameObject);
         }
         if (collision.gameObject.tag == "Bullet")
         {
@@ -487,12 +587,12 @@ public class Alien : MonoBehaviour
                 //Little Knockback
                 Vector3 targetDirection = collision.transform.position - transform.position;
                 targetDirection = targetDirection.normalized;
-                transform.position += new Vector3((-1)* targetDirection.x * speed * Time.deltaTime * hitJumpBack, (-1) * targetDirection.y * speed * Time.deltaTime * hitJumpBack, 0);
+                body.velocity = targetDirection * (-1) * speed * hitJumpBack * Time.deltaTime;
 
-                canAttack = false;                
+                canAttack = false;
             }
         }
-        
+
     }
     public float GetSpeed()
     {
@@ -522,6 +622,6 @@ public class Alien : MonoBehaviour
         else
         {
             return ambientPath;
-        }        
+        }
     }
 }

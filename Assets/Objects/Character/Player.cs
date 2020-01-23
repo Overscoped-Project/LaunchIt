@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Player : MonoBehaviour
 {
     //DEBUG
@@ -21,6 +22,7 @@ public class Player : MonoBehaviour
     private AudioManager audioManager;
     private Animator animator;
     private Rigidbody2D body;
+
     void Start()
     {
         dialogueManager = FindObjectOfType<DialogueManager>();
@@ -129,8 +131,7 @@ public class Player : MonoBehaviour
         direction *= playerSpeed * Time.deltaTime;
         body.velocity = direction;
 
-
-        animator.SetFloat("WalkDirectionX", directionX);
+        animator.SetFloat("WalkDirectionX", directionX);       
         animator.SetFloat("WalkDirectionY", directionY);
         animator.SetBool("walk", walk);
         if ((!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S)))
