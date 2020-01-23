@@ -8,7 +8,7 @@ public class TextWriter : MonoBehaviour
 {
 
     public string[] text;
-    public float timeTillNextTextPart;
+    public float[] timeTillNextTextPart;
     public TextMeshProUGUI tGUI;
     public enum Level
     {
@@ -33,13 +33,13 @@ public class TextWriter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (timer >= timeTillNextTextPart && count < text.Length)
+        if (count < text.Length && timer >= timeTillNextTextPart[count])
         {
             timer = 0;
             tGUI.text = text[count];
             count++;
         }
-        else if (timer != timeTillNextTextPart && count < text.Length)
+        else if (count < text.Length && timer != timeTillNextTextPart[count])
         {
             timer += Time.deltaTime;
         }

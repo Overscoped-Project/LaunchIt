@@ -575,7 +575,27 @@ MonoBehaviour:
   - "Wir st\xFCrzen ab!!"
   - Was?!
   - 
-  timeTillNextTextPart: 2
+  timeTillNextTextPart:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 2
+  - 1
+  - 1
+  - 1
+  - 1
+  - 2
+  - 1
+  - 1
+  - 1
   tGUI: {fileID: 1316237591}
   level: 3
   timer: 0
@@ -627,7 +647,27 @@ MonoBehaviour:
   - AI
   - Ich
   - 
-  timeTillNextTextPart: 2
+  timeTillNextTextPart:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
   tGUI: {fileID: 1555272171}
   level: 3
   timer: 0
