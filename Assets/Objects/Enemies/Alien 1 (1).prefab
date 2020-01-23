@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1282715113683435961}
   - component: {fileID: 4027446425291585761}
   - component: {fileID: 3339171974409631543}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Alien 1 (1)
   m_TagString: Entity
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 4ef7e292bbe24f44e8e2ec6c637cdad8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -111,6 +111,7 @@ MonoBehaviour:
   ambientRange: 10
   maxGapToPoint: 5
   gapToPoint: 2
+  gapMultiplicator: 1.5
   patrouilleUnit: 0
   patrouillePoints: []
   triggerZone: {fileID: 0}
