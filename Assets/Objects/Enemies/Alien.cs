@@ -93,10 +93,7 @@ public class Alien : MonoBehaviour
                 {
                     patrouilleAlly.Add(alien);
                     ambientPath = Pathfinding(transform.position, (Vector2)patrouillePoints[currentPoint].transform.position);
-                    if (ambientPath != null)
-                    {
-                        SetNewPosition(ambientPath, patrouilleAlly.Count);
-                    }
+                    SetNewPosition(ambientPath, patrouilleAlly.Count);
                 }
             }
 
@@ -188,7 +185,7 @@ public class Alien : MonoBehaviour
     }
     public void SetNewPosition(List<Node> path, int count)
     {
-        if (path.Count == 0)
+        if (path == null || path.Count == 0)
         {
 
         }
