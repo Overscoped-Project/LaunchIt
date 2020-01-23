@@ -241,6 +241,7 @@ public class Alien : MonoBehaviour
             Vector3 targetPoint = nextPosition - transform.position;
             targetPoint = targetPoint.normalized;
             body.velocity = targetPoint * speed * Time.deltaTime;
+            GetComponent<Animator>().SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPoint));
         }
         else
         {
@@ -280,6 +281,7 @@ public class Alien : MonoBehaviour
             Vector2 targetPosition = player.GetComponent<Rigidbody2D>().position - body.position;
             targetPosition = targetPosition.normalized;
             body.velocity = targetPosition * speed * Time.deltaTime;
+            GetComponent<Animator>().SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPosition));
             Dodge();
         }
         else if (!dodge)

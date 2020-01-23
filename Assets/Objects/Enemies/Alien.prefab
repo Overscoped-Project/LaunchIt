@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6366870600042727910}
   - component: {fileID: 9111600792265519294}
   - component: {fileID: 8605795422720971921}
+  - component: {fileID: 1106511741243464318}
   m_Layer: 0
   m_Name: Alien
   m_TagString: Entity
@@ -174,3 +175,22 @@ CapsuleCollider2D:
   m_Offset: {x: -1.2245026, y: -0.88336515}
   m_Size: {x: 7.7830505, y: 8.993251}
   m_Direction: 0
+--- !u!95 &1106511741243464318
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450288344098211467}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b6a1f63daab284c40b702b7ba78cb765, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
