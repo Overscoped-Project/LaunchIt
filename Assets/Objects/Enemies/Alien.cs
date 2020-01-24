@@ -69,6 +69,9 @@ public class Alien : MonoBehaviour
     private CircleCollider2D circleCollider2D;
     private SpriteRenderer spriteRenderer;
 
+    //test
+    public bool freeze = false;
+
     IEnumerator Start()
     {
         nodeGrid = GameObject.FindGameObjectWithTag("NodeManager").GetComponent<NodeGrid>();
@@ -108,7 +111,11 @@ public class Alien : MonoBehaviour
 
     void Update()
     {
-        if (!ready)
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            freeze = !freeze;
+        }
+        if (!ready || freeze)
         {
             //Wait that Start() get's ready or the Freeze ends
         }
