@@ -50,6 +50,11 @@ public class Bullet : MonoBehaviour
                 audioManager.PlayIfNot("HitPlayer");
                 Destroy(this.gameObject);
             }
+            else
+            {
+                audioManager.Play("HitWall");
+                Destroy(this.gameObject);
+            }
         }
         else
         {
