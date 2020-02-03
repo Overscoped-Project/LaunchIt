@@ -58,8 +58,7 @@ public class Bullet : MonoBehaviour
         }
         else
         {
-            audioManager.Play("HitWall");
-            Destroy(this.gameObject);
+            Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), obj.GetComponent<CapsuleCollider2D>());
         }
     }
 
