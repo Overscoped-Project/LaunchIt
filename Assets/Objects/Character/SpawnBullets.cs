@@ -16,6 +16,7 @@ public class SpawnBullets : MonoBehaviour
     private float angle = 0;
     private Rigidbody2D body;
     private Animator animator;
+    private AudioManager audioManager;
 
     private Light2D light2D;
 
@@ -24,6 +25,7 @@ public class SpawnBullets : MonoBehaviour
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        audioManager = FindObjectOfType<AudioManager>();
         foreach (Light2D l in GetComponentsInChildren<Light2D>())
         {
             if (l.tag == "Flashlight")
@@ -88,7 +90,8 @@ public class SpawnBullets : MonoBehaviour
     {
         Quaternion q = Quaternion.Euler(0, 0, angle);
         Bullet bullet = Instantiate(shot, body.position + offset, q);
-        bullet.SetDirection(lookDir);
+        bullet.SetDirection(lookDir, this.gameObject, audioManager);
+        audioManager.Play("PlayerFire");
     }   
 
     public Bullet getShot()

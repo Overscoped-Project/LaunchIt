@@ -104,6 +104,11 @@ MonoBehaviour:
   aggression: 70
   aggressionRegeneration: 10
   damage: 20
+  rangeUnit: 0
+  shot: {fileID: 7819643427785643837, guid: 728301dbab5965f4385aabd2ada1e9db, type: 3}
+  range: 10
+  offsetX: 2
+  offsetY: 2
   attackRate: 1
   hitJumpBack: 0.1
   dodgeChance: 10
@@ -123,6 +128,7 @@ MonoBehaviour:
   enemyDeath: {fileID: 7276113938277166871, guid: 9ff342a42844d964a9d5ad6597747e3f,
     type: 3}
   home: {fileID: 0}
+  freeze: 0
 --- !u!58 &6366870600042727910
 CircleCollider2D:
   m_ObjectHideFlags: 0

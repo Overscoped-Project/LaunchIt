@@ -150,7 +150,6 @@ public class Player : MonoBehaviour
     public void Hit(int damage)
     {
         health -= damage;
-        audioManager.PlayIfNot("HitPlayer");
         if (health <= 0)
         {
             levelManager.GoToDeathScreen();

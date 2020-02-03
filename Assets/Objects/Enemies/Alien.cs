@@ -14,6 +14,12 @@ public class Alien : MonoBehaviour
     [SerializeField] private int aggressionRegeneration = 10;
     [SerializeField] private int damage = 20;
 
+    [SerializeField] private bool rangeUnit = false;
+    [SerializeField] private Bullet shot;
+    [SerializeField] private float range = 10f;
+    [SerializeField] private float offsetX = 2f;
+    [SerializeField] private float offsetY = 2f;
+
     [SerializeField] private float attackRate = 1f;
     private bool canAttack = true;
     private float timeSinceAttack = 0;
@@ -63,11 +69,15 @@ public class Alien : MonoBehaviour
     private bool ready = false;
 
     private GameObject enemy;
+    private Rigidbody2D enemyBody;
+    private Player enemyPlayer;
+
     private Rigidbody2D body;
     private AudioManager audioManager;
     private CapsuleCollider2D capsuleCollider2D;
     private CircleCollider2D circleCollider2D;
     private SpriteRenderer spriteRenderer;
+    private Animator animator;
 
     //test
     public bool freeze = false;
@@ -80,6 +90,7 @@ public class Alien : MonoBehaviour
         body = gameObject.GetComponent<Rigidbody2D>();
         capsuleCollider2D = gameObject.GetComponent<CapsuleCollider2D>();
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+        animator = gameObject.GetComponent<Animator>();
 
         defaultGap = gapToPoint;
         newPosition = body.position;
@@ -121,17 +132,6 @@ public class Alien : MonoBehaviour
         }
         else
         {
-            //DEBUG
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                ambientPath = Pathfinding(transform.position, newPosition);
-                nodeIndex = 0;
-                nextPosition = ambientPath[nodeIndex].GetNodePosition();
-
-            }
-            //DEBUG
-
             if (enemy != null)
             {
                 Physics2D.IgnoreCollision(capsuleCollider2D, enemy.GetComponent<CircleCollider2D>());
@@ -184,6 +184,38 @@ public class Alien : MonoBehaviour
             float temp = aggression;
             aggression -= (int)((temp / 100) * (100 / (health + dmg)) * dmg);
         }
+    }
+    private void Shoot(Vector2 direction, float angle)
+    {
+        Vector2 offset = new Vector2(0,0);
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+        {
+            if (direction.x > 0)
+            {
+                offset.x = offsetX;
+            }
+            else
+            {
+                offset.x = -offsetX;
+            }
+            offset.y = 0;
+        }
+        else
+        {
+            if (direction.y > 0)
+            {
+                offset.y = offsetY;
+            }
+            else
+            {
+                offset.y = -offsetY;
+            }
+            offset.x = 0;
+        }
+        Quaternion q = Quaternion.Euler(0, 0, angle);
+        Bullet bullet = Instantiate(shot, body.position + offset, q);
+        bullet.SetDirection(direction, this.gameObject, audioManager);
+        //audioManager.Play("");
     }
 
     public void RemoveUnit(Alien unit)
@@ -347,7 +379,7 @@ public class Alien : MonoBehaviour
             Vector3 targetPoint = nextPosition - transform.position;
             targetPoint = targetPoint.normalized;
             body.velocity = targetPoint * speed * Time.deltaTime;
-            GetComponent<Animator>().SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPoint));
+            animator.SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPoint));
         }
         else
         {
@@ -374,7 +406,7 @@ public class Alien : MonoBehaviour
             body.velocity = targetPosition * speed * Time.deltaTime;
         }
 
-        if (aggression < player.GetComponent<Player>().GetAggression() && !dodge)
+        if (aggression < enemyPlayer.GetAggression() && !dodge)
         {
             if (homePath == null || homePath.Count < 1)
             {
@@ -384,11 +416,28 @@ public class Alien : MonoBehaviour
         }
         else if (canAttack && !dodge)
         {
-            Vector2 targetPosition = player.GetComponent<Rigidbody2D>().position - body.position;
+            Vector2 targetPosition = enemyBody.position - body.position;
             targetPosition = targetPosition.normalized;
+
+            if (rangeUnit)
+            {
+                if (enemyBody.position.magnitude - body.position.magnitude <= range)
+                {
+                    if (canAttack)
+                    {
+                        float angle = 180 - Vector2.SignedAngle(targetPosition * (-1), transform.up);
+                        Shoot(targetPosition, angle);
+                        //audioManager.Play("");
+                        canAttack = false;
+                    }
+                }
+            }
+            else
+            {           
             body.velocity = targetPosition * speed * Time.deltaTime;
-            GetComponent<Animator>().SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPosition));
+            animator.SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPosition));
             Dodge();
+            }           
         }
         else if (!dodge)
         {
@@ -533,13 +582,13 @@ public class Alien : MonoBehaviour
     }
 
 
-    private void ContactSwarm(GameObject target)
+    private void ContactSwarm(GameObject target, Rigidbody2D rigi, Player player)
     {
         foreach (GameObject obj in UnitInRange)
         {
             if (obj != null && obj.tag == "Entity" && target != null)
             {
-                obj.GetComponent<Alien>().SetEnemy(target);
+                obj.GetComponent<Alien>().SetEnemy(target, rigi, player);
             }
         }
     }
@@ -550,7 +599,9 @@ public class Alien : MonoBehaviour
         if (collision.gameObject.tag == "Player" && circleCollider2D.IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
             enemy = collision.gameObject;
-            ContactSwarm(enemy);
+            enemyBody = enemy.GetComponent<Rigidbody2D>();
+            enemyPlayer = enemy.GetComponent<Player>();
+            ContactSwarm(enemy, enemyBody, enemyPlayer);
         }
         if (collision.gameObject.tag == "Entity" && circleCollider2D.IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
@@ -590,7 +641,7 @@ public class Alien : MonoBehaviour
         {
             if (canAttack)
             {
-                collision.gameObject.GetComponent<Player>().Hit(damage);
+                enemyPlayer.Hit(damage);
                 audioManager.PlayIfNot("EnemyAttack");
                 //Little Knockback
                 Vector3 targetDirection = collision.transform.position - transform.position;
@@ -607,9 +658,11 @@ public class Alien : MonoBehaviour
         return speed;
     }
 
-    public void SetEnemy(GameObject enemy)
+    public void SetEnemy(GameObject enemy, Rigidbody2D enemyBody, Player enemyPlayer)
     {
         this.enemy = enemy;
+        this.enemyBody = enemyBody;
+        this.enemyPlayer = enemyPlayer;
     }
 
     public bool GetPatrouilleUnit()

@@ -8,12 +8,11 @@ public class Bullet : MonoBehaviour
     [SerializeField] private int damage = 30;
     [SerializeField] private float range = 100f;
     private Vector3 startPosition;
+    private GameObject origin;
     private AudioManager audioManager;
     void Start()
     {
         startPosition = transform.position;
-        audioManager = FindObjectOfType<AudioManager>();
-        audioManager.Play("PlayerFire");
     }
 
     void Update()
@@ -36,11 +35,21 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Entity")
+        GameObject obj = collision.gameObject;
+        if (obj.tag != origin.tag)
         {
-            collision.gameObject.GetComponent<Alien>().Hit(damage);
-            audioManager.Play("HitEnemy");
-            Destroy(this.gameObject);
+            if (obj.tag == "Entity")
+            {
+                obj.GetComponent<Alien>().Hit(damage);
+                audioManager.Play("HitEnemy");
+                Destroy(this.gameObject);
+            }
+            else if (obj.tag == "Player")
+            {
+                obj.GetComponent<Player>().Hit(damage);
+                audioManager.PlayIfNot("HitPlayer");
+                Destroy(this.gameObject);
+            }
         }
         else
         {
@@ -49,9 +58,12 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    public void SetDirection(Vector2 lookDir)
+    public void SetDirection(Vector2 lookDir, GameObject origin, AudioManager audioManager)
     {
         GetComponent<Rigidbody2D>().velocity = lookDir * GetSpeed();
+        this.origin = origin;
+        this.audioManager = audioManager;
+
     }
 
 }
