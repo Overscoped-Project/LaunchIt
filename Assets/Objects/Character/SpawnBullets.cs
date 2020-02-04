@@ -18,24 +18,14 @@ public class SpawnBullets : MonoBehaviour
     private Animator animator;
     private AudioManager audioManager;
 
-    private Light2D light2D;
-
 
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         audioManager = FindObjectOfType<AudioManager>();
-        foreach (Light2D l in GetComponentsInChildren<Light2D>())
-        {
-            if (l.tag == "Flashlight")
-            {
-                light2D = l;
-            }
-        }
+
     }
-
-
     void Update()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -67,7 +57,6 @@ public class SpawnBullets : MonoBehaviour
             offset.x = 0;
         }
         angle = 180 - Vector2.SignedAngle(lookDir * (-1), transform.up);
-        light2D.transform.rotation = Quaternion.Euler(0,0,angle);
         animator.SetFloat("Rotation", angle);
         if (Input.GetKey(KeyCode.Mouse0) && canShoot)
         {
