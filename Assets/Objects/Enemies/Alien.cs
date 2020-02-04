@@ -378,7 +378,7 @@ public class Alien : MonoBehaviour
         {
             Vector3 targetPoint = nextPosition - transform.position;
             targetPoint = targetPoint.normalized;
-            body.velocity = targetPoint * speed * Time.deltaTime;
+            body.velocity = targetPoint * speed; //* Time.deltaTime;
             animator.SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPoint));
         }
         else
@@ -403,7 +403,7 @@ public class Alien : MonoBehaviour
         {
             Vector2 targetPosition = dodgeSequencePoint - body.position;
             targetPosition = targetPosition.normalized;
-            body.velocity = targetPosition * speed * Time.deltaTime;
+            body.velocity = targetPosition * speed; //* Time.deltaTime;
         }
 
         if (aggression < enemyPlayer.GetAggression() && !dodge)
@@ -646,7 +646,7 @@ public class Alien : MonoBehaviour
                 //Little Knockback
                 Vector3 targetDirection = collision.transform.position - transform.position;
                 targetDirection = targetDirection.normalized;
-                body.velocity = targetDirection * (-1) * speed * hitJumpBack * Time.deltaTime;
+                body.velocity = targetDirection * (-1) * speed * hitJumpBack; //* Time.deltaTime;
 
                 canAttack = false;
             }

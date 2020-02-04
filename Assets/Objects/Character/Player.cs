@@ -127,9 +127,11 @@ public class Player : MonoBehaviour
             }
         }
 
+        Debug.LogWarning("vel: " + body.velocity);
         direction.Normalize();
-        direction *= playerSpeed * Time.deltaTime;
+        direction *= playerSpeed;// * Time.deltaTime;
         body.velocity = direction;
+        Debug.LogWarning("vel: " + body.velocity + ", dir: " + direction);
 
         animator.SetFloat("WalkDirectionX", directionX);       
         animator.SetFloat("WalkDirectionY", directionY);

@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  speed: 1200
+  speed: 40
   ambientsSpeedPercentage: 0.8
   maxAggression: 100
   aggression: 70
@@ -118,7 +118,7 @@ MonoBehaviour:
   maxGapToPoint: 20
   gapToPoint: 5
   gapMultiplicator: 1.5
-  patrouilleUnit: 1
+  patrouilleUnit: 0
   patrouillePoints:
   - {fileID: 0}
   - {fileID: 0}
