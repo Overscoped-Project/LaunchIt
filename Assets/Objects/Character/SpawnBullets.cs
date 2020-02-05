@@ -7,9 +7,7 @@ public class SpawnBullets : MonoBehaviour
 {
     [SerializeField] private Bullet shot;
     [SerializeField] private float fireRate = 0.5f;
-    [SerializeField] private float offsetRateX = 1.5f;
-    [SerializeField] private float offsetRateY = 3.5f;
-    private Vector2 offset = new Vector2(0, 0);
+    [SerializeField] private Vector2 offset = new Vector2(0, 2);
     private float timeSinceShoot = 0;
     private bool canShoot = true;
     private Vector2 lookDir;
@@ -29,33 +27,9 @@ public class SpawnBullets : MonoBehaviour
     void Update()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        lookDir = mousePos - body.position;
-        lookDir = lookDir.normalized;
+        lookDir = mousePos - body.position + offset;
+        lookDir = lookDir.normalized;     
 
-        if (Mathf.Abs(lookDir.x) > Mathf.Abs(lookDir.y))
-        {
-            if (lookDir.x > 0)
-            {
-                offset.x = offsetRateX;
-            }
-            else
-            {
-                offset.x = -offsetRateX;
-            }
-            offset.y = 0;
-        }
-        else
-        {
-            if (lookDir.y > 0)
-            {
-                offset.y = offsetRateY;
-            }
-            else
-            {
-                offset.y = -offsetRateY;
-            }
-            offset.x = 0;
-        }
         angle = 180 - Vector2.SignedAngle(lookDir * (-1), transform.up);
         animator.SetFloat("Rotation", angle);
         if (Input.GetKey(KeyCode.Mouse0) && canShoot)

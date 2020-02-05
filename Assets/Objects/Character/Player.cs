@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
     private Animator animator;
     private Rigidbody2D body;
 
+    [SerializeField] Texture2D cursor;
+
     void Start()
     {
         dialogueManager = FindObjectOfType<DialogueManager>();
@@ -30,6 +32,8 @@ public class Player : MonoBehaviour
         audioManager = FindObjectOfType<AudioManager>();
         animator = GetComponent<Animator>();
         body = GetComponent<Rigidbody2D>();
+
+        Cursor.SetCursor(cursor, new Vector2(cursor.width/2, cursor.height/2), CursorMode.ForceSoftware);
     }
 
 
