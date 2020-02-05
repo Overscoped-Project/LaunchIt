@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class DialogueTrigger : MonoBehaviour
 {
-    [SerializeField] private Dialogue dialogue;
+    private Dialogue dialogue;
     private DialogueManager dialogueManager;
+
+    [SerializeField] DialogueManager.pathType path;
 
     private void Start()
     {
-        dialogue.trigger = gameObject;
+       //dialogue.trigger = gameObject;
         dialogueManager = FindObjectOfType<DialogueManager>();
     }
 
@@ -17,15 +19,16 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (other.tag == "Player" && !other.GetComponent<Player>().GetAttacked())
         {
-            dialogueManager.StartDialogue(dialogue);
+            dialogueManager.StartDialogue(path, null);
+            this.gameObject.SetActive(false);
         } 
     }
 
-    public void OnTriggerExit2D (Collider2D other)
+    /*public void OnTriggerExit2D (Collider2D other)
     {
         if (other.tag == "Player")
         {
             dialogueManager.EndDialogue();
         }
-    }
+    }*/
 }

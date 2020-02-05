@@ -34,7 +34,13 @@ public class Ship : MonoBehaviour
     {
         return repaired;
     }
-    
+
+    public List<QuestObject> GetRequiredItems()
+    {
+        return requiredItems;
+    }
+
+
     public void RepairShip(GameObject inventory)
     {
         foreach (Slot slot in inventory.GetComponentsInChildren<Slot>())

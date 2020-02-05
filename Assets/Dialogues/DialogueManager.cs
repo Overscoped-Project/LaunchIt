@@ -11,35 +11,74 @@ public class DialogueManager : MonoBehaviour
 
     public Animator animator;
 
+    Queue<Dialogue> dialogueQueue;
     Dialogue currentDialogue;
 
-    private void Start ()
+    private Inventory inventory;
+
+    [SerializeField] private List<Dialogue> story = new List<Dialogue>();
+    private int storyCount = 0;
+
+    public enum pathType { Story, Inventory };
+
+    private void Start()
     {
         sentences = new Queue<string>();
+        inventory = FindObjectOfType<Inventory>();
     }
 
-    
-    public void StartDialogue(Dialogue dialogue)
+
+    public void StartDialogue(pathType path, Item obj)
     {
-        currentDialogue = dialogue;
+        switch (path)
+        {
+            case pathType.Story:
+                dialogueQueue.Enqueue(story[storyCount]);
+                if (storyCount < story.Count)
+                {
+                    storyCount++;
+                }
+                break;
+
+            case pathType.Inventory:
+
+
+                dialogueQueue.Enqueue(obj.GetDialogue());
+                dialogueQueue.Enqueue(inventory.GetDialogue(obj));
+
+                break;
+        }
+
+        SetCurrentDialogue();
+    }
+    public void SetCurrentDialogue()
+    {
+        currentDialogue = dialogueQueue.Dequeue();
+
         animator.SetBool("IsOpen", true);
-        nameItem.text = dialogue.name;
+        nameItem.text = currentDialogue.name;
         sentences.Clear();
 
-        foreach (string sentence in dialogue.sentences)
+        foreach (string sentence in currentDialogue.GetSentences())
         {
             sentences.Enqueue(sentence);
         }
 
         DisplayNextSentence();
     }
-    
     public void DisplayNextSentence()
     {
         if (sentences.Count == 0)
         {
-            EndDialogue();
-            return;
+            if (dialogueQueue.Count != 0)
+            {
+                SetCurrentDialogue();
+            }
+            else
+            {
+                EndDialogue();
+                return;
+            }
         }
 
         string sentence = sentences.Dequeue();
@@ -49,12 +88,6 @@ public class DialogueManager : MonoBehaviour
     public void EndDialogue()
     {
         animator.SetBool("IsOpen", false);
-
-        if(currentDialogue != null && currentDialogue.destroyWhenDone)
-        {
-            Destroy(currentDialogue.trigger);
-        }
-
         currentDialogue = null;
     }
 }
