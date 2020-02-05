@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -556,46 +556,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text:
   - Lebenserhaltungsprotokol aktiviert.
-  - "Die Kontrolle \xFCber den Anzug wird \xFCbernommen."
-  - Letzter Zielpunkt wird angesteuert.
-  - '...'
-  - Raumschiff erreicht.
-  - Hyperraumsprung wird vorbereitet.
-  - Raumschiff erreicht Orbit.
-  - Anzugsreparatur erfolgreich.
-  - Ist jemand hier?
-  - Guten Morgen Sir. Wir sind allein.
+  - Ein schwerer Schaden wurde festgestellt.
+  - "Reperatur n\xF6tig."
+  - 
   - Wer bist du?
-  - "Ich bin ein k\xFCnstliches Assistenzprogramm und Teil ihres Anzuges."
-  - Hyperraumsprung wird eingeleitet.
-  - Was? Wohin!? Warum??
-  - '*bang*'
-  - Wir wurden von einem unbekannten Objekt getroffen.
-  - Ein schwerer Schaden wurde festgestellt. Ein totaler Systemausfall steht bevor.
-  - "Wir st\xFCrzen ab!!"
-  - Was?!
   - 
   timeTillNextTextPart:
-  - 3.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 3.2
-  - 3.2
-  - 2.2
-  - 3.2
-  - 2.2
-  - 3.2
-  - 4.2
-  - 2.2
-  - 2.2
-  - 2.2
+  - 3
+  - 3
+  - 3
+  - 3
+  - 8
+  - 2
   tGUI: {fileID: 1316237591}
   level: 3
   timer: 0
@@ -631,43 +603,15 @@ MonoBehaviour:
   - AI
   - AI
   - 
-  - AI
-  - AI
-  - AI
-  - AI
-  - '...'
-  - AI
-  - '...'
-  - AI
-  - AI
-  - '...'
-  - 
-  - AI
-  - AI
-  - AI
-  - '...'
+  - General
   - 
   timeTillNextTextPart:
-  - 3.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 2.2
-  - 3.2
-  - 3.2
-  - 2.2
-  - 3.2
-  - 2.2
-  - 3.2
-  - 4.2
-  - 2.2
-  - 2.2
-  - 2.2
+  - 3
+  - 3
+  - 3
+  - 3
+  - 8
+  - 2
   tGUI: {fileID: 1555272171}
   level: 3
   timer: 0
