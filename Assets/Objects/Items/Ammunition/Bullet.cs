@@ -36,30 +36,24 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject obj = collision.gameObject;
-        if (obj.tag != origin.tag)
+        if (obj.tag == "Entity")
         {
-            if (obj.tag == "Entity")
-            {
-                obj.GetComponent<Alien>().Hit(damage);
-                audioManager.Play("HitEnemy");
-                Destroy(this.gameObject);
-            }
-            else if (obj.tag == "Player")
-            {
-                obj.GetComponent<Player>().Hit(damage);
-                audioManager.PlayIfNot("HitPlayer");
-                Destroy(this.gameObject);
-            }
-            else
-            {
-                audioManager.Play("HitWall");
-                Destroy(this.gameObject);
-            }
+            obj.GetComponent<Alien>().Hit(damage);
+            audioManager.Play("HitEnemy");
+            Destroy(this.gameObject);
+        }
+        else if (obj.tag == "Player")
+        {
+            obj.GetComponent<Player>().Hit(damage);
+            audioManager.PlayIfNot("HitPlayer");
+            Destroy(this.gameObject);
         }
         else
         {
-            Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), obj.GetComponent<CapsuleCollider2D>());
+            audioManager.Play("HitWall");
+            Destroy(this.gameObject);
         }
+
     }
 
     public void SetDirection(Vector2 lookDir, GameObject origin, AudioManager audioManager)
@@ -67,6 +61,16 @@ public class Bullet : MonoBehaviour
         GetComponent<Rigidbody2D>().velocity = lookDir * GetSpeed();
         this.origin = origin;
         this.audioManager = audioManager;
+
+        if (origin.tag == "Player")
+        {
+            this.gameObject.layer = 12;
+        }
+        else
+        {
+            this.gameObject.layer = 13;
+        }
+        
 
     }
 

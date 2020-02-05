@@ -26,8 +26,8 @@ TagManager:
   - Objects
   - Entity
   - Player
-  - Projectiles
-  - 
+  - ProjectilesPlayer
+  - ProjectilesEntity
   - 
   - 
   - 
