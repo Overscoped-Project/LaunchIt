@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Dialogue
+[CreateAssetMenu(fileName = "Item", menuName = "ScriptableObjects/Dialogue", order = 1)]
+public class Dialogue : ScriptableObject
 {
-    public string name;
+    [SerializeField] private string name;
     [TextArea(3, 10)]
-    public string[] sentences;
-    public bool destroyWhenDone = false;
-    public GameObject trigger;
+    [SerializeField] private string[] sentences;
   
+    public string[] GetSentences()
+    {
+        return sentences;
+    }
+
+    public Dialogue(string name, string[] sentences)
+    {
+        this.name = name;
+        this.sentences = sentences;
+    }
 }

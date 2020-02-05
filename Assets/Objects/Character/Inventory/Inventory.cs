@@ -4,18 +4,17 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    private bool isPickupRange = false;
-    private bool isRepairRange = false;  
-    private bool invEnable = false;
-    private List<GameObject> pickupAbleObjects = new List<GameObject>();
+    private bool isRepairRange = false;
     private List<Item> questObjects = new List<Item>();
     [SerializeField] private int invSlots = 6;
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject emptySlot;
+    private int invCount = 0;
     private Ship ship;
     private Transform inventoryTransform;
     private AudioManager audioManager;
-    
+
+    private DialogueManager dialogueManager;
 
     void Start()
     {
@@ -25,41 +24,13 @@ public class Inventory : MonoBehaviour
             Instantiate(emptySlot, inventoryTransform);
         }
         audioManager = FindObjectOfType<AudioManager>();
+        dialogueManager = FindObjectOfType<DialogueManager>();
+        inventory.SetActive(true);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            invEnable = !invEnable;
-        }
-        if (invEnable)
-        {
-            inventory.SetActive(true);
-        }
-        else if (!invEnable)
-        {
-            inventory.SetActive(false);
-        }
-        if (Input.GetKeyDown(KeyCode.F) && isPickupRange && (pickupAbleObjects != null))
-        {
-            for (int j = 0; j < pickupAbleObjects.Count; j++)
-            {
-                for (int i = 0; i < invSlots; i++)
-                {
-                    if (inventory.GetComponentsInChildren<Slot>()[i].GetEmpty())
-                    {
-                        AddItem(inventory.GetComponentsInChildren<Slot>()[i], pickupAbleObjects[j].gameObject);
-                    }
-                    if (pickupAbleObjects.Count == 0)
-                    {
-                        isPickupRange = false;
-                        break;
-                    }                       
-                } 
-            }
-        }
-        
+
         if (Input.GetKeyDown(KeyCode.E) && isRepairRange && ship != null)
         {
             ship.RepairShip(inventory);
@@ -70,26 +41,29 @@ public class Inventory : MonoBehaviour
     {
         if (collider.gameObject.CompareTag("Item"))
         {
-            isPickupRange = true;
-            pickupAbleObjects.Add(collider.gameObject);
+            for (int i = 0; i < invSlots; i++)
+            {
+                if (inventory.GetComponentsInChildren<Slot>()[i].GetEmpty())
+                {
+                    AddItem(inventory.GetComponentsInChildren<Slot>()[i], collider.gameObject);
+                    invCount++;
+                    dialogueManager.StartDialogue(DialogueManager.pathType.Inventory, collider.gameObject.GetComponent<Item>());
+                }
+            }
         }
         if (collider.gameObject.CompareTag("Ship"))
         {
             ship = collider.gameObject.GetComponent<Ship>();
             isRepairRange = true;
         }
-        
+
     }
 
     private void OnTriggerExit2D(Collider2D collider)
     {
         if (collider.gameObject.CompareTag("Item"))
         {
-            pickupAbleObjects.Remove(collider.gameObject);
-            if (pickupAbleObjects.Count == 0)
-            {
-                isPickupRange = false;
-            }
+
         }
         if (collider.gameObject.CompareTag("Ship"))
         {
@@ -98,7 +72,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void AddItem(Slot slot,GameObject item)
+    public void AddItem(Slot slot, GameObject item)
     {
         slot.AddItem(item.GetComponent<ConnectorItem>().GetItem());
         Destroy(item);
@@ -120,7 +94,7 @@ public class Inventory : MonoBehaviour
             {
                 invSlots++;
             }
-        }      
+        }
     }
 
     public void RecreateInventorySlot(GameObject slot)
@@ -129,4 +103,23 @@ public class Inventory : MonoBehaviour
         AddInventorySlot(1, false);
     }
 
+    public void SetInvCount(int invCount)
+    {
+        this.invCount = invCount;
+    }
+
+    public int GetInvCount()
+    {
+        return invCount;
+    }
+
+
+    public Dialogue GetDialogue(Item obj)
+    {
+
+        string[] text = new string[] { "Du hast " + obj.GetName() + " gefunden.", "Dir fehlen nurnoch " + (ship.GetRequiredItems().Count - invCount) + " Items."};
+        Dialogue invDialogue = new Dialogue("Inventory", text);
+
+       return invDialogue;
+    }
 }
