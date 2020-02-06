@@ -79,11 +79,15 @@ public class Alien : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Animator animator;
 
+    private MusicManager musicManager;
+
     //test
     public bool freeze = false;
 
     IEnumerator Start()
     {
+        musicManager = FindObjectOfType<MusicManager>();
+
         nodeGrid = GameObject.FindGameObjectWithTag("NodeManager").GetComponent<NodeGrid>();
         yield return new WaitUntil(() => nodeGrid.GetReady());
         audioManager = FindObjectOfType<AudioManager>();
@@ -177,6 +181,8 @@ public class Alien : MonoBehaviour
 
             }
             Instantiate(enemyDeath, transform.position, transform.rotation);
+            musicManager.RemoveAlien(this);
+            musicManager.UpdateMusik();
             Destroy(this.gameObject);
         }
         else
@@ -602,6 +608,9 @@ public class Alien : MonoBehaviour
             enemyBody = enemy.GetComponent<Rigidbody2D>();
             enemyPlayer = enemy.GetComponent<Player>();
             ContactSwarm(enemy, enemyBody, enemyPlayer);
+
+            musicManager.AddAlien(this);
+            musicManager.UpdateMusik();
         }
         if (collision.gameObject.tag == "Entity" && circleCollider2D.IsTouching(collision.GetComponent<CapsuleCollider2D>()))
         {
@@ -618,6 +627,8 @@ public class Alien : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             enemy = null;
+            musicManager.RemoveAlien(this);
+            musicManager.UpdateMusik();
         }
         if (collision.gameObject.tag == "Entity" && !collision.isTrigger)
         {
