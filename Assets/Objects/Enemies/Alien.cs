@@ -433,8 +433,8 @@ public class Alien : MonoBehaviour
                 }
             }
             else
-            {           
-            body.velocity = targetPosition * speed * Time.deltaTime;
+            {
+            body.velocity = targetPosition * speed;// * Time.deltaTime;
             animator.SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPosition));
             Dodge();
             }           
