@@ -5,7 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Item", menuName = "ScriptableObjects/Dialogue", order = 1)]
 public class Dialogue : ScriptableObject
 {
-    [SerializeField] private string name;
+    public enum Names {General, AI, Inventory};
+
+    [SerializeField] private Names[] names;
     [TextArea(3, 10)]
     [SerializeField] private string[] sentences;
   
@@ -14,9 +16,14 @@ public class Dialogue : ScriptableObject
         return sentences;
     }
 
-    public Dialogue(string name, string[] sentences)
+    public Names[] GetNames()
     {
-        this.name = name;
+        return names;
+    }
+
+    public Dialogue(Names[] names, string[] sentences)
+    {
+        this.names = names;
         this.sentences = sentences;
     }
 }

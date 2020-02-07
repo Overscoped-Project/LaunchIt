@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class MusicManager : MonoBehaviour
 {
     [SerializeField] private AudioClip[] musik;
+    public AudioMixerGroup audioMixerGroup;
 
     private AudioSource source;
 
@@ -14,22 +16,22 @@ public class MusicManager : MonoBehaviour
     void Start()
     {
         source = gameObject.AddComponent<AudioSource>();
+        source.outputAudioMixerGroup = audioMixerGroup;
         source.clip = musik[0];
         source.playOnAwake = true;
         source.loop = true;
         source.Play();
+
     }
 
     public void AddAlien(Alien alien)
     {
-        if (!aliensAround.Contains(alien))
-            aliensAround.Add(alien);
+        if (!aliensAround.Contains(alien)) aliensAround.Add(alien);
     }
 
     public void RemoveAlien(Alien alien)
     {
-        if(aliensAround.Contains(alien))
-        aliensAround.Remove(alien);
+        if(aliensAround.Contains(alien)) aliensAround.Remove(alien);
     }
 
     public void UpdateMusik()

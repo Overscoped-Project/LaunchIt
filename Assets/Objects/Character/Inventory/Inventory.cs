@@ -47,7 +47,9 @@ public class Inventory : MonoBehaviour
                 {
                     AddItem(inventory.GetComponentsInChildren<Slot>()[i], collider.gameObject);
                     invCount++;
-                    dialogueManager.StartDialogue(DialogueManager.pathType.Inventory, collider.gameObject.GetComponent<Item>());
+                    dialogueManager.StartDialogue(DialogueManager.pathType.Inventory, collider.gameObject.GetComponent<ConnectorItem>().GetItem());
+
+                    break;
                 }
             }
         }
@@ -116,9 +118,12 @@ public class Inventory : MonoBehaviour
 
     public Dialogue GetDialogue(Item obj)
     {
-
-        string[] text = new string[] { "Du hast " + obj.GetName() + " gefunden.", "Dir fehlen nurnoch " + (ship.GetRequiredItems().Count - invCount) + " Items."};
-        Dialogue invDialogue = new Dialogue("Inventory", text);
+        string name = obj.GetName();
+        int count = FindObjectOfType<Ship>().GetRequiredItems().Count - invCount;
+        string[] text = new string[] { "Du hast " + name + " gefunden.",  " Dir fehlen nurnoch " + count + " Items."};
+        Dialogue.Names[] names = new Dialogue.Names[1];
+        names[0] = Dialogue.Names.Inventory;
+        Dialogue invDialogue = new Dialogue(names, text);
 
        return invDialogue;
     }

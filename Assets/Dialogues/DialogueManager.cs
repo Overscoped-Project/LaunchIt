@@ -5,11 +5,15 @@ using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
+    public bool running = false;
     public Queue<string> sentences;
-    public Text descriptionText;
-    public Text nameItem;
+    public Queue<Dialogue.Names> names;
 
-    public Animator animator;
+    public Text[] descriptionText;
+    public Text[] nameItem;
+
+    public Animator[] dialogBoxAnimator;
+    public Animator inventoryPanelAnimator;
 
     Queue<Dialogue> dialogueQueue;
     Dialogue currentDialogue;
@@ -24,12 +28,18 @@ public class DialogueManager : MonoBehaviour
     private void Start()
     {
         sentences = new Queue<string>();
+        names = new Queue<Dialogue.Names>();
+        dialogueQueue = new Queue<Dialogue>();
         inventory = FindObjectOfType<Inventory>();
     }
 
 
     public void StartDialogue(pathType path, Item obj)
     {
+        running = true;
+        inventoryPanelAnimator.SetBool("IsOpen", false);
+        //inventoryPanel.SetActive(false);
+
         switch (path)
         {
             case pathType.Story:
@@ -42,9 +52,8 @@ public class DialogueManager : MonoBehaviour
 
             case pathType.Inventory:
 
-
                 dialogueQueue.Enqueue(obj.GetDialogue());
-                dialogueQueue.Enqueue(inventory.GetDialogue(obj));
+                //dialogueQueue.Enqueue(inventory.GetDialogue(obj));
 
                 break;
         }
@@ -55,13 +64,17 @@ public class DialogueManager : MonoBehaviour
     {
         currentDialogue = dialogueQueue.Dequeue();
 
-        animator.SetBool("IsOpen", true);
-        nameItem.text = currentDialogue.name;
         sentences.Clear();
+        names.Clear();
 
         foreach (string sentence in currentDialogue.GetSentences())
         {
             sentences.Enqueue(sentence);
+        }
+
+        foreach (Dialogue.Names name in currentDialogue.GetNames())
+        {
+            names.Enqueue(name);
         }
 
         DisplayNextSentence();
@@ -82,12 +95,40 @@ public class DialogueManager : MonoBehaviour
         }
 
         string sentence = sentences.Dequeue();
-        descriptionText.text = sentence;
+        Dialogue.Names name = names.Dequeue();
+
+        if(name == Dialogue.Names.General)
+        {
+            dialogBoxAnimator[0].SetBool("IsOpen", true);
+            dialogBoxAnimator[1].SetBool("IsOpen", false);
+
+            nameItem[0].text = name.ToString();
+            descriptionText[0].text = sentence;
+        }
+        else if (name == Dialogue.Names.AI)
+        {
+            dialogBoxAnimator[0].SetBool("IsOpen", false);
+            dialogBoxAnimator[1].SetBool("IsOpen", true);
+
+            nameItem[1].text = name.ToString();
+            descriptionText[1].text = sentence;
+        } else if(name == Dialogue.Names.Inventory)
+        {
+            dialogBoxAnimator[0].SetBool("IsOpen", false);
+            dialogBoxAnimator[1].SetBool("IsOpen", true);
+
+            nameItem[1].text = name.ToString();
+            descriptionText[1].text = sentence;
+        }
     }
 
     public void EndDialogue()
     {
-        animator.SetBool("IsOpen", false);
+
+        dialogBoxAnimator[0].SetBool("IsOpen", false);
+        dialogBoxAnimator[1].SetBool("IsOpen", false);
+        inventoryPanelAnimator.SetBool("IsOpen", true);
         currentDialogue = null;
+        running = false;
     }
 }

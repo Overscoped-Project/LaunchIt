@@ -17,10 +17,11 @@ public class DialogueTrigger : MonoBehaviour
 
     public void OnTriggerEnter2D (Collider2D other)
     {
-        if (other.tag == "Player" && !other.GetComponent<Player>().GetAttacked())
+        if (other.tag == "Player" && !other.GetComponent<Player>().GetAttacked() && dialogueManager.running == false)
         {
-            dialogueManager.StartDialogue(path, null);
             this.gameObject.SetActive(false);
+            dialogueManager.StartDialogue(path, null);
+            Destroy(gameObject);
         } 
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Item", menuName = "ScriptableObjects/Item", order = 1)]
 public class Item : ScriptableObject
 {
-    [SerializeField] private string name;
+    [SerializeField] private string itemName;
     public enum ItemTypes { Basic, Food, Ammunition, Weapon, QuestObject };
     [SerializeField] private ItemTypes itemType;
     [SerializeField] private int amount = 1;

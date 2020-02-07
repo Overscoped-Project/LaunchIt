@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 195934122e5a10247922721ec7818321, type: 3}
   m_Name: Item 1
   m_EditorClassIdentifier: 
+  itemName: Name1
   itemType: 4
   amount: 2
   description: eata
   icon: {fileID: 21300000, guid: 97d7c8dc86d1e034c9be69984205f730, type: 3}
+  dialogue: {fileID: 11400000, guid: fb1481796a24b3341a8da66cde8d7a3a, type: 2}
