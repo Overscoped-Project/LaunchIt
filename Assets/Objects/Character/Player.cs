@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     //DEBUG
     [SerializeField] private float sprintMultiplier = 1;
     //DEBUG
+    private int maxHealth;
     [SerializeField] private int health = 100;
     [SerializeField] private float playerSpeed = 1;
     [SerializeField] private int aggression = 30;
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D body;
 
     [SerializeField] Texture2D cursor;
+    private Slider healthBar;
 
     void Start()
     {
@@ -32,6 +34,10 @@ public class Player : MonoBehaviour
         audioManager = FindObjectOfType<AudioManager>();
         animator = GetComponent<Animator>();
         body = GetComponent<Rigidbody2D>();
+
+        healthBar = GameObject.FindGameObjectWithTag("HealthBar").GetComponent<Slider>();
+        healthBar.value = 100;
+        maxHealth = health;
 
         Cursor.SetCursor(cursor, new Vector2(cursor.width/2, cursor.height/2), CursorMode.ForceSoftware);
     }
@@ -154,6 +160,7 @@ public class Player : MonoBehaviour
     public void Hit(int damage)
     {
         health -= damage;
+        healthBar.value -= (100 / maxHealth) * damage;
         if (health <= 0)
         {
             levelManager.GoToDeathScreen();

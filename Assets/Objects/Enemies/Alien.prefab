@@ -129,6 +129,7 @@ MonoBehaviour:
   enemyDeath: {fileID: 7276113938277166871, guid: 9ff342a42844d964a9d5ad6597747e3f,
     type: 3}
   home: {fileID: 0}
+  healthBar: {fileID: 0}
   freeze: 0
 --- !u!58 &6366870600042727910
 CircleCollider2D:
@@ -397,8 +398,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20, y: 0}
+  m_AnchoredPosition: {x: 2.23, y: 0}
+  m_SizeDelta: {x: 15.53, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8419388538548907166
 CanvasRenderer:

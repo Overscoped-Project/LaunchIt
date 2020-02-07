@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class Alien : MonoBehaviour
 {
+    private int maxHealth;
     [SerializeField] private int health = 100;
     [SerializeField] private float speed = 30f;
     [SerializeField] private float ambientsSpeedPercentage = 0.5f;
@@ -81,20 +83,26 @@ public class Alien : MonoBehaviour
 
     private MusicManager musicManager;
 
+    private Slider healthBar;
+
     //test
     public bool freeze = false;
 
     IEnumerator Start()
     {
-        musicManager = FindObjectOfType<MusicManager>();
 
         nodeGrid = GameObject.FindGameObjectWithTag("NodeManager").GetComponent<NodeGrid>();
         yield return new WaitUntil(() => nodeGrid.GetReady());
         audioManager = FindObjectOfType<AudioManager>();
+        musicManager = FindObjectOfType<MusicManager>();
         body = gameObject.GetComponent<Rigidbody2D>();
         capsuleCollider2D = gameObject.GetComponent<CapsuleCollider2D>();
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         animator = gameObject.GetComponent<Animator>();
+
+        healthBar = gameObject.GetComponentInChildren<Slider>();
+        healthBar.value = 100;
+        maxHealth = health;
 
         defaultGap = gapToPoint;
         newPosition = body.position;
@@ -157,6 +165,7 @@ public class Alien : MonoBehaviour
     public void Hit(int dmg)
     {
         health -= dmg;
+        healthBar.value -= (100 / maxHealth) * dmg;
         if (health <= 0)
         {
             if (patrouilleUnit)
