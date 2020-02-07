@@ -53,7 +53,7 @@ public class DialogueManager : MonoBehaviour
             case pathType.Inventory:
 
                 dialogueQueue.Enqueue(obj.GetDialogue());
-                //dialogueQueue.Enqueue(inventory.GetDialogue(obj));
+                dialogueQueue.Enqueue(inventory.GetDialogue(obj));
 
                 break;
         }
@@ -62,7 +62,7 @@ public class DialogueManager : MonoBehaviour
     }
     public void SetCurrentDialogue()
     {
-        currentDialogue = dialogueQueue.Dequeue();
+            currentDialogue = dialogueQueue.Dequeue();
 
         sentences.Clear();
         names.Clear();
@@ -79,13 +79,15 @@ public class DialogueManager : MonoBehaviour
 
         DisplayNextSentence();
     }
+
     public void DisplayNextSentence()
     {
         if (sentences.Count == 0)
         {
-            if (dialogueQueue.Count != 0)
+            if (dialogueQueue.Count > 0)
             {
                 SetCurrentDialogue();
+                return;
             }
             else
             {
