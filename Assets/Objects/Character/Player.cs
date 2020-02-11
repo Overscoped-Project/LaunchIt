@@ -172,4 +172,9 @@ public class Player : MonoBehaviour
     {
         return isAttacked;
     }
+
+    public void SetAttacked(bool isAttacked)
+    {
+        this.isAttacked = isAttacked;
+    }
 }

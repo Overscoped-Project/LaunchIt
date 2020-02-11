@@ -146,6 +146,7 @@ public class Alien : MonoBehaviour
         {
             if (enemy != null)
             {
+                enemyPlayer.SetAttacked(true);
                 Physics2D.IgnoreCollision(capsuleCollider2D, enemy.GetComponent<CircleCollider2D>());
                 audioManager.PlayIfNot("EnemyMove");
                 AttackMovement(enemy);
@@ -633,17 +634,21 @@ public class Alien : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (collision.gameObject.tag == "Entity" && !collision.isTrigger)
+        {
+            aggression -= UnitInRange.Count;
+            UnitInRange.Remove(collision.gameObject);
+            if (UnitInRange.Count == 0)
+            {
+                enemyPlayer.SetAttacked(false);
+            }
+        }
         if (collision.gameObject.tag == "Player")
         {
             enemy = null;
             musicManager.RemoveAlien(this);
             musicManager.UpdateMusik();
-        }
-        if (collision.gameObject.tag == "Entity" && !collision.isTrigger)
-        {
-            aggression -= UnitInRange.Count;
-            UnitInRange.Remove(collision.gameObject);
-        }
+        }        
         if (collision.gameObject.tag == "Bullet")
         {
             bulletsInRange.Remove(collision.GetComponent<Bullet>());
