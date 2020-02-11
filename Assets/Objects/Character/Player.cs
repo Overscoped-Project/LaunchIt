@@ -53,11 +53,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Application.Quit();
-        }
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-
+            levelManager.GoToMainMenu();
         }
 
         Vector2 direction = Vector2.zero;
