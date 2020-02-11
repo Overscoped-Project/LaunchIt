@@ -641,14 +641,12 @@ public class Alien : MonoBehaviour
         {
             aggression -= UnitInRange.Count;
             UnitInRange.Remove(collision.gameObject);
-            if (UnitInRange.Count == 0)
-            {
-                enemyPlayer.SetAttacked(false);
-            }
+
         }
         if (collision.gameObject.tag == "Player")
         {
             enemy = null;
+            enemyPlayer.SetAttacked(false);
             musicManager.RemoveAlien(this);
             musicManager.UpdateMusik();
         }        

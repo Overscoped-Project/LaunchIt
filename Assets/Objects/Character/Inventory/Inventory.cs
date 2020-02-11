@@ -102,9 +102,20 @@ public class Inventory : MonoBehaviour
     {
         string name = obj.GetName();
         int count = FindObjectOfType<Ship>().GetRequiredItems().Count - invCount;
-        string[] text = new string[2];
-        text[0] = "Du hast " + name + " gefunden.";
-        text[1] = " Dir fehlen nurnoch " + count + " Items.";
+        string[] text;
+        if (count == 0)
+        {
+            text = new string[3];
+            text[0] = "You found " + name + ".";
+            text[1] = "Now we can repair our ship.";
+            text[2] = "Let us return to it!";
+        }
+        else
+        {
+            text = new string[2];
+            text[0] = "You found " + name + ".";
+            text[1] = "You only need " + count + " more Supplies.";
+        }
 
         Dialogue.Names[] names = new Dialogue.Names[2];
         names[0] = Dialogue.Names.Inventory;
