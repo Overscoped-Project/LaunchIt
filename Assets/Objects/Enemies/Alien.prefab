@@ -74,8 +74,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: a039909c2225d1343aa6ab5a84c3782a, type: 3}
+  m_SortingOrder: 3
+  m_Sprite: {fileID: 21300000, guid: bc10bb3c04cabc54c8087f7e88405f6c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -98,13 +98,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3790c73384b82b341a3f3905708d5e3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  speed: 40
+  health: 2
+  speed: 35
   ambientsSpeedPercentage: 0.8
   maxAggression: 100
   aggression: 70
   aggressionRegeneration: 10
-  damage: 20
+  damage: 1
   rangeUnit: 0
   shot: {fileID: 7819643427785643837, guid: 728301dbab5965f4385aabd2ada1e9db, type: 3}
   range: 10
@@ -129,7 +129,6 @@ MonoBehaviour:
   enemyDeath: {fileID: 7276113938277166871, guid: 9ff342a42844d964a9d5ad6597747e3f,
     type: 3}
   home: {fileID: 0}
-  healthBar: {fileID: 0}
   freeze: 0
 --- !u!58 &6366870600042727910
 CircleCollider2D:
@@ -181,9 +180,9 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -1.2245026, y: -0.88336515}
-  m_Size: {x: 7.7830505, y: 8.993251}
-  m_Direction: 0
+  m_Offset: {x: -0.058146846, y: -3.0384486}
+  m_Size: {x: 18.741957, y: 12.389544}
+  m_Direction: 1
 --- !u!95 &1106511741243464318
 Animator:
   serializedVersion: 3

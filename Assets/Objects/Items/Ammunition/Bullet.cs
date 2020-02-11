@@ -17,7 +17,7 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        if ((transform.position.magnitude - startPosition.magnitude) > range)
+        if ((transform.position - startPosition).magnitude > range)
         {
             Destroy(this.gameObject);
         }
