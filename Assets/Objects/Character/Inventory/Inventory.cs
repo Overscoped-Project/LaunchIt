@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    private bool isRepairRange = false;
     private List<Item> questObjects = new List<Item>();
     [SerializeField] private int invSlots = 6;
     [SerializeField] private GameObject inventory;
@@ -31,11 +30,6 @@ public class Inventory : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.E) && isRepairRange && ship != null)
-        {
-            ship.RepairShip(inventory);
-        }
-
     }
     private void OnTriggerEnter2D(Collider2D collider)
     {
@@ -56,23 +50,11 @@ public class Inventory : MonoBehaviour
         if (collider.gameObject.CompareTag("Ship"))
         {
             ship = collider.gameObject.GetComponent<Ship>();
-            isRepairRange = true;
+            ship.RepairShip(inventory);
         }
 
     }
 
-    private void OnTriggerExit2D(Collider2D collider)
-    {
-        if (collider.gameObject.CompareTag("Item"))
-        {
-
-        }
-        if (collider.gameObject.CompareTag("Ship"))
-        {
-            ship = null;
-            isRepairRange = false;
-        }
-    }
 
     public void AddItem(Slot slot, GameObject item)
     {
