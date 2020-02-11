@@ -449,6 +449,13 @@ public class Alien : MonoBehaviour
                         canAttack = false;
                     }
                 }
+                else
+                {
+                    body.velocity = targetPosition * speed;// * Time.deltaTime;
+                    animator.SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPosition));
+                    animator.SetBool("Walk", true);
+                    Dodge();
+                }
             }
             else
             {
@@ -641,14 +648,11 @@ public class Alien : MonoBehaviour
         {
             aggression -= UnitInRange.Count;
             UnitInRange.Remove(collision.gameObject);
-            if (UnitInRange.Count == 0)
-            {
-                enemyPlayer.SetAttacked(false);
-            }
         }
         if (collision.gameObject.tag == "Player")
         {
             enemy = null;
+            enemyPlayer.SetAttacked(false);
             musicManager.RemoveAlien(this);
             musicManager.UpdateMusik();
         }        
