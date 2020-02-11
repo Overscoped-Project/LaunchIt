@@ -395,10 +395,12 @@ public class Alien : MonoBehaviour
             targetPoint = targetPoint.normalized;
             body.velocity = targetPoint * speed; //* Time.deltaTime;
             animator.SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPoint));
+            animator.SetBool("Walk", true);
         }
         else
         {
             body.velocity = Vector3.zero;
+            animator.SetBool("Walk", false);
         }
     }
     private void AttackMovement(GameObject player)
@@ -449,9 +451,10 @@ public class Alien : MonoBehaviour
             }
             else
             {
-            body.velocity = targetPosition * speed;// * Time.deltaTime;
-            animator.SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPosition));
-            Dodge();
+                body.velocity = targetPosition * speed;// * Time.deltaTime;
+                animator.SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPosition));
+                animator.SetBool("Walk", true);
+                Dodge();
             }           
         }
         else if (!dodge)
