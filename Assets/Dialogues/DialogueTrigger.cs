@@ -5,14 +5,13 @@ using UnityEngine;
 public class DialogueTrigger : MonoBehaviour
 {
     private Dialogue dialogue;
-    private DialogueManager dialogueManager;
+    [SerializeField] private DialogueManager dialogueManager;
 
     [SerializeField] DialogueManager.pathType path;
 
     private void Start()
     {
-       //dialogue.trigger = gameObject;
-        dialogueManager = FindObjectOfType<DialogueManager>();
+
     }
 
     public void OnTriggerEnter2D (Collider2D other)
