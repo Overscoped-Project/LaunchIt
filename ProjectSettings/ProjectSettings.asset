@@ -39,7 +39,21 @@ PlayerSettings:
     y: 0
     width: 1
     height: 1
-  m_SplashScreenLogos: []
+  m_SplashScreenLogos:
+  - logo: {fileID: 21300000, guid: cf71c4043e8c61d46b12698572e338be, type: 3}
+    duration: 2
+  - logo: {fileID: 21300000, guid: 2bfa98a0c8dc60e459a428b574b95ee9, type: 3}
+    duration: 2
+  - logo: {fileID: 21300000, guid: 8f199f154837d53408f9f3bdb697eacf, type: 3}
+    duration: 2
+  - logo: {fileID: 21300000, guid: 815babda7b3969243be19b4bbfddfb4c, type: 3}
+    duration: 2
+  - logo: {fileID: 21300000, guid: 26d035b2518dd734e957e0356bae39b4, type: 3}
+    duration: 2
+  - logo: {fileID: 21300000, guid: 5f1c31991b4be0a469fb52e99cc4aa1b, type: 3}
+    duration: 2
+  - logo: {fileID: 21300000, guid: 633c190e96d50b140b2879786f2fa68a, type: 3}
+    duration: 2
   m_VirtualRealitySplashScreen: {fileID: 0}
   m_HolographicTrackingLossScreen: {fileID: 0}
   defaultScreenWidth: 1024
@@ -276,7 +290,14 @@ PlayerSettings:
   AndroidValidateAppBundleSize: 1
   AndroidAppBundleSizeToValidate: 150
   resolutionDialogBanner: {fileID: 0}
-  m_BuildTargetIcons: []
+  m_BuildTargetIcons:
+  - m_BuildTarget: 
+    m_Icons:
+    - serializedVersion: 2
+      m_Icon: {fileID: 2800000, guid: 5f1c31991b4be0a469fb52e99cc4aa1b, type: 3}
+      m_Width: 128
+      m_Height: 128
+      m_Kind: 0
   m_BuildTargetPlatformIcons: []
   m_BuildTargetBatching: []
   m_BuildTargetGraphicsAPIs:
@@ -503,7 +524,8 @@ PlayerSettings:
   ps4attribEyeToEyeDistanceSettingVR: 0
   ps4IncludedModules: []
   monoEnv: 
-  splashScreenBackgroundSourceLandscape: {fileID: 0}
+  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: e2f7bb18f5ecefb478e9f923fffa2a40,
+    type: 3}
   splashScreenBackgroundSourcePortrait: {fileID: 0}
   blurSplashScreenBackground: 1
   spritePackerPolicy: 
