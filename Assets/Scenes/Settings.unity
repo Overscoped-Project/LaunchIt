@@ -940,8 +940,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c4597db38f670941a0f5348831151a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Brightness: 0.9388856
-  _Contrast: 0.8498891
+  _Brightness: 1
+  _Contrast: 1
   _VolumeMaster: 0
   _VolumeMusic: 0
   _VolumeSFX: 0
@@ -1983,7 +1983,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 2
   m_WholeNumbers: 0
-  m_Value: 0.9388856
+  m_Value: 0.9333349
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -2540,7 +2540,7 @@ MonoBehaviour:
   m_MinValue: 0.001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.001
+  m_Value: 0.50244224
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
