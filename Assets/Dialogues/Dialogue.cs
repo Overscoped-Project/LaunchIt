@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 [CreateAssetMenu(fileName = "Item", menuName = "ScriptableObjects/Dialogue", order = 1)]
 public class Dialogue : ScriptableObject
 {
-    public enum Names {Pilot, AI, Inventory};
+    public enum Names {Pilot, AI, Inventory, Unknown};
 
     [SerializeField] private Names[] names;
     [TextArea(3, 10)]
