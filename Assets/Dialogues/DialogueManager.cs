@@ -62,7 +62,7 @@ public class DialogueManager : MonoBehaviour
     }
     public void SetCurrentDialogue()
     {
-            currentDialogue = dialogueQueue.Dequeue();
+        currentDialogue = dialogueQueue.Dequeue();
 
         sentences.Clear();
         names.Clear();
@@ -130,7 +130,30 @@ public class DialogueManager : MonoBehaviour
         dialogBoxAnimator[0].SetBool("IsOpen", false);
         dialogBoxAnimator[1].SetBool("IsOpen", false);
         inventoryPanelAnimator.SetBool("IsOpen", true);
+
+        ExecuteDialogEvent(currentDialogue.getEventCode());
+
         currentDialogue = null;
         running = false;
+    }
+
+    public void ExecuteDialogEvent(Dialogue.EventCode eventCode)
+    {
+        if (eventCode == Dialogue.EventCode.GameEnd_Spaceship)
+        {
+            GameObject.Find("GameController").GetComponent<LevelManager>().GoToOutroSpaceship();
+        }
+        else if (eventCode == Dialogue.EventCode.Access_Repository)
+        {
+
+        }
+        else if (eventCode == Dialogue.EventCode.GameEnd_Repository)
+        {
+            GameObject.Find("GameController").GetComponent<LevelManager>().GoToOutroRepository();
+        }
+        else
+        {
+
+        }
     }
 }

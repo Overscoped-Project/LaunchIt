@@ -32,7 +32,12 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene("Intro", LoadSceneMode.Single);
     }
 
-    public void GoToOutro()
+    public void GoToOutroSpaceship()
+    {
+        SceneManager.LoadScene("Outro", LoadSceneMode.Single);
+    }
+
+    public void GoToOutroRepository()
     {
         SceneManager.LoadScene("Outro", LoadSceneMode.Single);
     }

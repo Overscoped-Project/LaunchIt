@@ -13,7 +13,7 @@ public class Inventory : MonoBehaviour
     private Transform inventoryTransform;
     private AudioManager audioManager;
 
-    private DialogueManager dialogueManager;
+    [SerializeField] private DialogueManager dialogueManager;
 
     void Start()
     {
@@ -23,7 +23,7 @@ public class Inventory : MonoBehaviour
             Instantiate(emptySlot, inventoryTransform);
         }
         audioManager = FindObjectOfType<AudioManager>();
-        dialogueManager = FindObjectOfType<DialogueManager>();
+        //dialogueManager = FindObjectOfType<DialogueManager>();
         inventory.SetActive(true);
     }
 

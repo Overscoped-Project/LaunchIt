@@ -22,6 +22,9 @@ public class Ship : MonoBehaviour
     }
     [SerializeField] private List<SpawnQuestObject> spawnRequiredItems = new List<SpawnQuestObject>();
     private List<QuestObject> requiredItems = new List<QuestObject>();
+
+    [SerializeField] private DialogueManager dialogueManager;
+
     private void Start()
     {
         foreach(SpawnQuestObject obj in spawnRequiredItems)
@@ -67,7 +70,8 @@ public class Ship : MonoBehaviour
         if (finished == requiredItems.Count)
         {
             repaired = true;
-            GameObject.Find("GameController").GetComponent<LevelManager>().GoToOutro();
+            dialogueManager.StartDialogue(DialogueManager.pathType.Story, null);
+            
         }
     }
 }
