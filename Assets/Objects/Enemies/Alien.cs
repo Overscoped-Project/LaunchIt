@@ -675,6 +675,7 @@ public class Alien : MonoBehaviour
             if (canAttack)
             {
                 enemyPlayer.Hit(damage);
+                animator.SetTrigger("Attack");
                 audioManager.PlayIfNot("EnemyAttack");
                 //Little Knockback
                 Vector3 targetDirection = collision.transform.position - transform.position;
