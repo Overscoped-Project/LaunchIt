@@ -51,10 +51,10 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            levelManager.GoToMainMenu();
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    levelManager.GoToMainMenu();
+        //}
 
         Vector2 direction = Vector2.zero;
 
