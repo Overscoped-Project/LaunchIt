@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   names: 
   sentences: []
-  eventCode: 0
+  eventCode: 2
   playBefore: 0

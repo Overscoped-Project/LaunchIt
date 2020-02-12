@@ -206,7 +206,7 @@ public class DialogueManager : MonoBehaviour
                 StartDialogue(pathType.Story, null);
             }
         }
-        else if(eventCode == Dialogue.EventCode.Outro)
+        else if(eventCode == Dialogue.EventCode.Death)
         {
             Animator anim = GameObject.Find("AnimatedImage").GetComponent<Animator>();
             anim.SetTrigger("Play");

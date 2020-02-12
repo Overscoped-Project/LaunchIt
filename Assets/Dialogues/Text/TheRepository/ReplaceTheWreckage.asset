@@ -15,5 +15,5 @@ MonoBehaviour:
   names: 00000000
   sentences:
   - Let's finish this. I'll find the Repository.
-  eventCode: 0
+  eventCode: 3
   playBefore: 0

@@ -19,6 +19,7 @@ public class SettingsManager : MonoBehaviour
     public Slider volumeMasterSlider;
     public Slider volumeMusicSlider;
     public Slider volumeSFXSlider;
+    public bool hasSliders;
 
     private void Start()
     {
@@ -70,11 +71,14 @@ public class SettingsManager : MonoBehaviour
             this._VolumeMaster = data._VolumeMaster;
             this._VolumeMusic = data._VolumeMusic;
             this._VolumeSFX = data._VolumeSFX;
-            this.brightnessSlider.value = data.volumeBright;
-            this.contrastSlider.value = data.volumeContr;
-            this.volumeMasterSlider.value = data.volumeVolumeMaster;
-            this.volumeMusicSlider.value = data.volumeVolumeMusic;
-            this.volumeSFXSlider.value = data.volumeVolumeSFX;
+            if (hasSliders)
+            {
+                this.brightnessSlider.value = data.volumeBright;
+                this.contrastSlider.value = data.volumeContr;
+                this.volumeMasterSlider.value = data.volumeVolumeMaster;
+                this.volumeMusicSlider.value = data.volumeVolumeMusic;
+                this.volumeSFXSlider.value = data.volumeVolumeSFX;
+            }
         }
     }
 
