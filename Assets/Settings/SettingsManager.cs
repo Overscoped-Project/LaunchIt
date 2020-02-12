@@ -9,12 +9,16 @@ public class SettingsManager : MonoBehaviour
 {
     [Range(0f, 2f)] public float _Brightness;
     [Range(0f, 2f)] public float _Contrast;
-    public float _Volume;
+    public float _VolumeMaster;
+    public float _VolumeMusic;
+    public float _VolumeSFX;
     public Material material;
     public AudioMixer audioMixer;
     public Slider brightnessSlider;
     public Slider contrastSlider;
-    public Slider volumeSlider;
+    public Slider volumeMasterSlider;
+    public Slider volumeMusicSlider;
+    public Slider volumeSFXSlider;
 
     private void Start()
     {
@@ -38,9 +42,18 @@ public class SettingsManager : MonoBehaviour
         _Contrast = value;
     }
 
-    public void SetVolume(float volume)
+    public void SetVolumeMaster(float volume)
     {
-        audioMixer.SetFloat("volume", volume);
+        audioMixer.SetFloat("MASTER", Mathf.Log10(volume*2)*100);
+    }
+
+    public void SetVolumeMusic(float volume)
+    {
+        audioMixer.SetFloat("MUSIC", Mathf.Log10(volume*2) * 100);
+    }
+    public void SetVolumeSFX(float volume)
+    {
+        audioMixer.SetFloat("SFX", Mathf.Log10(volume*2) * 100);
     }
 
     public void LoadSettings()
@@ -54,10 +67,14 @@ public class SettingsManager : MonoBehaviour
             SaveData data = JsonUtility.FromJson<SaveData>(value);
             this._Brightness = data._Brightness;
             this._Contrast = data._Contrast;
-            this._Volume = data._Volume;
+            this._VolumeMaster = data._VolumeMaster;
+            this._VolumeMusic = data._VolumeMusic;
+            this._VolumeSFX = data._VolumeSFX;
             this.brightnessSlider.value = data.volumeBright;
             this.contrastSlider.value = data.volumeContr;
-            this.volumeSlider.value = data.volumeVolume;
+            this.volumeMasterSlider.value = data.volumeVolumeMaster;
+            this.volumeMusicSlider.value = data.volumeVolumeMusic;
+            this.volumeSFXSlider.value = data.volumeVolumeSFX;
         }
     }
 
@@ -67,10 +84,14 @@ public class SettingsManager : MonoBehaviour
         SaveData data = new SaveData();
         data._Brightness = this._Brightness;
         data._Contrast = this._Contrast;
-        data._Volume = this._Volume;
+        data._VolumeMaster = this._VolumeMaster;
+        data._VolumeMusic = this._VolumeMusic;
+        data._VolumeSFX = this._VolumeSFX;
         data.volumeBright = this.brightnessSlider.value;
         data.volumeContr = this.contrastSlider.value;
-        data.volumeVolume = this.volumeSlider.value;
+        data.volumeVolumeMaster = this.volumeMasterSlider.value;
+        data.volumeVolumeMusic = this.volumeMusicSlider.value;
+        data.volumeVolumeSFX = this.volumeSFXSlider.value;
 
         string value = JsonUtility.ToJson(data);
         PlayerPrefs.SetString(key, value);

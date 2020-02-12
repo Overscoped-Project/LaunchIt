@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
+    private bool ready = false;
+
     public bool running = false;
     public Queue<string> sentences;
     public Queue<Dialogue.Names> names;
@@ -33,6 +35,7 @@ public class DialogueManager : MonoBehaviour
         names = new Queue<Dialogue.Names>();
         dialogueQueue = new Queue<Dialogue>();
         inventory = FindObjectOfType<Inventory>();
+        ready = true;
     }
 
     float timer = 0;
@@ -63,6 +66,7 @@ public class DialogueManager : MonoBehaviour
 
         switch (path)
         {
+           
             case pathType.Story:
                 dialogueQueue.Enqueue(story[storyCount]);
                 if (storyCount < story.Count)
@@ -78,13 +82,8 @@ public class DialogueManager : MonoBehaviour
 
                 break;
         }
-
-        if(currentDialogue.playBefore)
-        {
-            ExecuteDialogEvent(eventCode);
-        }
-
         SetCurrentDialogue();
+
     }
 
     public void SetCurrentDialogue()
@@ -94,9 +93,15 @@ public class DialogueManager : MonoBehaviour
         names.Clear();
         eventCode = Dialogue.EventCode.None;
 
+
         if (currentDialogue.getEventCode() != Dialogue.EventCode.None)
         {
             eventCode = currentDialogue.getEventCode();
+
+            if (currentDialogue.playBefore)
+            {
+                ExecuteDialogEvent(eventCode);
+            }
         }
 
         foreach (string sentence in currentDialogue.GetSentences())
@@ -165,13 +170,13 @@ public class DialogueManager : MonoBehaviour
             inventoryPanelAnimator.SetBool("IsOpen", true);
         }
 
-        if (!currentDialogue.playBefore)
-        {
-            ExecuteDialogEvent(eventCode);
-        }
+        bool temp = false;
+        if (!currentDialogue.playBefore) temp = true;
 
         currentDialogue = null;
         running = false;
+
+        if(temp) ExecuteDialogEvent(eventCode);
     }
 
     public void ExecuteDialogEvent(Dialogue.EventCode eventCode)
@@ -190,15 +195,33 @@ public class DialogueManager : MonoBehaviour
         }
         else if (eventCode == Dialogue.EventCode.Intro)
         {
-
+            if (storyCount == story.Count)
+            {
+                Animator anim = GameObject.Find("AnimatedImage").GetComponent<Animator>();
+                anim.SetTrigger("Play");
+                anim.SetBool("ScreenOn", true);
+                StartCoroutine(GetComponent<LevelManager>().GoToGame());
+            } else
+            {
+                StartDialogue(pathType.Story, null);
+            }
         }
         else if(eventCode == Dialogue.EventCode.Outro)
         {
-
+            Animator anim = GameObject.Find("AnimatedImage").GetComponent<Animator>();
+            anim.SetTrigger("Play");
+            anim.SetBool("ScreenOn", false);
         }
         else
         {
 
         }
     }
+
+    public bool GetReady()
+    {
+        return ready;
+    }
+
+   
 }

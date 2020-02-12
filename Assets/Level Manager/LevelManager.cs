@@ -9,9 +9,10 @@ public class LevelManager : MonoBehaviour
     private int previousScene;
 
 
-    public void GoToGame()
+    public IEnumerator GoToGame()
     {
-        SceneManager.LoadScene("Game", LoadSceneMode.Single);
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single);
     }
 
     public void GoToDeathScreen()
