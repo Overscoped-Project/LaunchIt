@@ -191,6 +191,7 @@ public class Alien : MonoBehaviour
 
             }
             Instantiate(enemyDeath, transform.position, transform.rotation);
+            audioManager.PlayIfNot("EnemyDeath");
             musicManager.RemoveAlien(this);
             musicManager.UpdateMusik();
             Destroy(this.gameObject);
@@ -232,6 +233,7 @@ public class Alien : MonoBehaviour
         Bullet bullet = Instantiate(shot, body.position + offset, q);
         bullet.SetDirection(direction, this.gameObject, audioManager);
         //audioManager.Play("");
+        audioManager.PlayIfNot("EnemyShoot");
     }
 
     public void RemoveUnit(Alien unit)
@@ -653,7 +655,7 @@ public class Alien : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             enemy = null;
-            enemyPlayer.SetAttacked(false);
+            if(enemyPlayer != null) enemyPlayer.SetAttacked(false);
             musicManager.RemoveAlien(this);
             musicManager.UpdateMusik();
         }        

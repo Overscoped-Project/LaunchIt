@@ -5,7 +5,7 @@ using UnityEngine.Audio;
 
 public class MusicManager : MonoBehaviour
 {
-    [SerializeField] private AudioClip[] musik;
+    [SerializeField] private Sound[] musik;
     public AudioMixerGroup audioMixerGroup;
 
     private AudioSource source;
@@ -17,7 +17,9 @@ public class MusicManager : MonoBehaviour
     {
         source = gameObject.AddComponent<AudioSource>();
         source.outputAudioMixerGroup = audioMixerGroup;
-        source.clip = musik[0];
+        source.clip = musik[0].clip;
+        source.volume = musik[0].volume;
+        source.pitch = musik[0].pitch;
         source.playOnAwake = true;
         source.loop = true;
         source.Play();
@@ -36,19 +38,23 @@ public class MusicManager : MonoBehaviour
 
     public void UpdateMusik()
     {
-            source.Pause();
+        source.Pause();
             float time = source.time;
 
         if(aliensAround.Count > 0)
         {
-            source.clip = musik[1];
+            source.clip = musik[1].clip;
+            source.volume = musik[1].volume;
+            source.pitch = musik[1].pitch;
         } else
         {
-            source.clip = musik[0];
+            source.clip = musik[0].clip;
+            source.volume = musik[0].volume;
+            source.pitch = musik[0].pitch;
         }
 
 
-            source.Play();
-            source.time = time;
+        source.Play();
+        source.time = time;
     }
 }

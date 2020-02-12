@@ -150,6 +150,9 @@ public class Player : MonoBehaviour
         if (walk)
         {
             audioManager.PlayIfNot("PlayerWalk");
+        } else
+        {
+            audioManager.Stop("PlayerWalk");
         }
     }
 

@@ -914,9 +914,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Brightness: 0.9986315
   _Contrast: 0.9973058
-  _VolumeMaster: 0
-  _VolumeMusic: 0
-  _VolumeSFX: 0
+  _VolumeMaster: 1
+  _VolumeMusic: 1
+  _VolumeSFX: 1
   material: {fileID: 2100000, guid: 9016663f9a9d6434fae6f8d6a4345f52, type: 2}
   audioMixer: {fileID: 24100000, guid: 617158e9d9e903e44a4f957616e0e175, type: 2}
   brightnessSlider: {fileID: 0}
