@@ -1,14 +1,8 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:Assets/Objects/Wreckage/mep.meta
-guid: 4d322b0e8365e7e4b8eb4950af950d29
-folderAsset: yes
-DefaultImporter:
-=======
-guid: 9c0785c7e364b2943a681cde49d4158c
+guid: 35d3637f064f27b4ca0b5c1f8a5ecf56
 NativeFormatImporter:
->>>>>>> d6679fcfe6a846d49ef6e47878e35a018cf922b4:Assets/Dialogues/Text/TheRepository/ReplaceTheWreckage.asset.meta
   externalObjects: {}
-  mainObjectFileID: 11400000
+  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
