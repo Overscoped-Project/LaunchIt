@@ -98,13 +98,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3790c73384b82b341a3f3905708d5e3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 2
+  health: 80
   speed: 35
   ambientsSpeedPercentage: 0.8
   maxAggression: 100
   aggression: 70
   aggressionRegeneration: 10
-  damage: 1
+  damage: 10
   rangeUnit: 0
   shot: {fileID: 7819643427785643837, guid: 16bdb6ab67d6dee44b5e8de6c7e72f60, type: 3}
   range: 10
@@ -112,17 +112,15 @@ MonoBehaviour:
   offsetY: 2
   attackRate: 1
   hitJumpBack: 0.1
-  dodgeChance: 10
-  maxRandomAmbientTime: 30
-  minRandomAmbientTime: 10
-  ambientRange: 10
+  dodgeChance: 5
+  maxRandomAmbientTime: 250
+  minRandomAmbientTime: 100
+  ambientRange: 15
   maxGapToPoint: 20
   gapToPoint: 5
   gapMultiplicator: 1.5
   patrouilleUnit: 0
-  patrouillePoints:
-  - {fileID: 0}
-  - {fileID: 0}
+  patrouillePoints: []
   triggerZone: {fileID: 0}
   maxGuardingTicks: 100
   patrouilleId: 0
