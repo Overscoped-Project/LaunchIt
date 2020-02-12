@@ -10,15 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd4e8ff882c82a8499596db16c03add5, type: 3}
-  m_Name: RepositoryOutro
+  m_Name: RepositoryMemory1
   m_EditorClassIdentifier: 
-  names: 000000000100000000000000000000000100000001000000
+  names: 00000000000000000000000001000000
   sentences:
-  - Finally. After all those centuries.
-  - Mission accomplished, General. Your Race will survive thanks to you.
-  - It's time to leave.
-  - 'New Command: Activate Escape Protocol.'
-  - Yes, Sir.
-  - Good Job.
+  - I know this Place...those Spaceships.
+  - Retreat! Flee You fools!
+  - We are overrun.
+  - Calculate the fastest route to the repository.
   eventCode: 0
   playBefore: 0
