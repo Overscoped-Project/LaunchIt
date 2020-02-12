@@ -48,20 +48,6 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene("Outro", LoadSceneMode.Single);
     }
 
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Escape))
-    //    {
-    //        SceneManager.LoadScene(previousScene);
-    //        Debug.Log("Previous Scene");
-    //    }
-    //}
-   
-    private void PreviousScene()
-    {
-        previousScene = SceneManager.GetActiveScene().buildIndex - 1;
-    }
-
     public void ExitGame()
     {
         Application.Quit(0);

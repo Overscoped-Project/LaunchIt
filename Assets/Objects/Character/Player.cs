@@ -5,9 +5,6 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    //DEBUG
-    [SerializeField] private float sprintMultiplier = 1;
-    //DEBUG
     private int maxHealth;
     [SerializeField] private int health = 100;
     [SerializeField] private float playerSpeed = 1;
@@ -43,7 +40,6 @@ public class Player : MonoBehaviour
     }
 
 
-    // Update is called once per frame
     private void LateUpdate()
     {
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
@@ -51,10 +47,10 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        //if (Input.GetKeyDown(KeyCode.Escape))
-        //{
-        //    levelManager.GoToMainMenu();
-        //}
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            levelManager.GoToMainMenu();
+        }
 
         Vector2 direction = Vector2.zero;
 
@@ -98,43 +94,10 @@ public class Player : MonoBehaviour
         {
             dialogueManager.DisplayNextSentence();
         }
-
-        //DEBUG Controls
-        if (Input.GetKey(KeyCode.LeftShift) && sprintAvailable)
-        {
-            sprintAvailable = false;
-            playerSpeed *= sprintMultiplier;
-        }
-        else if (!Input.GetKey(KeyCode.LeftShift) && !sprintAvailable)
-        {
-            playerSpeed /= sprintMultiplier;
-            sprintAvailable = true;
-        }
-        if (Input.GetKeyDown(KeyCode.Mouse2))
-        {
-            body.position = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
-        }
-
-        
-
-        if (Input.GetKey(KeyCode.End))
-        {
-            Camera.main.orthographicSize = 40;
-        }
-        if (Input.GetKey(KeyCode.PageUp))
-        {
-            Camera.main.orthographicSize += 10;
-        }
-        if (Input.GetKey(KeyCode.PageDown))
-        {
-            if (Camera.main.orthographicSize - 10 > 0)
-            {
-                Camera.main.orthographicSize -= 10;
-            }
-        }
+       
 
         direction.Normalize();
-        direction *= playerSpeed;// * Time.deltaTime;
+        direction *= playerSpeed;
         body.velocity = direction;
 
         animator.SetFloat("WalkDirectionX", directionX);       
@@ -163,7 +126,6 @@ public class Player : MonoBehaviour
         if (health <= 0)
         {
             levelManager.GoToDeathScreen();
-            //Destroy(this.gameObject);
         }
     }
 

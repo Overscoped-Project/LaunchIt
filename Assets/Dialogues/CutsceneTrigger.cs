@@ -14,12 +14,4 @@ public class CutsceneTrigger : MonoBehaviour
         yield return new WaitUntil(() => dialogueManager.GetReady());
         dialogueManager.StartDialogue(path, null);
     }
-
-    /*public void OnTriggerExit2D (Collider2D other)
-    {
-        if (other.tag == "Player")
-        {
-            dialogueManager.EndDialogue();
-        }
-    }*/
 }

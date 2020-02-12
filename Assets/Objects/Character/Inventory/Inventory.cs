@@ -23,7 +23,6 @@ public class Inventory : MonoBehaviour
             Instantiate(emptySlot, inventoryTransform);
         }
         audioManager = FindObjectOfType<AudioManager>();
-        //dialogueManager = FindObjectOfType<DialogueManager>();
         inventory.SetActive(true);
     }
 
@@ -101,7 +100,8 @@ public class Inventory : MonoBehaviour
     public Dialogue GetDialogue(Item obj)
     {
         string name = obj.GetName();
-        int count = FindObjectOfType<Ship>().GetRequiredItems().Count - invCount;
+        Ship ship = FindObjectOfType<Ship>();
+        int count = ship.GetRequiredItems().Count - (invCount + ship.GetLastFinished());
         string[] text;
         if (count == 0)
         {

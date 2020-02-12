@@ -23,12 +23,4 @@ public class DialogueTrigger : MonoBehaviour
             Destroy(gameObject);
         } 
     }
-
-    /*public void OnTriggerExit2D (Collider2D other)
-    {
-        if (other.tag == "Player")
-        {
-            dialogueManager.EndDialogue();
-        }
-    }*/
 }

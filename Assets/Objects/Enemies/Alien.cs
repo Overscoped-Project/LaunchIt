@@ -52,7 +52,6 @@ public class Alien : MonoBehaviour
 
     [SerializeField] private bool patrouilleUnit = false;
     [SerializeField] private List<GameObject> patrouillePoints = new List<GameObject>();
-    [SerializeField] private GameObject triggerZone;
     [SerializeField] private int maxGuardingTicks = 500;
     private int guardingTicks;
     private int currentPoint = 0;
@@ -85,8 +84,6 @@ public class Alien : MonoBehaviour
 
     private Slider healthBar;
 
-    //test
-    public bool freeze = false;
 
     IEnumerator Start()
     {
@@ -134,11 +131,8 @@ public class Alien : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            freeze = !freeze;
-        }
-        if (!ready || freeze)
+       
+        if (!ready)
         {
             //Wait that Start() get's ready or the Freeze ends
         }
@@ -232,7 +226,6 @@ public class Alien : MonoBehaviour
         Quaternion q = Quaternion.Euler(0, 0, angle);
         Bullet bullet = Instantiate(shot, body.position + offset, q);
         bullet.SetDirection(direction, this.gameObject, audioManager);
-        //audioManager.Play("");
         audioManager.PlayIfNot("EnemyShoot");
     }
 
@@ -396,7 +389,7 @@ public class Alien : MonoBehaviour
         {
             Vector3 targetPoint = nextPosition - transform.position;
             targetPoint = targetPoint.normalized;
-            body.velocity = targetPoint * speed; //* Time.deltaTime;
+            body.velocity = targetPoint * speed;
             animator.SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPoint));
             animator.SetBool("Walk", true);
         }
@@ -423,7 +416,7 @@ public class Alien : MonoBehaviour
         {
             Vector2 targetPosition = dodgeSequencePoint - body.position;
             targetPosition = targetPosition.normalized;
-            body.velocity = targetPosition * speed; //* Time.deltaTime;
+            body.velocity = targetPosition * speed;
         }
 
         if (aggression < enemyPlayer.GetAggression() && !dodge)
@@ -447,13 +440,12 @@ public class Alien : MonoBehaviour
                     {
                         float angle = 180 - Vector2.SignedAngle(targetPosition * (-1), transform.up);
                         Shoot(targetPosition, angle);
-                        //audioManager.Play("");
                         canAttack = false;
                     }
                 }
                 else
                 {
-                    body.velocity = targetPosition * speed;// * Time.deltaTime;
+                    body.velocity = targetPosition * speed;
                     animator.SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPosition));
                     animator.SetBool("Walk", true);
                     Dodge();
@@ -461,7 +453,7 @@ public class Alien : MonoBehaviour
             }
             else
             {
-                body.velocity = targetPosition * speed;// * Time.deltaTime;
+                body.velocity = targetPosition * speed;
                 animator.SetFloat("Direction", Vector2.SignedAngle(Vector2.up, targetPosition));
                 animator.SetBool("Walk", true);
                 Dodge();
@@ -582,7 +574,6 @@ public class Alien : MonoBehaviour
                 }
             }
         }
-        Debug.Log("## No path found ##");
         return null;
     }
 
@@ -682,7 +673,7 @@ public class Alien : MonoBehaviour
                 //Little Knockback
                 Vector3 targetDirection = collision.transform.position - transform.position;
                 targetDirection = targetDirection.normalized;
-                body.velocity = targetDirection * (-1) * speed * hitJumpBack; //* Time.deltaTime;
+                body.velocity = targetDirection * (-1) * speed * hitJumpBack; 
 
                 canAttack = false;
             }

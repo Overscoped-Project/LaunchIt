@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,13 +42,14 @@ public class DialogueManager : MonoBehaviour
     float timer = 0;
     private void Update()
     {
-        if(running)
+        if (running)
         {
-            if(timer >= 1)
+            if (timer >= 1)
             {
                 DisplayNextSentence();
                 timer = 0;
-            } else
+            }
+            else
             {
                 timer += Time.deltaTime;
             }
@@ -62,11 +64,10 @@ public class DialogueManager : MonoBehaviour
         {
             inventoryPanelAnimator.SetBool("IsOpen", false);
         }
-        //inventoryPanel.SetActive(false);
 
         switch (path)
         {
-           
+
             case pathType.Story:
                 dialogueQueue.Enqueue(story[storyCount]);
                 if (storyCount < story.Count)
@@ -136,7 +137,7 @@ public class DialogueManager : MonoBehaviour
         string sentence = sentences.Dequeue();
         Dialogue.Names name = names.Dequeue();
 
-        if(name == Dialogue.Names.Pilot)
+        if (name == Dialogue.Names.Pilot)
         {
             dialogBoxAnimator[0].SetBool("IsOpen", true);
             dialogBoxAnimator[1].SetBool("IsOpen", false);
@@ -164,12 +165,21 @@ public class DialogueManager : MonoBehaviour
         }
 
         bool temp = false;
-        if (!currentDialogue.playBefore) temp = true;
+        try
+        {
+            if (!currentDialogue.playBefore) temp = true;
 
-        currentDialogue = null;
-        running = false;
+            currentDialogue = null;
+            running = false;
 
-        if(temp) ExecuteDialogEvent(eventCode);
+        }
+        catch (NullReferenceException e)
+        {
+
+        }
+
+
+        if (temp) ExecuteDialogEvent(eventCode);
     }
 
     public void ExecuteDialogEvent(Dialogue.EventCode eventCode)
@@ -198,12 +208,13 @@ public class DialogueManager : MonoBehaviour
                 anim.SetTrigger("Play");
                 anim.SetBool("ScreenOn", true);
                 StartCoroutine(GetComponent<LevelManager>().GoToGame());
-            } else
+            }
+            else
             {
                 StartDialogue(pathType.Story, null);
             }
         }
-        else if(eventCode == Dialogue.EventCode.Death)
+        else if (eventCode == Dialogue.EventCode.Death)
         {
             Animator anim = GameObject.Find("AnimatedImage").GetComponent<Animator>();
             anim.SetTrigger("Play");
@@ -220,5 +231,5 @@ public class DialogueManager : MonoBehaviour
         return ready;
     }
 
-   
+
 }

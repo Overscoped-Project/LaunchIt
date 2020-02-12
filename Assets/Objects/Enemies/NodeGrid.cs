@@ -208,30 +208,30 @@ public class NodeGrid : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position, new Vector3(gridSizeX, gridSizeY, 1));//Draw a wire cube with the given dimensions from the Unity inspector
+        Gizmos.DrawWireCube(transform.position, new Vector3(gridSizeX, gridSizeY, 1));
 
-        if (nodeArray != null)//If the grid is not empty
+        if (nodeArray != null)
         {
-            foreach (Node n in nodeArray)//Loop through every node in the grid
+            foreach (Node n in nodeArray)
             {
-                if (n.GetIsWall())//If the current node is a wall node
+                if (n.GetIsWall())
                 {
-                    Gizmos.color = Color.yellow;//Set the color of the node
+                    Gizmos.color = Color.yellow;
                 }
                 else
                 {
-                    Gizmos.color = Color.white;//Set the color of the node
+                    Gizmos.color = Color.white;
                 }
 
-                if (Aliens != null)//If the final path is not empty
+                if (Aliens != null)
                 {
-                    if (Aliens.Count != 0 && Aliens[alien].GetCurrentPath().Contains(n))//If the current node is in the final path
+                    if (Aliens.Count != 0 && Aliens[alien].GetCurrentPath().Contains(n))
                     {
-                        Gizmos.color = Color.red;//Set the color of that node
+                        Gizmos.color = Color.red;
                     }
 
                 }
-                Gizmos.DrawCube(n.GetNodePosition(), Vector3.one * (nodeDiameter - distanceBetweenNodes));//Draw the node at the position of the node.
+                Gizmos.DrawCube(n.GetNodePosition(), Vector3.one * (nodeDiameter - distanceBetweenNodes));
             }
         }
     }

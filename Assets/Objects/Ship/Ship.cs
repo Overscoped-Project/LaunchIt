@@ -6,7 +6,11 @@ using UnityEngine;
 public class Ship : MonoBehaviour
 {
     private bool repaired = false;
-    [System.Serializable] private struct SpawnQuestObject
+    private int lastFinished = 0;
+    private int lastI = 0;
+    [SerializeField] private GameObject[] damageVFX;
+    [System.Serializable]
+    private struct SpawnQuestObject
     {
         [SerializeField] private Item item;
         [SerializeField] private int requiredAmount;
@@ -27,7 +31,7 @@ public class Ship : MonoBehaviour
 
     private void Start()
     {
-        foreach(SpawnQuestObject obj in spawnRequiredItems)
+        foreach (SpawnQuestObject obj in spawnRequiredItems)
         {
             QuestObject newObj = new QuestObject(obj.GetItem(), obj.GetRequiredAmount());
             requiredItems.Add(newObj);
@@ -52,12 +56,12 @@ public class Ship : MonoBehaviour
             {
                 foreach (QuestObject obj in requiredItems)
                 {
-                    if ((obj.GetRequiredAmount() != 0 ) && (slot.GetItem().Equals(obj.GetItem())))
+                    if ((obj.GetRequiredAmount() != 0) && (slot.GetItem().Equals(obj.GetItem())))
                     {
                         obj.SetRequiredAmount(obj.GetRequiredAmount() - slot.RemoveItem(obj.GetRequiredAmount()));
                     }
                 }
-            }          
+            }
         }
         int finished = 0;
         foreach (QuestObject obj in requiredItems)
@@ -67,11 +71,28 @@ public class Ship : MonoBehaviour
                 finished++;
             }
         }
+        if (lastFinished != finished)
+        {
+            for (int i = 0 + lastI; i < (Mathf.FloorToInt(damageVFX.Length / 100f * ((100f / requiredItems.Count) * finished))); i++)
+            {
+                Destroy(damageVFX[i]);
+            }
+            lastI = Mathf.FloorToInt(damageVFX.Length / 100f * ((100f / requiredItems.Count) * finished));
+
+
+        }
+        lastFinished = finished;
+
         if (finished == requiredItems.Count)
         {
             repaired = true;
             dialogueManager.StartDialogue(DialogueManager.pathType.Story, null);
-            
+
         }
+    }
+
+    public int GetLastFinished()
+    {
+        return lastFinished;
     }
 }
