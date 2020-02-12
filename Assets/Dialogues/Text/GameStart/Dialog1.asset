@@ -10,9 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd4e8ff882c82a8499596db16c03add5, type: 3}
-  m_Name: Test2
+  m_Name: Dialog1
   m_EditorClassIdentifier: 
-  names: 0000000000000000
+  names: 0000000000000000010000000100000000000000
   sentences:
-  - Nice
-  - Test
+  - Who's this?
+  - And why am I looking from the Sky?
+  - This is you, Sir.
+  - Your Visor is damaged, so I linked your Perception to a Drone.
+  - This feels odd.
+  eventCode: 0

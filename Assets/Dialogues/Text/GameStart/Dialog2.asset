@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd4e8ff882c82a8499596db16c03add5, type: 3}
+  m_Name: Dialog2
+  m_EditorClassIdentifier: 
+  names: 000000000100000001000000000000000100000001000000010000000000000001000000
+  sentences:
+  - What the hell is that?
+  - Scanning organism. Comparing to Database.
+  - Organism recognized as Scolopendra. High danger level.
+  - "\rOh we have a database? Do you have any further information?"
+  - Yes, Sir. I will search the Database.
+  - Error! I report significent data loss.
+  - But the sensors report further signatures of this organism.
+  - I need to get out of here.
+  - Structures located in the south. Maybe you can find spare Parts.
+  eventCode: 0

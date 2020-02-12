@@ -25,12 +25,30 @@ public class DialogueManager : MonoBehaviour
 
     public enum pathType { Story, Inventory };
 
+    Dialogue.EventCode eventCode;
+
     private void Start()
     {
         sentences = new Queue<string>();
         names = new Queue<Dialogue.Names>();
         dialogueQueue = new Queue<Dialogue>();
         inventory = FindObjectOfType<Inventory>();
+    }
+
+    float timer = 0;
+    private void Update()
+    {
+        if(running)
+        {
+            if(timer >= 1)
+            {
+                DisplayNextSentence();
+                timer = 0;
+            } else
+            {
+                timer += Time.deltaTime;
+            }
+        }
     }
 
 
@@ -63,9 +81,14 @@ public class DialogueManager : MonoBehaviour
     public void SetCurrentDialogue()
     {
         currentDialogue = dialogueQueue.Dequeue();
-
         sentences.Clear();
         names.Clear();
+        eventCode = Dialogue.EventCode.None;
+
+        if (currentDialogue.getEventCode() != Dialogue.EventCode.None)
+        {
+            eventCode = currentDialogue.getEventCode();
+        }
 
         foreach (string sentence in currentDialogue.GetSentences())
         {
@@ -99,7 +122,7 @@ public class DialogueManager : MonoBehaviour
         string sentence = sentences.Dequeue();
         Dialogue.Names name = names.Dequeue();
 
-        if(name == Dialogue.Names.General)
+        if(name == Dialogue.Names.Pilot)
         {
             dialogBoxAnimator[0].SetBool("IsOpen", true);
             dialogBoxAnimator[1].SetBool("IsOpen", false);
@@ -126,12 +149,11 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue()
     {
-
         dialogBoxAnimator[0].SetBool("IsOpen", false);
         dialogBoxAnimator[1].SetBool("IsOpen", false);
         inventoryPanelAnimator.SetBool("IsOpen", true);
 
-        ExecuteDialogEvent(currentDialogue.getEventCode());
+        ExecuteDialogEvent(eventCode);
 
         currentDialogue = null;
         running = false;

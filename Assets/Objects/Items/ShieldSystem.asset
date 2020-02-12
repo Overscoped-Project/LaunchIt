@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 195934122e5a10247922721ec7818321, type: 3}
-  m_Name: Item 3
+  m_Name: ShieldSystem
   m_EditorClassIdentifier: 
-  itemName: Name3
+  itemName: Shield System
   itemType: 4
   amount: 1
-  description: test
-  icon: {fileID: 21300000, guid: 188f92eb959d2fa4e9140dfdb4943f00, type: 3}
-  dialogue: {fileID: 11400000, guid: fb1481796a24b3341a8da66cde8d7a3a, type: 2}
+  description: A Shield System
+  icon: {fileID: 21300000, guid: 97d7c8dc86d1e034c9be69984205f730, type: 3}
+  dialogue: {fileID: 11400000, guid: d64cf2f97812da342bf85d05fff835b3, type: 2}

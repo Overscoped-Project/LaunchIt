@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 195934122e5a10247922721ec7818321, type: 3}
-  m_Name: Item 2
+  m_Name: NavigationModule
   m_EditorClassIdentifier: 
-  itemName: Name2
+  itemName: Navigation Module
   itemType: 4
-  amount: 3
-  description: 654684846
-  icon: {fileID: 21300000, guid: ce074a8ee104c744ba4122cacc98a17c, type: 3}
-  dialogue: {fileID: 11400000, guid: fb1481796a24b3341a8da66cde8d7a3a, type: 2}
+  amount: 1
+  description: A Navigation Module
+  icon: {fileID: 21300000, guid: 188f92eb959d2fa4e9140dfdb4943f00, type: 3}
+  dialogue: {fileID: 11400000, guid: 4e5c978a8a4cc5b45817db05ad8dfb5e, type: 2}

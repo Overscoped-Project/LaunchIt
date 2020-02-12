@@ -10,8 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd4e8ff882c82a8499596db16c03add5, type: 3}
-  m_Name: ItemDialog
+  m_Name: PowerSource
   m_EditorClassIdentifier: 
-  names: 00000000
+  names: 000000000000000000000000
   sentences:
-  - Wow, Ein Item.
+  - 
+  - 
+  - 
+  eventCode: 0

@@ -10,9 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd4e8ff882c82a8499596db16c03add5, type: 3}
-  m_Name: Test1
+  m_Name: ShieldSystem
   m_EditorClassIdentifier: 
-  names: 0000000001000000
-  sentences:
-  - Hallo AI
-  - Hallo General
+  names: 
+  sentences: []
+  eventCode: 0
