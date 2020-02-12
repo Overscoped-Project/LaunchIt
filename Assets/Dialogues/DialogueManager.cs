@@ -55,7 +55,10 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogue(pathType path, Item obj)
     {
         running = true;
-        inventoryPanelAnimator.SetBool("IsOpen", false);
+        if (inventoryPanelAnimator != null)
+        {
+            inventoryPanelAnimator.SetBool("IsOpen", false);
+        }
         //inventoryPanel.SetActive(false);
 
         switch (path)
@@ -76,8 +79,14 @@ public class DialogueManager : MonoBehaviour
                 break;
         }
 
+        if(currentDialogue.playBefore)
+        {
+            ExecuteDialogEvent(eventCode);
+        }
+
         SetCurrentDialogue();
     }
+
     public void SetCurrentDialogue()
     {
         currentDialogue = dialogueQueue.Dequeue();
@@ -151,9 +160,15 @@ public class DialogueManager : MonoBehaviour
     {
         dialogBoxAnimator[0].SetBool("IsOpen", false);
         dialogBoxAnimator[1].SetBool("IsOpen", false);
-        inventoryPanelAnimator.SetBool("IsOpen", true);
+        if (inventoryPanelAnimator != null)
+        {
+            inventoryPanelAnimator.SetBool("IsOpen", true);
+        }
 
-        ExecuteDialogEvent(eventCode);
+        if (!currentDialogue.playBefore)
+        {
+            ExecuteDialogEvent(eventCode);
+        }
 
         currentDialogue = null;
         running = false;
@@ -172,6 +187,14 @@ public class DialogueManager : MonoBehaviour
         else if (eventCode == Dialogue.EventCode.GameEnd_Repository)
         {
             GameObject.Find("GameController").GetComponent<LevelManager>().GoToOutroRepository();
+        }
+        else if (eventCode == Dialogue.EventCode.Intro)
+        {
+
+        }
+        else if(eventCode == Dialogue.EventCode.Outro)
+        {
+
         }
         else
         {

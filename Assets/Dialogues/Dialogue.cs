@@ -13,8 +13,9 @@ public class Dialogue : ScriptableObject
     [TextArea(3, 10)]
     [SerializeField] private string[] sentences;
 
-    public enum EventCode {None, GameEnd_Spaceship, Access_Repository, GameEnd_Repository};
+    public enum EventCode {None, Intro, GameEnd_Spaceship, Access_Repository, GameEnd_Repository, Outro};
     [SerializeField] private EventCode eventCode;
+    public bool playBefore;
   
     public string[] GetSentences()
     {
