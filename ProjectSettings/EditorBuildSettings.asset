@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Outro_Spaceship.unity
     guid: 74407aef132e00b4daa8769ea82af70f
   - enabled: 1
+    path: Assets/Scenes/Outro_Repository.unity
+    guid: 707ebcbdf63397043a68092ac9925957
+  - enabled: 1
     path: Assets/Scenes/Credits.unity
     guid: b116a626af2affb40b609ef44878756f
   - enabled: 1

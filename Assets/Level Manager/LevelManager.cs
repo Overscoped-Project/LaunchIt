@@ -24,6 +24,11 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
 
+    public void GoToCredits()
+    {
+        SceneManager.LoadScene("Credits", LoadSceneMode.Single);
+    }
+
     public void GoToSettings()
     {
         SceneManager.LoadScene("Settings", LoadSceneMode.Single);

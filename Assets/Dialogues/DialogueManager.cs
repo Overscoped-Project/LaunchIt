@@ -144,14 +144,7 @@ public class DialogueManager : MonoBehaviour
             nameItem[0].text = name.ToString();
             descriptionText[0].text = sentence;
         }
-        else if (name == Dialogue.Names.AI)
-        {
-            dialogBoxAnimator[0].SetBool("IsOpen", false);
-            dialogBoxAnimator[1].SetBool("IsOpen", true);
-
-            nameItem[1].text = name.ToString();
-            descriptionText[1].text = sentence;
-        } else if(name == Dialogue.Names.Inventory)
+        else
         {
             dialogBoxAnimator[0].SetBool("IsOpen", false);
             dialogBoxAnimator[1].SetBool("IsOpen", true);
@@ -192,6 +185,10 @@ public class DialogueManager : MonoBehaviour
         else if (eventCode == Dialogue.EventCode.GameEnd_Repository)
         {
             GameObject.Find("GameController").GetComponent<LevelManager>().GoToOutroRepository();
+        }
+        else if (eventCode == Dialogue.EventCode.Credits)
+        {
+            GetComponent<LevelManager>().GoToCredits();
         }
         else if (eventCode == Dialogue.EventCode.Intro)
         {

@@ -293,91 +293,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: AI
---- !u!1 &508856521
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 508856525}
-  - component: {fileID: 508856524}
-  - component: {fileID: 508856523}
-  - component: {fileID: 508856522}
-  m_Layer: 0
-  m_Name: Intro
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &508856522
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508856521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49ce894394c520b4eb667863543479f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &508856523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508856521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db5028333eb00db4e83f3d0877b99004, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogueManager: {fileID: 508856524}
-  path: 0
---- !u!114 &508856524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508856521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 786d52ba74b4b72499b840daf3d5ce82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  running: 0
-  descriptionText:
-  - {fileID: 631820218}
-  - {fileID: 576707256}
-  nameItem:
-  - {fileID: 1508829261}
-  - {fileID: 335639449}
-  dialogBoxAnimator:
-  - {fileID: 28332734}
-  - {fileID: 975997366}
-  inventoryPanelAnimator: {fileID: 0}
-  story:
-  - {fileID: 0}
-  - {fileID: 0}
---- !u!4 &508856525
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508856521}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -34.117973, y: 18.328247, z: -13.559082}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &576707253
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,6 +628,8 @@ GameObject:
   - component: {fileID: 1244979006}
   - component: {fileID: 1244979005}
   - component: {fileID: 1244979004}
+  - component: {fileID: 1244979007}
+  - component: {fileID: 1244979008}
   m_Layer: 5
   m_Name: AnimatedImage
   m_TagString: Untagged
@@ -794,6 +711,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1244979002}
   m_CullTransparentMesh: 0
+--- !u!114 &1244979007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244979002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 875f4affc9c312f4ba00ccf9c7c6bff0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 1244979004}
+--- !u!114 &1244979008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244979002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ce894394c520b4eb667863543479f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1508829258
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,8 +909,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c4597db38f670941a0f5348831151a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Brightness: 0.9648602
-  _Contrast: 0.94498885
+  _Brightness: 0.9986315
+  _Contrast: 0.9973058
   _VolumeMaster: 0
   _VolumeMusic: 0
   _VolumeSFX: 0
@@ -979,6 +921,7 @@ MonoBehaviour:
   volumeMasterSlider: {fileID: 0}
   volumeMusicSlider: {fileID: 0}
   volumeSFXSlider: {fileID: 0}
+  hasSliders: 0
 --- !u!1 &1954608061
 GameObject:
   m_ObjectHideFlags: 0
