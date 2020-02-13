@@ -155,10 +155,10 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: Rotation
-    m_EventTreshold: 44
+    m_EventTreshold: 46
   - m_ConditionMode: 4
     m_ConditionEvent: Rotation
-    m_EventTreshold: 136
+    m_EventTreshold: 135
   - m_ConditionMode: 1
     m_ConditionEvent: walk
     m_EventTreshold: 0
@@ -303,10 +303,10 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: Rotation
-    m_EventTreshold: 134
+    m_EventTreshold: 136
   - m_ConditionMode: 4
     m_ConditionEvent: Rotation
-    m_EventTreshold: 226
+    m_EventTreshold: 235
   - m_ConditionMode: 1
     m_ConditionEvent: walk
     m_EventTreshold: 0
@@ -689,10 +689,10 @@ AnimatorTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: Rotation
-    m_EventTreshold: 134
+    m_EventTreshold: 136
   - m_ConditionMode: 4
     m_ConditionEvent: Rotation
-    m_EventTreshold: 226
+    m_EventTreshold: 225
   - m_ConditionMode: 2
     m_ConditionEvent: walk
     m_EventTreshold: 0
@@ -797,10 +797,10 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: Rotation
-    m_EventTreshold: 224
+    m_EventTreshold: 236
   - m_ConditionMode: 4
     m_ConditionEvent: Rotation
-    m_EventTreshold: 316
+    m_EventTreshold: 339
   - m_ConditionMode: 1
     m_ConditionEvent: walk
     m_EventTreshold: 0
@@ -1071,10 +1071,10 @@ AnimatorTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: Rotation
-    m_EventTreshold: 44
+    m_EventTreshold: 45
   - m_ConditionMode: 4
     m_ConditionEvent: Rotation
-    m_EventTreshold: 136
+    m_EventTreshold: 135
   - m_ConditionMode: 2
     m_ConditionEvent: walk
     m_EventTreshold: 0
@@ -1263,10 +1263,10 @@ AnimatorTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: Rotation
-    m_EventTreshold: -1
+    m_EventTreshold: 340
   - m_ConditionMode: 4
     m_ConditionEvent: Rotation
-    m_EventTreshold: 46
+    m_EventTreshold: 44
   - m_ConditionMode: 2
     m_ConditionEvent: walk
     m_EventTreshold: 0
@@ -1342,10 +1342,10 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: Rotation
-    m_EventTreshold: 314
+    m_EventTreshold: 340
   - m_ConditionMode: 4
     m_ConditionEvent: Rotation
-    m_EventTreshold: 361
+    m_EventTreshold: 45
   - m_ConditionMode: 1
     m_ConditionEvent: walk
     m_EventTreshold: 0
@@ -1373,10 +1373,10 @@ AnimatorTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: Rotation
-    m_EventTreshold: 224
+    m_EventTreshold: 226
   - m_ConditionMode: 4
     m_ConditionEvent: Rotation
-    m_EventTreshold: 316
+    m_EventTreshold: 339
   - m_ConditionMode: 2
     m_ConditionEvent: walk
     m_EventTreshold: 0

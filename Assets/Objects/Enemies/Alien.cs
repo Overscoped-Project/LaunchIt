@@ -140,11 +140,11 @@ public class Alien : MonoBehaviour
         {
             if (enemy != null)
             {
-                enemyPlayer.SetAttacked(true);
+                
                 Physics2D.IgnoreCollision(capsuleCollider2D, enemy.GetComponent<CircleCollider2D>());
                 //audioManager.PlayIfNot("EnemyMove");
                 AttackMovement(enemy);
-
+                CheckRange();
             }
             else
             {
@@ -423,6 +423,8 @@ public class Alien : MonoBehaviour
 
         if (aggression < enemyPlayer.GetAggression() && !dodge)
         {
+            CheckRange();
+            enemyPlayer.SetAttacked(false);
             if (homePath == null || homePath.Count < 1)
             {
                 homePath = Pathfinding(body.position, home.transform.position);
@@ -430,10 +432,10 @@ public class Alien : MonoBehaviour
             movementPathfinding(homePath, speed);
         }
         else if (canAttack && !dodge)
-        {
+        {            
+            enemyPlayer.SetAttacked(true);
             Vector2 targetPosition = enemyBody.position - body.position;
-            targetPosition = targetPosition.normalized;
-
+            targetPosition = targetPosition.normalized;            
             if (rangeUnit)
             {
                 if (enemyBody.position.magnitude - body.position.magnitude <= range)
@@ -469,6 +471,17 @@ public class Alien : MonoBehaviour
                 timeSinceAttack = 0;
                 canAttack = true;
             }
+        }
+    }
+
+    private void CheckRange()
+    {
+        if ((enemyBody.position-body.position).magnitude >= 100)
+        {
+            enemyPlayer.SetAttacked(false);
+            enemy = null;
+            enemyBody = null;
+            enemyPlayer = null;
         }
     }
 
@@ -647,8 +660,12 @@ public class Alien : MonoBehaviour
         }
         if (collision.gameObject.tag == "Player")
         {
-            enemy = null;
-            if(enemyPlayer != null) enemyPlayer.SetAttacked(false);
+            if (enemyPlayer != null)
+            {
+                enemyPlayer.SetAttacked(false);
+            }
+            enemy = null;           
+            enemyPlayer = null;
             musicManager.RemoveAlien(this);
             musicManager.UpdateMusik();
         }        
