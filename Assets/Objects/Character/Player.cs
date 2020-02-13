@@ -150,5 +150,6 @@ public class Player : MonoBehaviour
         {
             health = maxHealth;
         }
+        healthBar.value = health;
     }
 }

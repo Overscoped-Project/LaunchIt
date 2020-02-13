@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Ship : MonoBehaviour
 {
-    private Player player;
+    [SerializeField] private Player player;
     private bool repaired = false;
     private int lastFinished = 0;
     private int lastI = 0;
@@ -32,7 +32,6 @@ public class Ship : MonoBehaviour
 
     private void Start()
     {
-        player = GetComponent<Player>();
         foreach (SpawnQuestObject obj in spawnRequiredItems)
         {
             QuestObject newObj = new QuestObject(obj.GetItem(), obj.GetRequiredAmount());
