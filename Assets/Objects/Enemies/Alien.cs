@@ -142,7 +142,7 @@ public class Alien : MonoBehaviour
             {
                 enemyPlayer.SetAttacked(true);
                 Physics2D.IgnoreCollision(capsuleCollider2D, enemy.GetComponent<CircleCollider2D>());
-                audioManager.PlayIfNot("EnemyMove");
+                //audioManager.PlayIfNot("EnemyMove");
                 AttackMovement(enemy);
 
             }
