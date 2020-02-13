@@ -482,7 +482,7 @@ public class Alien : MonoBehaviour
 
     private void Dodge()
     {
-        if (Random.Range(1, aggression + 1) < (aggression / 100 * dodgeChance) + (maxAggression - aggression))
+        if (Random.Range(1, maxAggression + 1) < (aggression / 100 * dodgeChance) + (maxAggression - aggression))
         {
             foreach (Bullet bullet in bulletsInRange)
             {
