@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int health = 100;
     [SerializeField] private float playerSpeed = 1;
     [SerializeField] private int aggression = 30;
+    [SerializeField] private int healthReg = 30;
     private bool sprintAvailable = true;
     private bool walk = false;
     private float directionX = 0;
@@ -135,5 +136,14 @@ public class Player : MonoBehaviour
     public void SetAttacked(bool isAttacked)
     {
         this.isAttacked = isAttacked;
+    }
+
+    public void AddHealth()
+    {
+        health = health + healthReg;
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
     }
 }

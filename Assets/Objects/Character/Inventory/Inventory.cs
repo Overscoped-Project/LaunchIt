@@ -59,6 +59,7 @@ public class Inventory : MonoBehaviour
     {
         slot.AddItem(item.GetComponent<ConnectorItem>().GetItem());
         Destroy(item);
+        
         audioManager.Play("ItemCollect");
     }
 
