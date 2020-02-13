@@ -116,7 +116,7 @@ public class Alien : MonoBehaviour
                 {
                     patrouilleAlly.Add(alien);
                     ambientPath = Pathfinding(transform.position, (Vector2)patrouillePoints[currentPoint].transform.position);
-                    SetNewPosition(ambientPath, patrouilleAlly.Count);
+                    SetNewPosition(ambientPath, patrouilleAlly.Count, currentPoint, pointRun);
                 }
             }
 
@@ -233,7 +233,7 @@ public class Alien : MonoBehaviour
     {
         patrouilleAlly.Remove(unit);
     }
-    public void SetNewPosition(List<Node> path, int count)
+    public void SetNewPosition(List<Node> path, int count, int currentPoint, bool pointRun)
     {
         if (path == null || path.Count == 0)
         {
@@ -260,6 +260,8 @@ public class Alien : MonoBehaviour
                 nextArrived = false;
                 newArrived = false;
             }
+            this.pointRun = pointRun;
+            this.currentPoint = currentPoint;
             guardingTicks = maxGuardingTicks;
             gapToPoint = count * gapMultiplicator + maxGapToPoint;
         }
@@ -309,7 +311,7 @@ public class Alien : MonoBehaviour
                 {
                     count++;
                     ambientPath = Pathfinding(transform.position, (Vector2)patrouillePoints[currentPoint].transform.position);
-                    ally.SetNewPosition(ambientPath, count);
+                    ally.SetNewPosition(ambientPath, count, currentPoint, pointRun);
                 }    
             }
         }
@@ -662,7 +664,11 @@ public class Alien : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        body.velocity = Vector3.zero;
+        if (body != null)
+        {
+            body.velocity = Vector3.zero;
+        }
+        
         if (collision.gameObject.tag == "Player")
         {
             if (canAttack)

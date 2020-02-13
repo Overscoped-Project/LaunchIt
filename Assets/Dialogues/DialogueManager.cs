@@ -62,18 +62,11 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogue(pathType path, Item obj)
     {
         running = true;
-        if (inventoryPanelAnimator != null)
-        {
-            inventoryPanelAnimator.SetBool("IsOpen", false);
-        }
 
         switch (path)
         {
 
             case pathType.Story:
-                Debug.Log(gameObject.name);
-                Debug.Log(storyCount);
-                Debug.Log(story.Count);
                 
                 dialogueQueue.Enqueue(story[storyCount]);
                 if (storyCount < story.Count)
@@ -111,7 +104,6 @@ public class DialogueManager : MonoBehaviour
             }
         }
 
-        Debug.Log(currentDialogue.name);
         foreach (string sentence in currentDialogue.GetSentences())
         {
             sentences.Enqueue(sentence);
@@ -145,7 +137,6 @@ public class DialogueManager : MonoBehaviour
 
         string sentence = sentences.Dequeue();
         Dialogue.Names name = names.Dequeue();
-        Debug.Log(name);
 
         if (name == Dialogue.Names.Pilot)
         {
@@ -169,10 +160,6 @@ public class DialogueManager : MonoBehaviour
     {
         dialogBoxAnimator[0].SetBool("IsOpen", false);
         dialogBoxAnimator[1].SetBool("IsOpen", false);
-        if (inventoryPanelAnimator != null)
-        {
-            inventoryPanelAnimator.SetBool("IsOpen", true);
-        }
 
         bool temp = false;
         try

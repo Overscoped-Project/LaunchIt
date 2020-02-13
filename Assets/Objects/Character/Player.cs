@@ -89,13 +89,7 @@ public class Player : MonoBehaviour
         {
             directionX = 0;
         }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            dialogueManager.DisplayNextSentence();
-        }
        
-
         direction.Normalize();
         direction *= playerSpeed;
         body.velocity = direction;
