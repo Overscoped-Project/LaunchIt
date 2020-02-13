@@ -912,8 +912,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c4597db38f670941a0f5348831151a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Brightness: 0.9986315
-  _Contrast: 0.9973058
+  _Brightness: 1.02685
+  _Contrast: 1.02685
   _VolumeMaster: 1
   _VolumeMusic: 1
   _VolumeSFX: 1
