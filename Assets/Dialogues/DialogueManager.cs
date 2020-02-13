@@ -42,11 +42,15 @@ public class DialogueManager : MonoBehaviour
     }
 
     float timer = 0;
+    float playLength;
+    float bonusLength = 0;
+    bool sentencePlaying = false;
+    Dialogue.Names previusName;
     private void Update()
     {
         if (running)
         {
-            if (timer >= 1)
+            if (timer >= playLength && !sentencePlaying)
             {
                 DisplayNextSentence();
                 timer = 0;
@@ -62,6 +66,7 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogue(pathType path, Item obj)
     {
         running = true;
+        bonusLength = 2;
 
         switch (path)
         {
@@ -119,6 +124,7 @@ public class DialogueManager : MonoBehaviour
 
     public void DisplayNextSentence()
     {
+        sentencePlaying = true;
         if (sentences.Count == 0)
         {
             if (dialogueQueue.Count > 0)
@@ -145,6 +151,11 @@ public class DialogueManager : MonoBehaviour
 
             nameItem[0].text = name.ToString();
             descriptionText[0].text = sentence;
+
+            if (previusName != null && previusName != name)
+            {
+                bonusLength = 2;
+            }
         }
         else
         {
@@ -153,7 +164,18 @@ public class DialogueManager : MonoBehaviour
 
             nameItem[1].text = name.ToString();
             descriptionText[1].text = sentence;
+
+            if (previusName != null && previusName != name)
+            {
+                bonusLength = 2;
+            }
         }
+
+       
+        playLength = (((1f / 24f) * sentence.Length) * 1.75f) + bonusLength;
+        bonusLength = 0;
+        sentencePlaying = false;
+        previusName = name;
     }
 
     public void EndDialogue()

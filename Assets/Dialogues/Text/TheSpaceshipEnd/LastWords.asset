@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd4e8ff882c82a8499596db16c03add5, type: 3}
   m_Name: LastWords
   m_EditorClassIdentifier: 
-  names: 
-  sentences: []
+  names: 0000000001000000
+  sentences:
+  - It's time to leave.
+  - "\rEngines are being prepared."
   eventCode: 2
   playBefore: 0
