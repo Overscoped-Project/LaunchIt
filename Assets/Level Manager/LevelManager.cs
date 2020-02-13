@@ -40,12 +40,12 @@ public class LevelManager : MonoBehaviour
 
     public void GoToOutroSpaceship()
     {
-        SceneManager.LoadScene("Outro", LoadSceneMode.Single);
+        SceneManager.LoadScene("Outro_Spaceship", LoadSceneMode.Single);
     }
 
     public void GoToOutroRepository()
     {
-        SceneManager.LoadScene("Outro", LoadSceneMode.Single);
+        SceneManager.LoadScene("Outro_Repository", LoadSceneMode.Single);
     }
 
     public void ExitGame()

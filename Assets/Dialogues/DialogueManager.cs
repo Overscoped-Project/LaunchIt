@@ -18,6 +18,8 @@ public class DialogueManager : MonoBehaviour
     public Animator[] dialogBoxAnimator;
     public Animator inventoryPanelAnimator;
 
+    [SerializeField] private GameObject[] dialogueObjects;
+
     Queue<Dialogue> dialogueQueue;
     Dialogue currentDialogue;
 
@@ -69,6 +71,10 @@ public class DialogueManager : MonoBehaviour
         {
 
             case pathType.Story:
+                Debug.Log(gameObject.name);
+                Debug.Log(storyCount);
+                Debug.Log(story.Count);
+                
                 dialogueQueue.Enqueue(story[storyCount]);
                 if (storyCount < story.Count)
                 {
@@ -105,6 +111,7 @@ public class DialogueManager : MonoBehaviour
             }
         }
 
+        Debug.Log(currentDialogue.name);
         foreach (string sentence in currentDialogue.GetSentences())
         {
             sentences.Enqueue(sentence);
@@ -134,8 +141,11 @@ public class DialogueManager : MonoBehaviour
             }
         }
 
+        
+
         string sentence = sentences.Dequeue();
         Dialogue.Names name = names.Dequeue();
+        Debug.Log(name);
 
         if (name == Dialogue.Names.Pilot)
         {
@@ -190,7 +200,10 @@ public class DialogueManager : MonoBehaviour
         }
         else if (eventCode == Dialogue.EventCode.Access_Repository)
         {
-
+            foreach (GameObject obj in dialogueObjects)
+            {
+                Destroy(obj);
+            }
         }
         else if (eventCode == Dialogue.EventCode.GameEnd_Repository)
         {

@@ -103,23 +103,29 @@ public class Inventory : MonoBehaviour
         Ship ship = FindObjectOfType<Ship>();
         int count = ship.GetRequiredItems().Count - (invCount + ship.GetLastFinished());
         string[] text;
+        Dialogue.Names[] names;
         if (count == 0)
         {
             text = new string[3];
             text[0] = "You found " + name + ".";
             text[1] = "Now we can repair our ship.";
             text[2] = "Let us return to it!";
+
+            names = new Dialogue.Names[3];
+            names[0] = Dialogue.Names.Inventory;
+            names[1] = Dialogue.Names.Inventory;
         }
         else
         {
+            names = new Dialogue.Names[2];
+            names[0] = Dialogue.Names.Inventory;
+            names[1] = Dialogue.Names.Inventory;
             text = new string[2];
             text[0] = "You found " + name + ".";
             text[1] = "You only need " + count + " more Supplies.";
         }
 
-        Dialogue.Names[] names = new Dialogue.Names[2];
-        names[0] = Dialogue.Names.Inventory;
-        names[1] = Dialogue.Names.Inventory;
+        
         Dialogue invDialogue = new Dialogue(names, text);
 
        return invDialogue;
