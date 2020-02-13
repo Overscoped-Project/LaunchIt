@@ -47,6 +47,11 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+        if(!isAttacked)
+        {
+            audioManager.Stop("EnemyShoot");
+            audioManager.Stop("EnemyAttack");
+        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
